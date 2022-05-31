@@ -51,7 +51,7 @@ class GameWindow(arcade.Window):
         self.bullet_list = arcade.SpriteList()
 
         # Map name
-        map_name = os.getcwd() + "/resources/images/tiled_maps/dummy_test_map.json"
+        map_name = os.getcwd() + "/resources/images/tiled_maps/dummy_test_map2.json"
 
         # Load in TileMap
         tile_map = arcade.load_tilemap(map_name, SPRITE_SCALING_TILES)
