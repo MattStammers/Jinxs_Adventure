@@ -14,8 +14,8 @@ SPRITE_SCALING_TILES = 0.4
 SPRITE_SIZE = int(SPRITE_IMAGE_SIZE * SPRITE_SCALING_PLAYER)
 
 # Size of grid to show on screen, in number of tiles
-SCREEN_GRID_WIDTH = 25
-SCREEN_GRID_HEIGHT = 15
+SCREEN_GRID_WIDTH = 50
+SCREEN_GRID_HEIGHT = 25
 
 # Size of screen to show, in pixels
 SCREEN_WIDTH = SPRITE_SIZE * SCREEN_GRID_WIDTH
@@ -52,7 +52,7 @@ PLAYER_MOVE_FORCE_IN_AIR = 900
 PLAYER_JUMP_IMPULSE = 1800
 
 # Close enough to not-moving to have the animation go to idle.
-DEAD_ZONE = 0.5
+DEAD_ZONE = 1
 
 # Constants used to track if the player is facing left or right
 RIGHT_FACING = 0
