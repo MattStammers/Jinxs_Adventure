@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=C:\Users\stammm\OneDrive - University Hospital Southampton NHS Foundation Trust\Documents\Development\python\Pymunk_Platformer\physics
+set VIRTUAL_ENV=C:\Users\Stammers\Documents\Development\Pymunk_Platformer\physics
 
 if not defined PROMPT set PROMPT=$P$G
 

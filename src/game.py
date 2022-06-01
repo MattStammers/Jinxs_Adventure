@@ -40,11 +40,16 @@ class GameWindow(arcade.Window):
         # Physics engine
         self.physics_engine: Optional[arcade.PymunkPhysicsEngine] = None
 
+        # Add camera
+        self.camera = None
+
         # Set background color
         arcade.set_background_color(arcade.color.AMAZON)
 
     def setup(self):
         """ Set up everything with the game """
+        # Set up the Camera
+        self.camera = arcade.Camera(self.width, self.height)
 
         # Create the sprite lists
         self.player_list = arcade.SpriteList()
@@ -227,8 +232,26 @@ class GameWindow(arcade.Window):
         force = (BULLET_MOVE_FORCE, 0)
         self.physics_engine.apply_force(bullet, force)
 
+    def center_camera_to_player(self):
+        screen_center_x = self.player_sprite.center_x - (self.camera.viewport_width / 2)
+        screen_center_y = self.player_sprite.center_y - (
+            self.camera.viewport_height / 2
+        )
+
+        # Don't let camera travel past 0
+        if screen_center_x < 0:
+            screen_center_x = 0
+        if screen_center_y < 0:
+            screen_center_y = 0
+        player_centered = screen_center_x, screen_center_y
+
+        self.camera.move_to(player_centered)
+
     def on_update(self, delta_time):
         """ Movement and game logic """
+
+        # Position the camera
+        self.center_camera_to_player()
 
         is_on_ground = self.physics_engine.is_on_ground(self.player_sprite)
         # Update player forces based on keys pressed
@@ -307,6 +330,9 @@ class GameWindow(arcade.Window):
         self.bullet_list.draw()
         self.item_list.draw()
         self.player_list.draw()
+
+        # Activate our Camera
+        self.camera.use()
 
         # for item in self.player_list:
         #     item.draw_hit_box(arcade.color.RED)
