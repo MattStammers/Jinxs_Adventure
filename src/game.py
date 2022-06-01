@@ -8,17 +8,25 @@ from typing import Optional
 from player import *
 from weapons import *
 from enemies import *
+from views import *
 
 SCREEN_TITLE = "Jinx & Gravity"
 
-class GameWindow(arcade.Window):
+class GameView(arcade.View):
     """ Main Window """
 
-    def __init__(self, width, height, title):
+    def __init__(self):
         """ Create the variables """
 
         # Init the parent class
-        super().__init__(width, height, title)
+        super().__init__()
+
+        # Don't show the mouse cursor
+        self.window.set_mouse_visible(True)
+
+        # Add width and height
+        self.width = SCREEN_WIDTH
+        self.height = SCREEN_HEIGHT
 
         # Player sprite
         self.player_sprite: Optional[PlayerSprite] = None
@@ -321,6 +329,12 @@ class GameWindow(arcade.Window):
             velocity = (moving_sprite.change_x * 1 / delta_time, moving_sprite.change_y * 1 / delta_time)
             self.physics_engine.set_velocity(moving_sprite, velocity)
 
+        # Check lives. If it is zero, flip to the game over view.
+        self.lives=3
+        if self.lives == 0:
+            view = GameOverView()
+            self.window.show_view(view)
+
     def on_draw(self):
         """ Draw everything """
         self.clear()
@@ -339,10 +353,80 @@ class GameWindow(arcade.Window):
         # for item in self.item_list:
         #     item.draw_hit_box(arcade.color.RED)
 
+class MenuView(arcade.View):
+    def on_show_view(self):
+        arcade.set_background_color(arcade.color.GRAY_BLUE)
+
+    def on_draw(self):
+        self.clear()
+        arcade.draw_text("Welcome to Jinx's Adventure", self.window.width / 2, self.window.height / 2,
+                         arcade.color.BLACK, font_size=50, anchor_x="center")
+        arcade.draw_text("The world is at peace until suddenly its not", self.window.width / 2, self.window.height / 2 - 75,
+                         arcade.color.RED_BROWN, font_size=25, anchor_x="center")
+        arcade.draw_text("Click to advance", self.window.width / 2, self.window.height / 2 - 150,
+                         arcade.color.REDWOOD, font_size=20, anchor_x="center")
+
+    def on_mouse_press(self, _x, _y, _button, _modifiers):
+        instructions_view = InstructionView()
+        self.window.show_view(instructions_view)
+
+class InstructionView(arcade.View):
+        
+    def on_show_view(self):
+        """ This is run once when we switch to this view """
+        arcade.set_background_color(arcade.csscolor.DARK_SLATE_BLUE)
+
+        # Reset the viewport, necessary if we have a scrolling game and we need
+        # to reset the viewport back to the start so we can see what we draw.
+        arcade.set_viewport(0, self.window.width, 0, self.window.height)
+
+    def on_draw(self):
+        """ Draw this view """
+        self.clear()
+        arcade.draw_text("Instructions Screen", self.window.width / 2, self.window.height / 2,
+                         arcade.color.WHITE, font_size=50, anchor_x="center")
+        arcade.draw_text("Click to fire, arrows to move", self.window.width / 2, self.window.height / 2-75,
+                         arcade.color.PINK_LAVENDER, font_size=30, anchor_x="center")
+        arcade.draw_text("Some objects can be moved around, others cannot", self.window.width / 2, self.window.height / 2-120,
+                         arcade.color.YELLOW_GREEN, font_size=25, anchor_x="center")
+        arcade.draw_text("Click to advance to game", self.window.width / 2, self.window.height / 2-150,
+                         arcade.color.DARK_CHESTNUT, font_size=20, anchor_x="center")
+
+    def on_mouse_press(self, _x, _y, _button, _modifiers):
+        """ If the user presses the mouse button, start the game. """
+        game_view = GameView()
+        game_view.setup()
+        self.window.show_view(game_view)
+
+class GameOverView(arcade.View):
+    """ View to show when game is over """
+
+    def __init__(self):
+        """ This is run once when we switch to this view """
+        super().__init__()
+        self.texture = arcade.load_texture(os.getcwd() + "/resources/images/tiles/sandtile.png")
+
+        # Reset the viewport, necessary if we have a scrolling game and we need
+        # to reset the viewport back to the start so we can see what we draw.
+        arcade.set_viewport(0, SCREEN_WIDTH - 1, 0, SCREEN_HEIGHT - 1)
+
+    def on_draw(self):
+        """ Draw this view """
+        self.clear()
+        self.texture.draw_sized(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
+                                SCREEN_WIDTH, SCREEN_HEIGHT)
+
+    def on_mouse_press(self, _x, _y, _button, _modifiers):
+        """ If the user presses the mouse button, re-start the game. """
+        game_view = GameView()
+        game_view.setup()
+        self.window.show_view(game_view)
+
 def main():
     """ Main function """
-    window = GameWindow(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
-    window.setup()
+    window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
+    start_view = MenuView()
+    window.show_view(start_view)
     arcade.run()
 
 
