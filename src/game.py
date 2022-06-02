@@ -35,6 +35,7 @@ class GameView(arcade.View):
         self.item_list: Optional[arcade.SpriteList] = None
         self.moving_sprites_list: Optional[arcade.SpriteList] = None
         self.ladder_list: Optional[arcade.SpriteList] = None
+        self.coin_list: Optional[arcade.SpriteList] = None
 
         # Track the current state of what key is pressed
         self.left_pressed: bool = False
@@ -50,6 +51,10 @@ class GameView(arcade.View):
 
         # Set background color
         arcade.set_background_color(arcade.color.AMAZON)
+
+        # Load sounds
+        self.collect_coin_sound = arcade.load_sound(file_path+"/resources/sounds/coin1.wav")
+        self.jump_sound = arcade.load_sound(file_path+"/resources/sounds/jump3.wav")
 
     def setup(self):
         """ Set up everything with the game """
@@ -71,6 +76,7 @@ class GameView(arcade.View):
         self.item_list = tile_map.sprite_lists["Dynamic Items"]
         self.ladder_list = tile_map.sprite_lists["Ladders"]
         self.moving_sprites_list = tile_map.sprite_lists['Moving Platforms']
+        self.coin_list = tile_map.sprite_lists["Coins"]
 
         # Create player sprite
         self.player_sprite = PlayerSprite(self.ladder_list, hit_box_algorithm="Detailed")
@@ -105,7 +111,6 @@ class GameView(arcade.View):
             bullet_sprite.remove_from_sprite_lists()
 
         self.physics_engine.add_collision_handler("bullet", "wall", post_handler=wall_hit_handler)
-
 
 #        def item_hit_handler(bullet_sprite, item_sprite, _arbiter, _space, _data):
 #           """ Called for bullet/wall collision """
@@ -144,6 +149,11 @@ class GameView(arcade.View):
                                             collision_type="wall",
                                             body_type=arcade.PymunkPhysicsEngine.STATIC)
 
+        # Add Coins
+        self.physics_engine.add_sprite_list(self.coin_list,
+                                            friction=DYNAMIC_ITEM_FRICTION,
+                                            collision_type="coin")
+
         # Create the items
         self.physics_engine.add_sprite_list(self.item_list,
                                             friction=DYNAMIC_ITEM_FRICTION,
@@ -162,6 +172,7 @@ class GameView(arcade.View):
             self.right_pressed = True
         elif key == arcade.key.UP:
             self.up_pressed = True
+            arcade.play_sound(self.jump_sound)
             # find out if player is standing on ground, and not on a ladder
             if self.physics_engine.is_on_ground(self.player_sprite) \
                     and not self.player_sprite.is_on_ladder:
@@ -332,6 +343,18 @@ class GameView(arcade.View):
             view = GameOverView()
             self.window.show_view(view)
 
+        # See if we hit any coins
+        coin_hit_list = arcade.check_for_collision_with_list(
+            self.player_sprite, self.coin_list
+        )
+
+        # Loop through each coin we hit (if any) and remove it
+        for coin in coin_hit_list:
+            # Remove the coin
+            coin.remove_from_sprite_lists()
+            # Play a sound
+            arcade.play_sound(self.collect_coin_sound)
+
     def on_draw(self):
         """ Draw everything """
         self.clear()
@@ -341,6 +364,7 @@ class GameView(arcade.View):
         self.bullet_list.draw()
         self.item_list.draw()
         self.player_list.draw()
+        self.coin_list.draw()
 
         # Activate our Camera
         self.camera.use()
