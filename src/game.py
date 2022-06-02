@@ -49,6 +49,12 @@ class GameView(arcade.View):
         # Add camera
         self.camera = None
 
+        # A Camera that can be used to draw GUI elements
+        self.gui_camera = None
+
+        # Keep track of the score
+        self.score = 0
+
         # Set background color
         arcade.set_background_color(arcade.color.AMAZON)
 
@@ -58,6 +64,13 @@ class GameView(arcade.View):
 
     def setup(self):
         """ Set up everything with the game """
+
+        # Set up the GUI Camera
+        self.gui_camera = arcade.Camera(self.width, self.height)
+
+        # Keep track of the score
+        self.score = 0
+
         # Set up the Camera
         self.camera = arcade.Camera(self.width, self.height)
 
@@ -349,7 +362,14 @@ class GameView(arcade.View):
         )
 
         # Loop through each coin we hit (if any) and remove it
+        
         for coin in coin_hit_list:
+            # Figure out how many points this coin is worth
+            if "Points" not in coin.properties:
+                print("Warning, collected a coin without a Points property.")
+            else:
+                points = int(coin.properties["Points"])
+                self.score += points
             # Remove the coin
             coin.remove_from_sprite_lists()
             # Play a sound
@@ -365,6 +385,19 @@ class GameView(arcade.View):
         self.item_list.draw()
         self.player_list.draw()
         self.coin_list.draw()
+
+        # Activate the GUI camera before drawing GUI elements
+        self.gui_camera.use()
+
+        # Draw our score on the screen, scrolling it with the viewport
+        score_text = f"Score: {self.score}"
+        arcade.draw_text(
+            score_text,
+            10,
+            10,
+            arcade.csscolor.WHITE,
+            18,
+        )
 
         # Activate our Camera
         self.camera.use()
