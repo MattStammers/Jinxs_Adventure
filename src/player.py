@@ -3,6 +3,10 @@
 import os
 import arcade
 
+# Set main file path
+file_path = os.path.dirname(os.path.abspath(__file__))
+os.chdir(file_path)
+
 # How big are our image tiles?
 SPRITE_IMAGE_SIZE = 128
 
@@ -75,7 +79,7 @@ class PlayerSprite(arcade.Sprite):
         self.scale = SPRITE_SCALING_PLAYER
 
         # Images from Character pack
-        main_path = os.getcwd() + "/resources/images/animated_characters/jinx/jinx"
+        main_path = file_path + "/resources/images/animated_characters/jinx/jinx"
 
         # Load textures for idle standing
         self.idle_texture_pair = arcade.load_texture_pair(f"{main_path}_idle.png",
