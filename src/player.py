@@ -25,6 +25,13 @@ SCREEN_GRID_HEIGHT = 13
 SCREEN_WIDTH = SPRITE_SIZE * SCREEN_GRID_WIDTH
 SCREEN_HEIGHT = SPRITE_SIZE * SCREEN_GRID_HEIGHT
 
+# Calculate Grid Pixel Size
+GRID_PIXEL_SIZE = SPRITE_IMAGE_SIZE * SPRITE_SCALING_TILES
+
+# Player Start Location
+start_grid_x = 1
+start_grid_y = 1
+
 # --- Physics forces. Higher number, faster accelerating.
 
 # Gravity

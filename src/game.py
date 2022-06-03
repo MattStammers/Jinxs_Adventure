@@ -55,10 +55,20 @@ class GameView(arcade.View):
         # Keep track of the score
         self.score = 0
 
+        # Do we need to reset the score?
+        self.reset_score = True
+
         # Set background color
         arcade.set_background_color(arcade.color.AMAZON)
 
+        # Where is the right edge of the map?
+        self.end_of_map = 0
+
+        # Level
+        self.level = 1
+
         # Load sounds
+        self.game_over = arcade.load_sound(file_path+"/resources/sounds/gameover2.wav")
         self.collect_coin_sound = arcade.load_sound(file_path+"/resources/sounds/coin1.wav")
         self.jump_sound = arcade.load_sound(file_path+"/resources/sounds/jump3.wav")
 
@@ -71,6 +81,11 @@ class GameView(arcade.View):
         # Keep track of the score
         self.score = 0
 
+        # Keep track of the score, make sure we keep the score if the player finishes a level
+        if self.reset_score:
+            self.score = 0
+        self.reset_score = True
+
         # Set up the Camera
         self.camera = arcade.Camera(self.width, self.height)
 
@@ -79,7 +94,7 @@ class GameView(arcade.View):
         self.bullet_list = arcade.SpriteList()
 
         # Map name
-        map_name = file_path + "/resources/images/tiled_maps/level_1.json"
+        map_name = file_path + f"/resources/images/tiled_maps/level_{self.level}.json"
 
         # Load in TileMap
         tile_map = arcade.load_tilemap(map_name, SPRITE_SCALING_TILES)
@@ -90,17 +105,24 @@ class GameView(arcade.View):
         self.ladder_list = tile_map.sprite_lists["Ladders"]
         self.moving_sprites_list = tile_map.sprite_lists['Moving Platforms']
         self.coin_list = tile_map.sprite_lists["Coins"]
+        self.background_list = tile_map.sprite_lists["Background"]
+        self.dont_touch_list = tile_map.sprite_lists["Don't Touch"]
 
         # Create player sprite
         self.player_sprite = PlayerSprite(self.ladder_list, hit_box_algorithm="Detailed")
 
-        # Set player location
-        grid_x = 1
-        grid_y = 1
-        self.player_sprite.center_x = SPRITE_SIZE * grid_x + SPRITE_SIZE / 2
-        self.player_sprite.center_y = SPRITE_SIZE * grid_y + SPRITE_SIZE / 2
+        # Set player start location
+        self.player_sprite.center_x = SPRITE_SIZE * start_grid_x + SPRITE_SIZE / 2
+        self.player_sprite.center_y = SPRITE_SIZE * start_grid_y + SPRITE_SIZE / 2
+        
         # Add to player sprite list
         self.player_list.append(self.player_sprite)
+
+        # Make sure that forground is added afterwards
+        self.foreground_list = tile_map.sprite_lists["Foreground"]
+
+        # Calculate the right edge of the my_map in pixels
+        self.end_of_map = tile_map.width * GRID_PIXEL_SIZE
 
         # --- Pymunk Physics Engine Setup ---
 
@@ -375,6 +397,29 @@ class GameView(arcade.View):
             # Play a sound
             arcade.play_sound(self.collect_coin_sound)
 
+        # Did the player fall off the map?
+        if self.player_sprite.center_y < -100:
+            arcade.play_sound(self.game_over)
+            self.setup()
+
+        # Did the player touch something they should not?
+        if arcade.check_for_collision_with_list(
+            self.player_sprite, self.dont_touch_list
+        ):
+            arcade.play_sound(self.game_over)
+            self.setup()
+
+        # See if the user got to the end of the level
+        if self.player_sprite.center_x >= self.end_of_map:
+            # Advance to the next level
+            self.level += 1
+
+            # Make sure to keep the score from this level when setting up the next level
+            self.reset_score = False
+
+            # Load the next level
+            self.setup()
+
     def on_draw(self):
         """ Draw everything """
         self.clear()
@@ -385,6 +430,9 @@ class GameView(arcade.View):
         self.item_list.draw()
         self.player_list.draw()
         self.coin_list.draw()
+        self.dont_touch_list.draw()
+        self.background_list.draw()
+        self.foreground_list.draw()
 
         # Activate the GUI camera before drawing GUI elements
         self.gui_camera.use()
