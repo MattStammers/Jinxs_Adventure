@@ -65,7 +65,7 @@ class GameView(arcade.View):
         self.end_of_map = 0
 
         # Level
-        self.level = 1
+        self.level = 0
 
         # Load sounds
         self.game_over = arcade.load_sound(file_path+"/resources/sounds/gameover2.wav")
