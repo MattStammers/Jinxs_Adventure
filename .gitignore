@@ -17,6 +17,7 @@ parts/
 sdist/
 var/
 physics/
+lib/
 wheels/
 pip-wheel-metadata/
 share/python-wheels/
