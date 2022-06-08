@@ -21,7 +21,7 @@ class Entity(arcade.Sprite):
         self.cur_texture = 0
         self.scale = SPRITE_SCALING_PLAYER
 
-        main_path = f":resources:images/animated_characters/{name_folder}/{name_file}"
+        main_path = file_path + f"/resources/images/animated_characters/{name_folder}/{name_file}"
 
         self.idle_texture_pair = load_texture_pair(f"{main_path}_idle.png")
         self.jump_texture_pair = load_texture_pair(f"{main_path}_jump.png")
@@ -79,7 +79,6 @@ class Enemy(Entity):
             return
 
         self.should_update_walk += 1
-
 
 class RobotEnemy(Enemy):
     def __init__(self):

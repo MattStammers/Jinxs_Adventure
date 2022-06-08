@@ -112,6 +112,7 @@ class GameView(arcade.View):
         self.background_list = tile_map.sprite_lists["Background"]
         self.dont_touch_list = tile_map.sprite_lists["Don't Touch"]
         self.enemies_list = tile_map.sprite_lists["Enemies"]
+        print(self.enemies_list)
 
         # Create player sprite
         self.player_sprite = PlayerSprite(self.ladder_list, hit_box_algorithm="Detailed")
@@ -130,7 +131,10 @@ class GameView(arcade.View):
         self.end_of_map = tile_map.width * GRID_PIXEL_SIZE
 
         # -- Enemies
-        for my_object in self.enemies_list:
+        enemies_layer = self.enemies_list
+        print(enemies_layer)
+
+        for my_object in enemies_layer: #self.enemies_list:
             cartesian = self.tile_map.get_cartesian(
                 my_object.shape[0], my_object.shape[1]
             )

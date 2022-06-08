@@ -37,7 +37,106 @@
          "draworder":"topdown",
          "id":9,
          "name":"Enemies",
-         "objects":[],
+         "objects":[
+                {
+                 "height":0,
+                 "id":6,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"boundary_left",
+                         "type":"int",
+                         "value":1000
+                        }, 
+                        {
+                         "name":"boundary_right",
+                         "type":"int",
+                         "value":1500
+                        }, 
+                        {
+                         "name":"change_x",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"robot"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1728,
+                 "y":2272
+                }, 
+                {
+                 "height":0,
+                 "id":9,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"boundary_left",
+                         "type":"int",
+                         "value":1000
+                        }, 
+                        {
+                         "name":"boundary_right",
+                         "type":"int",
+                         "value":1500
+                        }, 
+                        {
+                         "name":"change_x",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"robot"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":2952,
+                 "y":2288
+                }, 
+                {
+                 "gid":594,
+                 "height":128,
+                 "id":10,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"boundary_left",
+                         "type":"int",
+                         "value":1000
+                        }, 
+                        {
+                         "name":"boundary_right",
+                         "type":"int",
+                         "value":1500
+                        }, 
+                        {
+                         "name":"change_x",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"robot"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1024,
+                 "x":1408,
+                 "y":1752
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -269,8 +368,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":10,
- "nextobjectid":6,
+ "nextlayerid":12,
+ "nextobjectid":14,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.8.5",
