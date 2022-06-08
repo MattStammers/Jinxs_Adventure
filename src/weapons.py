@@ -1,7 +1,7 @@
 # This is the main weapons script
 
-from player import *
 from enemies import *
+from objects import *
 
 # How much force to put on the bullet
 BULLET_MOVE_FORCE = 4500

@@ -36,6 +36,7 @@ class GameView(arcade.View):
         self.moving_sprites_list: Optional[arcade.SpriteList] = None
         self.ladder_list: Optional[arcade.SpriteList] = None
         self.coin_list: Optional[arcade.SpriteList] = None
+        self.enemies_list: Optional[Enemy] = None
 
         # Track the current state of what key is pressed
         self.left_pressed: bool = False
@@ -51,6 +52,9 @@ class GameView(arcade.View):
 
         # A Camera that can be used to draw GUI elements
         self.gui_camera = None
+
+        # Our TileMap Object
+        self.tile_map = None
 
         # Keep track of the score
         self.score = 0
@@ -107,6 +111,7 @@ class GameView(arcade.View):
         self.coin_list = tile_map.sprite_lists["Coins"]
         self.background_list = tile_map.sprite_lists["Background"]
         self.dont_touch_list = tile_map.sprite_lists["Don't Touch"]
+        self.enemies_list = tile_map.sprite_lists["Enemies"]
 
         # Create player sprite
         self.player_sprite = PlayerSprite(self.ladder_list, hit_box_algorithm="Detailed")
@@ -123,6 +128,24 @@ class GameView(arcade.View):
 
         # Calculate the right edge of the my_map in pixels
         self.end_of_map = tile_map.width * GRID_PIXEL_SIZE
+
+        # -- Enemies
+        for my_object in self.enemies_list:
+            cartesian = self.tile_map.get_cartesian(
+                my_object.shape[0], my_object.shape[1]
+            )
+            enemy_type = my_object.properties["type"]
+            if enemy_type == "robot":
+                enemy = RobotEnemy()
+            else:
+                raise Exception(f"Unknown enemy type {enemy_type}.")
+            enemy.center_x = math.floor(
+                cartesian[0] * SPRITE_SCALING_PLAYER * self.tile_map.tile_width
+            )
+            enemy.center_y = math.floor(
+                (cartesian[1] + 1) * (self.tile_map.tile_height * SPRITE_SCALING_TILES)
+            )
+            self.scene.add_sprite(self.enemies_list, enemy)
 
         # --- Pymunk Physics Engine Setup ---
 
@@ -433,6 +456,7 @@ class GameView(arcade.View):
         self.dont_touch_list.draw()
         self.background_list.draw()
         self.foreground_list.draw()
+        self.enemies_list.draw()
 
         # Activate the GUI camera before drawing GUI elements
         self.gui_camera.use()
