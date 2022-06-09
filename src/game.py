@@ -9,6 +9,22 @@ from views import *
 
 SCREEN_TITLE = "Jinx & Gravity"
 
+# Key Game Layer Variables - central source of control
+LAYER_NAME_PLATFORMS = "Platforms"
+LAYER_NAME_PLAYER = "Player"
+LAYER_NAME_BACKGROUND = "Background"
+LAYER_NAME_FOREGROUND = "Foreground"
+LAYER_NAME_COINS = "Coins"
+LAYER_NAME_DONT_TOUCH = "Don't Touch"
+LAYER_NAME_LADDERS = "Ladders"
+LAYER_NAME_MOVING_PLATFORMS = "Moving Platforms"
+LAYER_NAME_ENEMIES = "Enemies"
+LAYER_NAME_DYNAMIC_ITEMS = "Dynamic Items"
+LAYER_NAME_PLAYER_BULLETS = "Player Bullets"
+LAYER_NAME_PLAYER_GRENADES = "Player Grenades"
+LAYER_NAME_ENEMY_BULLETS = "Enemy Bullets"
+LAYER_NAME_ALLIES = "Allies"
+
 class GameView(arcade.View):
     """ Main Window """
 
@@ -31,7 +47,7 @@ class GameView(arcade.View):
         # Sprite lists we need
         self.player_list: Optional[arcade.SpriteList] = None
         self.wall_list: Optional[arcade.SpriteList] = None
-        self.bullet_list: Optional[arcade.SpriteList] = None
+        self.grenade_list: Optional[arcade.SpriteList] = None
         self.item_list: Optional[arcade.SpriteList] = None
         self.moving_sprites_list: Optional[arcade.SpriteList] = None
         self.ladder_list: Optional[arcade.SpriteList] = None
@@ -44,6 +60,8 @@ class GameView(arcade.View):
         self.right_pressed: bool = False
         self.up_pressed: bool = False
         self.down_pressed: bool = False
+        self.shoot_pressed: bool = False
+        self.mouse_pressed: bool = False
 
         # Physics engine
         self.physics_engine: Optional[arcade.PymunkPhysicsEngine] = None
@@ -84,7 +102,7 @@ class GameView(arcade.View):
         self.collect_coin_sound = arcade.load_sound(file_path+"/resources/sounds/coin1.wav")
         self.jump_sound = arcade.load_sound(file_path+"/resources/sounds/jump3.wav")
         self.hit_sound = arcade.load_sound(file_path+"/resources/sounds/hit2.wav")
-        self.shoot_sound = arcade.load_sound(file_path+"/resourcessounds/hurt3.wav")
+        self.shoot_sound = arcade.load_sound(file_path+"/resources/sounds/hurt3.wav")
 
     def setup(self):
         """ Set up everything with the game """
@@ -99,6 +117,9 @@ class GameView(arcade.View):
         self.can_shoot = True
         self.shoot_timer = 0
 
+        # Shooting mechanics
+        self.mouse_pressed = False
+
         # Keep track of the score, make sure we keep the score if the player finishes a level
         if self.reset_score:
             self.score = 0
@@ -109,13 +130,13 @@ class GameView(arcade.View):
 
         # Create the sprite lists
         self.player_list = arcade.SpriteList()
-        self.bullet_list = arcade.SpriteList()
+        self.grenade_list = arcade.SpriteList()
 
         # Map name
         map_name = file_path + f"/resources/images/tiled_maps/level_{self.level}.json"
 
         # Load in TileMap
-        tile_map = arcade.load_tilemap(map_name, SPRITE_SCALING_TILES)
+        self.tile_map = arcade.load_tilemap(map_name, SPRITE_SCALING_TILES)
 
         # May need to add spacial hashing later on if performance deteriorates as below
         '''
@@ -137,16 +158,16 @@ class GameView(arcade.View):
         
         # Initiate New Scene with our TileMap, this will automatically add all layers
         # from the map as SpriteLists in the scene in the proper order.
-        self.scene = arcade.Scene.from_tilemap(tile_map)
+        self.scene = arcade.Scene.from_tilemap(self.tile_map)
 
         # Pull the sprite layers out of the tile map
-        self.wall_list = tile_map.sprite_lists["Platforms"]
-        self.item_list = tile_map.sprite_lists["Dynamic Items"]
-        self.ladder_list = tile_map.sprite_lists["Ladders"]
-        self.moving_sprites_list = tile_map.sprite_lists['Moving Platforms']
-        self.coin_list = tile_map.sprite_lists["Coins"]
-        self.background_list = tile_map.sprite_lists["Background"]
-        self.dont_touch_list = tile_map.sprite_lists["Don't Touch"]
+        self.wall_list = self.tile_map.sprite_lists[LAYER_NAME_PLATFORMS]
+        self.background_list = self.tile_map.sprite_lists[LAYER_NAME_BACKGROUND]
+        self.coin_list = self.tile_map.sprite_lists[LAYER_NAME_COINS]
+        self.dont_touch_list = self.tile_map.sprite_lists[LAYER_NAME_DONT_TOUCH]
+        self.item_list = self.tile_map.sprite_lists[LAYER_NAME_DYNAMIC_ITEMS]
+        self.ladder_list = self.tile_map.sprite_lists[LAYER_NAME_LADDERS]
+        self.moving_sprites_list = self.tile_map.sprite_lists[LAYER_NAME_MOVING_PLATFORMS]
 
         # Create player sprite
         self.player_sprite = PlayerSprite(self.ladder_list, hit_box_algorithm="Detailed")
@@ -159,16 +180,16 @@ class GameView(arcade.View):
         self.player_list.append(self.player_sprite)
 
         # Make sure that forground is added afterwards
-        self.foreground_list = tile_map.sprite_lists["Foreground"]
+        self.foreground_list = self.tile_map.sprite_lists[LAYER_NAME_FOREGROUND]
 
         # Calculate the right edge of the my_map in pixels
-        self.end_of_map = tile_map.width * GRID_PIXEL_SIZE
+        self.end_of_map = self.tile_map.width * GRID_PIXEL_SIZE
 
         # -- Enemies
-        self.enemies_list = tile_map.object_lists["Enemies"]
+        self.enemies_list = self.tile_map.object_lists[LAYER_NAME_ENEMIES]
 
         for my_object in self.enemies_list:
-            cartesian = tile_map.get_cartesian(
+            cartesian = self.tile_map.get_cartesian(
                 my_object.shape[0], my_object.shape[1]
             )
             enemy_type = my_object.properties["type"]
@@ -190,7 +211,13 @@ class GameView(arcade.View):
                 enemy.boundary_right = my_object.properties["boundary_right"]
             if "change_x" in my_object.properties:
                 enemy.change_x = my_object.properties["change_x"]
-            self.scene.add_sprite("Enemies", enemy)
+            self.scene.add_sprite(LAYER_NAME_ENEMIES, enemy)
+
+        # Add bullet spritelist to Scene
+        self.scene.add_sprite_list(LAYER_NAME_PLAYER_BULLETS)
+
+        # Add grenade spritelist to Scene
+        self.scene.add_sprite_list(LAYER_NAME_PLAYER_GRENADES)
 
         # --- Pymunk Physics Engine Setup ---
 
@@ -209,11 +236,11 @@ class GameView(arcade.View):
         self.physics_engine = arcade.PymunkPhysicsEngine(damping=damping,
                                                          gravity=gravity)
 
-        def wall_hit_handler(bullet_sprite, _wall_sprite, _arbiter, _space, _data):
-            """ Called for bullet/wall collision """
-            bullet_sprite.remove_from_sprite_lists()
+        def wall_hit_handler(grenade_sprite, _wall_sprite, _arbiter, _space, _data):
+            """ Called for grenade/wall collision """
+            grenade_sprite.remove_from_sprite_lists()
 
-        self.physics_engine.add_collision_handler("bullet", "wall", post_handler=wall_hit_handler)
+        # self.physics_engine.add_collision_handler("grenade", "wall", post_handler=wall_hit_handler)
 
 #        def item_hit_handler(bullet_sprite, item_sprite, _arbiter, _space, _data):
 #           """ Called for bullet/wall collision """
@@ -286,10 +313,8 @@ class GameView(arcade.View):
             self.down_pressed = True
         
         # Adding shoot button
-        if key == arcade.key.Q:
+        if key == arcade.key.Q or key == arcade.key.N:
             self.shoot_pressed = True
-
-
 
     def on_key_release(self, key, modifiers):
         """Called when the user releases a key. """
@@ -303,63 +328,16 @@ class GameView(arcade.View):
         elif key == arcade.key.DOWN or key == arcade.key.S:
             self.down_pressed = False
 
-        if key == arcade.key.Q:
+        if key == arcade.key.Q or key == arcade.key.N:
             self.shoot_pressed = False
-        
+
 
     def on_mouse_press(self, x, y, button, modifiers):
         """ Called whenever the mouse button is clicked. """
 
-        bullet = BulletSprite(20, 5, arcade.color.DARK_YELLOW)
-        self.bullet_list.append(bullet)
-
-        # Position the bullet at the player's current location
-        start_x = self.player_sprite.center_x
-        start_y = self.player_sprite.center_y
-        bullet.position = self.player_sprite.position
-
-        # Get from the mouse the destination location for the bullet
-        # IMPORTANT! If you have a scrolling screen, you will also need
-        # to add in self.view_bottom and self.view_left.
-        dest_x = x
-        dest_y = y
-
-        # Do math to calculate how to get the bullet to the destination.
-        # Calculation the angle in radians between the start points
-        # and end points. This is the angle the bullet will travel.
-        x_diff = dest_x - start_x
-        y_diff = dest_y - start_y
-        angle = math.atan2(y_diff, x_diff)
-
-        # What is the 1/2 size of this sprite, so we can figure out how far
-        # away to spawn the bullet
-        size = max(self.player_sprite.width, self.player_sprite.height) / 2
-
-        # Use angle to to spawn bullet away from player in proper direction
-        bullet.center_x += size * math.cos(angle)
-        bullet.center_y += size * math.sin(angle)
-
-        # Set angle of bullet
-        bullet.angle = math.degrees(angle)
-
-        # Gravity to use for the bullet
-        # If we don't use custom gravity, bullet drops too fast, or we have
-        # to make it go too fast.
-        # Force is in relation to bullet's angle.
-        bullet_gravity = (0, -BULLET_GRAVITY)
-
-        # Add the sprite. This needs to be done AFTER setting the fields above.
-        self.physics_engine.add_sprite(bullet,
-                                       mass=BULLET_MASS,
-                                       damping=1.0,
-                                       friction=0.6,
-                                       collision_type="bullet",
-                                       gravity=bullet_gravity,
-                                       elasticity=0.9)
-
-        # Add force to bullet
-        force = (BULLET_MOVE_FORCE, 0)
-        self.physics_engine.apply_force(bullet, force)
+        self.mouse_pressed = True
+        self.x = self.player_centered[0] + x
+        self.y = self.player_centered[1] + y
 
     def center_camera_to_player(self):
         screen_center_x = self.player_sprite.center_x - (self.camera.viewport_width / 2)
@@ -372,9 +350,8 @@ class GameView(arcade.View):
             screen_center_x = 0
         if screen_center_y < 0:
             screen_center_y = 0
-        player_centered = screen_center_x, screen_center_y
-
-        self.camera.move_to(player_centered)
+        self.player_centered = screen_center_x, screen_center_y
+        self.camera.move_to(self.player_centered)
 
     def on_update(self, delta_time):
         """ Movement and game logic """
@@ -453,27 +430,81 @@ class GameView(arcade.View):
         if self.can_shoot:
             if self.shoot_pressed:
                 arcade.play_sound(self.shoot_sound)
-                bullet = arcade.Sprite(
+                player_bullet = arcade.Sprite(
                     file_path + "/resources/images/weapons/candyBlue.png", # later will make this weapon interchangeable
                     SPRITE_SCALING_PROJECTILES,
                 )
 
                 if self.player_sprite.character_face_direction == RIGHT_FACING:
-                    bullet.change_x = BULLET_SPEED
+                    player_bullet.change_x = BULLET_SPEED
                 else:
-                    bullet.change_x = -BULLET_SPEED
+                    player_bullet.change_x = -BULLET_SPEED
 
-                bullet.center_x = self.player_sprite.center_x
-                bullet.center_y = self.player_sprite.center_y
+                player_bullet.center_x = self.player_sprite.center_x
+                player_bullet.center_y = self.player_sprite.center_y
 
-                self.scene.add_sprite(self.player_bullets, bullet)
+                self.scene.add_sprite(LAYER_NAME_PLAYER_BULLETS, player_bullet)
 
                 self.can_shoot = False
-            else:
+        else:
             self.shoot_timer += 1
             if self.shoot_timer == SHOOT_SPEED:
                 self.can_shoot = True
                 self.shoot_timer = 0
+
+        # Add mouse shooting
+        if self.mouse_pressed:
+            grenade = GrenadeSprite(20, 5, arcade.color.DARK_CANDY_APPLE_RED)
+            self.grenade_list.append(grenade)
+
+            # Position the grenade at the player's current location
+            start_x = self.player_sprite.center_x
+            start_y = self.player_sprite.center_y
+            grenade.position = self.player_sprite.position
+
+            # Get from the mouse the destination location for the grenade
+            # IMPORTANT! If you have a scrolling screen, you will also need
+            # to add in self.view_bottom and self.view_left.
+            dest_x = self.x
+            dest_y = self.y
+
+            # Do math to calculate how to get the grenade to the destination.
+            # Calculation the angle in radians between the start points
+            # and end points. This is the angle the grenade will travel.
+            x_diff = dest_x - start_x
+            y_diff = dest_y - start_y
+            angle = math.atan2(y_diff, x_diff)
+
+            # What is the 1/2 size of this sprite, so we can figure out how far
+            # away to spawn the grenade
+            size = max(self.player_sprite.width, self.player_sprite.height) / 2
+
+            # Use angle to to spawn bullet away from player in proper direction
+            grenade.center_x += size * math.cos(angle)
+            grenade.center_y += size * math.sin(angle)
+
+            # Set angle of bullet
+            grenade.angle = math.degrees(angle)
+
+            # Gravity to use for the bullet
+            # If we don't use custom gravity, bullet drops too fast, or we have
+            # to make it go too fast.
+            # Force is in relation to bullet's angle.
+            grenade_gravity = (0, -BULLET_GRAVITY)
+
+            # Add the sprite. This needs to be done AFTER setting the fields above.
+            self.physics_engine.add_sprite(grenade,
+                                        mass=BULLET_MASS,
+                                        damping=1.0,
+                                        friction=0.6,
+                                        collision_type="grenade",
+                                        gravity=grenade_gravity,
+                                        elasticity=0.9)
+
+            # Add force to bullet
+            force = (BULLET_MOVE_FORCE, 0)
+            self.physics_engine.apply_force(grenade, force)
+
 
         # Check lives. If it is zero, flip to the game over view.
         self.lives=3
@@ -486,15 +517,16 @@ class GameView(arcade.View):
         self.scene.update_animation(
             delta_time,
             [
-                "Enemies"
-                self.player_bullets            ],
+                LAYER_NAME_ENEMIES, ],
         )
 
-        # Update moving platforms and enemies
-        self.scene.update(["Enemies"])
+        # Update enemies and bullets
+        self.scene.update(
+            [LAYER_NAME_ENEMIES, LAYER_NAME_PLAYER_BULLETS, LAYER_NAME_PLAYER_GRENADES]
+        )
 
         # See if the enemy hit a boundary and needs to reverse direction.
-        for enemy in self.scene["Enemies"]:
+        for enemy in self.scene[LAYER_NAME_ENEMIES]:
             if (
                 enemy.boundary_right
                 and enemy.right > enemy.boundary_right
@@ -509,15 +541,52 @@ class GameView(arcade.View):
             ):
                 enemy.change_x *= -1
 
+        for projectile in self.scene[LAYER_NAME_PLAYER_BULLETS] or self.scene[LAYER_NAME_PLAYER_GRENADES]:
+            hit_list = arcade.check_for_collision_with_lists(
+                projectile,
+                [
+                    self.scene[LAYER_NAME_ENEMIES],
+                    # self.scene[LAYER_NAME_PLATFORMS],
+                    # self.scene[LAYER_NAME_MOVING_PLATFORMS],
+                ],
+            )
+
+            if hit_list:
+                projectile.remove_from_sprite_lists()
+
+                for collision in hit_list:
+                    if (
+                        self.scene[LAYER_NAME_ENEMIES]
+                        in collision.sprite_lists
+                    ):
+                        # The collision was with an enemy
+                        collision.health -= PLAYER_BULLET_DAMAGE
+
+                        if collision.health <= 0:
+                            collision.remove_from_sprite_lists()
+                            self.score += 100
+
+                        # Hit sound
+                        arcade.play_sound(self.hit_sound)
+
+                return
+
+            if (projectile.right < 0) or (
+                projectile.left
+                > (self.tile_map.width * self.tile_map.tile_width) * SPRITE_SCALING_TILES
+            ):
+                projectile.remove_from_sprite_lists()
+
         # See if we hit any coins
         coin_hit_list = arcade.check_for_collision_with_list(
             self.player_sprite, self.coin_list
         )
 
+        # See if we hit any enemies
         enemy_collision_list = arcade.check_for_collision_with_lists(
             self.player_sprite,
             [
-                self.scene["Enemies"],
+                self.scene[LAYER_NAME_ENEMIES],
             ],
         )
 
@@ -538,7 +607,7 @@ class GameView(arcade.View):
         # Look through the enemies to see if we hit any:
 
         for collision in enemy_collision_list:
-            if self.scene["Enemies"] in collision.sprite_lists:
+            if self.scene[LAYER_NAME_ENEMIES] in collision.sprite_lists:
             # If we collide with an enemy then reset the game - to be edited later on with life removal
                 arcade.play_sound(self.game_over)
                 self.setup()
@@ -573,13 +642,15 @@ class GameView(arcade.View):
         self.wall_list.draw()
         self.ladder_list.draw()
         self.moving_sprites_list.draw()
-        self.bullet_list.draw()
+        self.grenade_list.draw()
         self.item_list.draw()
         self.player_list.draw()
         self.coin_list.draw()
         self.dont_touch_list.draw()
         self.background_list.draw()
         self.foreground_list.draw()
+
+        # This variable contains the enemies and bullets
         self.scene.draw()
 
         # Activate the GUI camera before drawing GUI elements

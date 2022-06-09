@@ -4,10 +4,10 @@ from enemies import *
 from objects import *
 
 # Shooting Constants
-SPRITE_SCALING_PROJECTILES = 0.8
-SHOOT_SPEED = 15
+SPRITE_SCALING_PROJECTILES = 0.6
+SHOOT_SPEED = 10
 BULLET_SPEED = 12
-BULLET_DAMAGE = 25
+PLAYER_BULLET_DAMAGE = 5
 
 # How much force to put on the bullet
 BULLET_MOVE_FORCE = 4500
@@ -18,7 +18,7 @@ BULLET_MASS = 0.1
 # Make bullet less affected by gravity
 BULLET_GRAVITY = 300
 
-class BulletSprite(arcade.SpriteSolidColor):
+class GrenadeSprite(arcade.SpriteSolidColor):
     """ Bullet Sprite """
     def pymunk_moved(self, physics_engine, dx, dy, d_angle):
         """ Handle when the sprite is moved by the physics engine. """
