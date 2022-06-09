@@ -37,6 +37,7 @@ class GameView(arcade.View):
         self.ladder_list: Optional[arcade.SpriteList] = None
         self.coin_list: Optional[arcade.SpriteList] = None
         self.enemies_list: Optional[Enemy] = None
+        self.player_bullets: Optional[arcade.SpriteList] = None
 
         # Track the current state of what key is pressed
         self.left_pressed: bool = False
@@ -59,6 +60,10 @@ class GameView(arcade.View):
         # Our Scene Object
         self.scene = None
 
+        # Shooting mechanics
+        self.can_shoot = False
+        self.shoot_timer = 0
+
         # Keep track of the score
         self.score = 0
 
@@ -78,6 +83,8 @@ class GameView(arcade.View):
         self.game_over = arcade.load_sound(file_path+"/resources/sounds/gameover2.wav")
         self.collect_coin_sound = arcade.load_sound(file_path+"/resources/sounds/coin1.wav")
         self.jump_sound = arcade.load_sound(file_path+"/resources/sounds/jump3.wav")
+        self.hit_sound = arcade.load_sound(file_path+"/resources/sounds/hit2.wav")
+        self.shoot_sound = arcade.load_sound(file_path+"/resourcessounds/hurt3.wav")
 
     def setup(self):
         """ Set up everything with the game """
@@ -87,6 +94,10 @@ class GameView(arcade.View):
 
         # Keep track of the score
         self.score = 0
+
+        # Shooting mechanics
+        self.can_shoot = True
+        self.shoot_timer = 0
 
         # Keep track of the score, make sure we keep the score if the player finishes a level
         if self.reset_score:
@@ -258,11 +269,11 @@ class GameView(arcade.View):
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
 
-        if key == arcade.key.LEFT:
+        if key == arcade.key.LEFT or key == arcade.key.A:
             self.left_pressed = True
-        elif key == arcade.key.RIGHT:
+        elif key == arcade.key.RIGHT or key == arcade.key.D:
             self.right_pressed = True
-        elif key == arcade.key.UP:
+        elif key == arcade.key.UP or key == arcade.key.W:
             self.up_pressed = True
             arcade.play_sound(self.jump_sound)
             # find out if player is standing on ground, and not on a ladder
@@ -271,19 +282,25 @@ class GameView(arcade.View):
                 # She is! Go ahead and jump
                 impulse = (0, PLAYER_JUMP_IMPULSE)
                 self.physics_engine.apply_impulse(self.player_sprite, impulse)
-        elif key == arcade.key.DOWN:
+        elif key == arcade.key.DOWN or key == arcade.key.S:
             self.down_pressed = True
+        
+        # Adding shoot button
+        if key == arcade.key.Q:
+            self.shoot_pressed = True
+
+        self.process_keychange()
 
     def on_key_release(self, key, modifiers):
         """Called when the user releases a key. """
 
-        if key == arcade.key.LEFT:
+        if key == arcade.key.LEFT or key == arcade.key.A:
             self.left_pressed = False
-        elif key == arcade.key.RIGHT:
+        elif key == arcade.key.RIGHT or key == arcade.key.D:
             self.right_pressed = False
-        elif key == arcade.key.UP:
+        elif key == arcade.key.UP or key == arcade.key.W:
             self.up_pressed = False
-        elif key == arcade.key.DOWN:
+        elif key == arcade.key.DOWN or key == arcade.key.S:
             self.down_pressed = False
 
     def on_mouse_press(self, x, y, button, modifiers):
