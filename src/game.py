@@ -504,6 +504,7 @@ class GameView(arcade.View):
             # Add force to bullet
             force = (BULLET_MOVE_FORCE, 0)
             self.physics_engine.apply_force(grenade, force)
+            self.scene.add_sprite(LAYER_NAME_PLAYER_GRENADES, grenade)
 
 
         # Check lives. If it is zero, flip to the game over view.
