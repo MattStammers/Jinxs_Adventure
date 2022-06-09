@@ -138,21 +138,29 @@ class GameView(arcade.View):
         # -- Enemies
         self.enemies_list = tile_map.object_lists["Enemies"]
 
-        for enemy in self.enemies_list:
+        for my_object in self.enemies_list:
             cartesian = tile_map.get_cartesian(
-                enemy.shape[0], enemy.shape[1]
+                my_object.shape[0], my_object.shape[1]
             )
-            enemy_type = enemy.properties["type"]
+            enemy_type = my_object.properties["type"]
             if enemy_type == "robot":
                 enemy = RobotEnemy()
+            elif enemy_type == "thunderer":
+                enemy = Thunderer()
             else:
                 raise Exception(f"Unknown enemy type {enemy_type}.")
             enemy.center_x = math.floor(
-                cartesian[0] * SPRITE_SCALING_PLAYER * 128
+                cartesian[0] * SPRITE_SCALING_ENEMIES * ENEMY_SPRITE_IMAGE_SIZE
             )
             enemy.center_y = math.floor(
-                (cartesian[1] + 1) * (128 * SPRITE_SCALING_TILES)
+                (cartesian[1] + 1) * (SPRITE_SCALING_ENEMIES * ENEMY_SPRITE_IMAGE_SIZE)
             )
+            if "boundary_left" in my_object.properties:
+                enemy.boundary_left = my_object.properties["boundary_left"]
+            if "boundary_right" in my_object.properties:
+                enemy.boundary_right = my_object.properties["boundary_right"]
+            if "change_x" in my_object.properties:
+                enemy.change_x = my_object.properties["change_x"]
             self.scene.add_sprite("Enemies", enemy)
 
         # --- Pymunk Physics Engine Setup ---
@@ -413,6 +421,35 @@ class GameView(arcade.View):
         coin_hit_list = arcade.check_for_collision_with_list(
             self.player_sprite, self.coin_list
         )
+
+        # Add animations for scene sprites
+                # Update Animations
+        self.scene.update_animation(
+            delta_time,
+            [
+                "Enemies"
+            ],
+        )
+
+        # Update moving platforms and enemies
+        self.scene.update(["Enemies"])
+
+        # See if the enemy hit a boundary and needs to reverse direction.
+        for enemy in self.scene["Enemies"]:
+            if (
+                enemy.boundary_right
+                and enemy.right > enemy.boundary_right
+                and enemy.change_x > 0
+            ):
+                enemy.change_x *= -1
+
+            if (
+                enemy.boundary_left
+                and enemy.left < enemy.boundary_left
+                and enemy.change_x < 0
+            ):
+                enemy.change_x *= -1
+
 
         # Loop through each coin we hit (if any) and remove it
         
