@@ -289,7 +289,7 @@ class GameView(arcade.View):
         if key == arcade.key.Q:
             self.shoot_pressed = True
 
-        self.process_keychange()
+
 
     def on_key_release(self, key, modifiers):
         """Called when the user releases a key. """
@@ -302,6 +302,10 @@ class GameView(arcade.View):
             self.up_pressed = False
         elif key == arcade.key.DOWN or key == arcade.key.S:
             self.down_pressed = False
+
+        if key == arcade.key.Q:
+            self.shoot_pressed = False
+        
 
     def on_mouse_press(self, x, y, button, modifiers):
         """ Called whenever the mouse button is clicked. """
@@ -446,6 +450,31 @@ class GameView(arcade.View):
             velocity = (moving_sprite.change_x * 1 / delta_time, moving_sprite.change_y * 1 / delta_time)
             self.physics_engine.set_velocity(moving_sprite, velocity)
 
+        if self.can_shoot:
+            if self.shoot_pressed:
+                arcade.play_sound(self.shoot_sound)
+                bullet = arcade.Sprite(
+                    file_path + "/resources/images/weapons/candyBlue.png", # later will make this weapon interchangeable
+                    SPRITE_SCALING_PROJECTILES,
+                )
+
+                if self.player_sprite.character_face_direction == RIGHT_FACING:
+                    bullet.change_x = BULLET_SPEED
+                else:
+                    bullet.change_x = -BULLET_SPEED
+
+                bullet.center_x = self.player_sprite.center_x
+                bullet.center_y = self.player_sprite.center_y
+
+                self.scene.add_sprite(self.player_bullets, bullet)
+
+                self.can_shoot = False
+            else:
+            self.shoot_timer += 1
+            if self.shoot_timer == SHOOT_SPEED:
+                self.can_shoot = True
+                self.shoot_timer = 0
+
         # Check lives. If it is zero, flip to the game over view.
         self.lives=3
         if self.lives == 0:
@@ -458,7 +487,7 @@ class GameView(arcade.View):
             delta_time,
             [
                 "Enemies"
-            ],
+                self.player_bullets            ],
         )
 
         # Update moving platforms and enemies

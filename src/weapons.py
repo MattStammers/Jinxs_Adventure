@@ -3,6 +3,12 @@
 from enemies import *
 from objects import *
 
+# Shooting Constants
+SPRITE_SCALING_PROJECTILES = 0.8
+SHOOT_SPEED = 15
+BULLET_SPEED = 12
+BULLET_DAMAGE = 25
+
 # How much force to put on the bullet
 BULLET_MOVE_FORCE = 4500
 
