@@ -1,3 +1,3 @@
 # Adding coin scaling
+
 COIN_SCALING = 0.5
-SPRITE_SCALING_BULLETS = 1
