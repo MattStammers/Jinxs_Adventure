@@ -103,39 +103,6 @@
                  "width":0,
                  "x":2952,
                  "y":2288
-                }, 
-                {
-                 "gid":594,
-                 "height":128,
-                 "id":10,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"boundary_left",
-                         "type":"int",
-                         "value":1000
-                        }, 
-                        {
-                         "name":"boundary_right",
-                         "type":"int",
-                         "value":1500
-                        }, 
-                        {
-                         "name":"change_x",
-                         "type":"int",
-                         "value":1
-                        }, 
-                        {
-                         "name":"type",
-                         "type":"string",
-                         "value":"robot"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":1024,
-                 "x":1408,
-                 "y":1752
                 }],
          "opacity":1,
          "type":"objectgroup",

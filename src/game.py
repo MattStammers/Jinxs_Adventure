@@ -56,6 +56,9 @@ class GameView(arcade.View):
         # Our TileMap Object
         self.tile_map = None
 
+        # Our Scene Object
+        self.scene = None
+
         # Keep track of the score
         self.score = 0
 
@@ -102,6 +105,10 @@ class GameView(arcade.View):
 
         # Load in TileMap
         tile_map = arcade.load_tilemap(map_name, SPRITE_SCALING_TILES)
+        
+        # Initiate New Scene with our TileMap, this will automatically add all layers
+        # from the map as SpriteLists in the scene in the proper order.
+        self.scene = arcade.Scene.from_tilemap(tile_map)
 
         # Pull the sprite layers out of the tile map
         self.wall_list = tile_map.sprite_lists["Platforms"]
@@ -111,8 +118,6 @@ class GameView(arcade.View):
         self.coin_list = tile_map.sprite_lists["Coins"]
         self.background_list = tile_map.sprite_lists["Background"]
         self.dont_touch_list = tile_map.sprite_lists["Don't Touch"]
-        self.enemies_list = tile_map.sprite_lists["Enemies"]
-        print(self.enemies_list)
 
         # Create player sprite
         self.player_sprite = PlayerSprite(self.ladder_list, hit_box_algorithm="Detailed")
@@ -131,25 +136,24 @@ class GameView(arcade.View):
         self.end_of_map = tile_map.width * GRID_PIXEL_SIZE
 
         # -- Enemies
-        enemies_layer = self.enemies_list
-        print(enemies_layer)
+        self.enemies_list = tile_map.object_lists["Enemies"]
 
-        for my_object in enemies_layer: #self.enemies_list:
-            cartesian = self.tile_map.get_cartesian(
-                my_object.shape[0], my_object.shape[1]
+        for enemy in self.enemies_list:
+            cartesian = tile_map.get_cartesian(
+                enemy.shape[0], enemy.shape[1]
             )
-            enemy_type = my_object.properties["type"]
+            enemy_type = enemy.properties["type"]
             if enemy_type == "robot":
                 enemy = RobotEnemy()
             else:
                 raise Exception(f"Unknown enemy type {enemy_type}.")
             enemy.center_x = math.floor(
-                cartesian[0] * SPRITE_SCALING_PLAYER * self.tile_map.tile_width
+                cartesian[0] * SPRITE_SCALING_PLAYER * 128
             )
             enemy.center_y = math.floor(
-                (cartesian[1] + 1) * (self.tile_map.tile_height * SPRITE_SCALING_TILES)
+                (cartesian[1] + 1) * (128 * SPRITE_SCALING_TILES)
             )
-            self.scene.add_sprite(self.enemies_list, enemy)
+            self.scene.add_sprite("Enemies", enemy)
 
         # --- Pymunk Physics Engine Setup ---
 
@@ -460,7 +464,7 @@ class GameView(arcade.View):
         self.dont_touch_list.draw()
         self.background_list.draw()
         self.foreground_list.draw()
-        self.enemies_list.draw()
+        self.scene.draw()
 
         # Activate the GUI camera before drawing GUI elements
         self.gui_camera.use()
