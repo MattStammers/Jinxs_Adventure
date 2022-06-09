@@ -105,6 +105,24 @@ class GameView(arcade.View):
 
         # Load in TileMap
         tile_map = arcade.load_tilemap(map_name, SPRITE_SCALING_TILES)
+
+        # May need to add spacial hashing later on if performance deteriorates as below
+        '''
+        layer_options = {
+            LAYER_NAME_PLATFORMS: {
+                "use_spatial_hash": True,
+            },
+            LAYER_NAME_MOVING_PLATFORMS: {
+                "use_spatial_hash": False,
+            },
+            LAYER_NAME_LADDERS: {
+                "use_spatial_hash": True,
+            },
+            LAYER_NAME_COINS: {
+                "use_spatial_hash": True,
+            },
+        }
+        '''
         
         # Initiate New Scene with our TileMap, this will automatically add all layers
         # from the map as SpriteLists in the scene in the proper order.
@@ -417,11 +435,6 @@ class GameView(arcade.View):
             view = GameOverView()
             self.window.show_view(view)
 
-        # See if we hit any coins
-        coin_hit_list = arcade.check_for_collision_with_list(
-            self.player_sprite, self.coin_list
-        )
-
         # Add animations for scene sprites
                 # Update Animations
         self.scene.update_animation(
@@ -450,6 +463,17 @@ class GameView(arcade.View):
             ):
                 enemy.change_x *= -1
 
+        # See if we hit any coins
+        coin_hit_list = arcade.check_for_collision_with_list(
+            self.player_sprite, self.coin_list
+        )
+
+        enemy_collision_list = arcade.check_for_collision_with_lists(
+            self.player_sprite,
+            [
+                self.scene["Enemies"],
+            ],
+        )
 
         # Loop through each coin we hit (if any) and remove it
         
@@ -464,6 +488,15 @@ class GameView(arcade.View):
             coin.remove_from_sprite_lists()
             # Play a sound
             arcade.play_sound(self.collect_coin_sound)
+
+        # Look through the enemies to see if we hit any:
+
+        for collision in enemy_collision_list:
+            if self.scene["Enemies"] in collision.sprite_lists:
+            # If we collide with an enemy then reset the game - to be edited later on with life removal
+                arcade.play_sound(self.game_over)
+                self.setup()
+                return
 
         # Did the player fall off the map?
         if self.player_sprite.center_y < -100:
