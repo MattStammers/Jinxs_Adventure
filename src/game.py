@@ -197,6 +197,12 @@ class GameView(arcade.View):
                 enemy = RobotEnemy()
             elif enemy_type == "thunderer":
                 enemy = Thunderer()
+            elif enemy_type == "chomper":
+                enemy = Chomper()
+            elif enemy_type == "diamondshooter":
+                enemy = DiamondShooter()
+            elif enemy_type == "slimeBlue":
+                enemy = BlueSlime()
             else:
                 raise Exception(f"Unknown enemy type {enemy_type}.")
             enemy.center_x = math.floor(

@@ -98,3 +98,27 @@ class Thunderer(Enemy):
         super().__init__("thunderer", "thunderer")
 
         self.health = 50
+
+class Chomper(Enemy):
+    def __init__(self):
+
+        # Set up parent class
+        super().__init__("chomper", "chomper")
+
+        self.health = 50
+
+class DiamondShooter(Enemy):
+    def __init__(self):
+
+        # Set up parent class
+        super().__init__("diamondshooter", "diamondshooter")
+
+        self.health = 50
+
+class BlueSlime(Enemy):
+    def __init__(self):
+
+        # Set up parent class
+        super().__init__("slimeBlue", "slimeBlue")
+
+        self.health = 50
