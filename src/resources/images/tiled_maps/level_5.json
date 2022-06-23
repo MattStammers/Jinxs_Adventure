@@ -330,39 +330,6 @@
                 }, 
                 {
                  "height":0,
-                 "id":15,
-                 "name":"",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"boundary_left",
-                         "type":"int",
-                         "value":1000
-                        }, 
-                        {
-                         "name":"boundary_right",
-                         "type":"int",
-                         "value":1500
-                        }, 
-                        {
-                         "name":"change_x",
-                         "type":"int",
-                         "value":1
-                        }, 
-                        {
-                         "name":"type",
-                         "type":"string",
-                         "value":"slimeBlue"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":229.05,
-                 "y":9458.53
-                }, 
-                {
-                 "height":0,
                  "id":16,
                  "name":"",
                  "point":true,

@@ -161,8 +161,8 @@ class GameView(arcade.View):
         self.scene = arcade.Scene.from_tilemap(self.tile_map)
 
         # Pull the sprite layers out of the tile map
-        self.wall_list = self.tile_map.sprite_lists[LAYER_NAME_PLATFORMS]
         self.background_list = self.tile_map.sprite_lists[LAYER_NAME_BACKGROUND]
+        self.wall_list = self.tile_map.sprite_lists[LAYER_NAME_PLATFORMS]
         self.coin_list = self.tile_map.sprite_lists[LAYER_NAME_COINS]
         self.dont_touch_list = self.tile_map.sprite_lists[LAYER_NAME_DONT_TOUCH]
         self.item_list = self.tile_map.sprite_lists[LAYER_NAME_DYNAMIC_ITEMS]
@@ -246,7 +246,7 @@ class GameView(arcade.View):
             """ Called for grenade/wall collision """
             grenade_sprite.remove_from_sprite_lists()
 
-        # self.physics_engine.add_collision_handler("grenade", "wall", post_handler=wall_hit_handler)
+        self.physics_engine.add_collision_handler("grenade", "wall", post_handler=wall_hit_handler)
 
 #        def item_hit_handler(bullet_sprite, item_sprite, _arbiter, _space, _data):
 #           """ Called for bullet/wall collision """
