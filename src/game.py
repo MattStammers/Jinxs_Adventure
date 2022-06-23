@@ -4,6 +4,7 @@ Jinx and Gravity Game
 This is the main game script
 """
 import math
+from sys import builtin_module_names
 from typing import Optional
 from views import *
 
@@ -193,16 +194,26 @@ class GameView(arcade.View):
                 my_object.shape[0], my_object.shape[1]
             )
             enemy_type = my_object.properties["type"]
-            if enemy_type == "robot":
-                enemy = RobotEnemy()
+            if enemy_type == "wormGreen":
+                enemy = GreenWorm()
+            elif enemy_type == "slimeBlue":
+                enemy = BlueSlime()
+            elif enemy_type == "snakeLava":
+                enemy = LavaSnake()    
+            elif enemy_type == "primaryslime":
+                enemy = PrimarySlime()  
+            elif enemy_type == "slimeBlueBoss":
+                enemy = BlueSlimeBoss()    
             elif enemy_type == "thunderer":
                 enemy = Thunderer()
             elif enemy_type == "chomper":
                 enemy = Chomper()
             elif enemy_type == "diamondshooter":
                 enemy = DiamondShooter()
-            elif enemy_type == "slimeBlue":
-                enemy = BlueSlime()
+            elif enemy_type == "robot":
+                enemy = RobotEnemy()
+            elif enemy_type == "rolypolybot":
+                enemy = RolyPolyBot()
             else:
                 raise Exception(f"Unknown enemy type {enemy_type}.")
             enemy.center_x = math.floor(

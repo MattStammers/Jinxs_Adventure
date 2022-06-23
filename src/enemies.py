@@ -83,37 +83,13 @@ class Enemy(Entity):
 
         self.should_update_walk += 1
 
-class RobotEnemy(Enemy):
+class GreenWorm(Enemy):
     def __init__(self):
 
         # Set up parent class
-        super().__init__("robot", "robot")
+        super().__init__("wormGreen", "wormGreen")
 
-        self.health = 100
-
-class Thunderer(Enemy):
-    def __init__(self):
-
-        # Set up parent class
-        super().__init__("thunderer", "thunderer")
-
-        self.health = 50
-
-class Chomper(Enemy):
-    def __init__(self):
-
-        # Set up parent class
-        super().__init__("chomper", "chomper")
-
-        self.health = 50
-
-class DiamondShooter(Enemy):
-    def __init__(self):
-
-        # Set up parent class
-        super().__init__("diamondshooter", "diamondshooter")
-
-        self.health = 50
+        self.health = 10
 
 class BlueSlime(Enemy):
     def __init__(self):
@@ -121,4 +97,68 @@ class BlueSlime(Enemy):
         # Set up parent class
         super().__init__("slimeBlue", "slimeBlue")
 
+        self.health = 20
+
+class LavaSnake(Enemy):
+    def __init__(self):
+
+        # Set up parent class
+        super().__init__("snakeLava", "snakeLava")
+
         self.health = 50
+
+class PrimarySlime(Enemy):
+    def __init__(self):
+
+        # Set up parent class
+        super().__init__("primaryslime", "primaryslime")
+
+        self.health = 200
+
+class BlueSlimeBoss(Enemy):
+    def __init__(self):
+
+        # Set up parent class
+        super().__init__("slimeBlueBoss", "slimeBlueBoss")
+
+        self.health = 2000
+
+class Thunderer(Enemy):
+    def __init__(self):
+
+        # Set up parent class
+        super().__init__("thunderer", "thunderer")
+
+        self.health = 100
+
+class Chomper(Enemy):
+    def __init__(self):
+
+        # Set up parent class
+        super().__init__("chomper", "chomper")
+
+        self.health = 300
+
+class DiamondShooter(Enemy):
+    def __init__(self):
+
+        # Set up parent class
+        super().__init__("diamondshooter", "diamondshooter")
+
+        self.health = 150
+
+class RobotEnemy(Enemy):
+    def __init__(self):
+
+        # Set up parent class
+        super().__init__("robot", "robot")
+
+        self.health = 500
+
+class RolyPolyBot(Enemy):
+    def __init__(self):
+
+        # Set up parent class
+        super().__init__("rolypolybot", "rolypolybot")
+
+        self.health = 500
