@@ -1,4 +1,5 @@
 - I would like to thank my kids for coming up with many of the ideas and concepts in this game. 
 - I am also very grateful to the developers behind the python arcade library for building a solid 2D game framework that is reasonably well optimised in python.
 - I am also grateful to the developers behind pymunk who have constructed a very decent 2D physics engine. 
+- Thanks to all my friends who have helped alpha test this along the way.
 - Finally, I would like to thank Kenney.nl for providing some of the basic tiles we started off with. Any of the tiles which look professional probably came from them.
