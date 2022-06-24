@@ -4,11 +4,15 @@ Jinx and Gravity Game
 This is the main game script
 """
 import math
+import time
+import random
 from sys import builtin_module_names
 from typing import Optional
 from views import *
 
 SCREEN_TITLE = "Jinx & Gravity"
+DEFAULT_LINE_HEIGHT = 45
+DEFAULT_FONT_SIZE = 20
 
 # Key Game Layer Variables - central source of control
 LAYER_NAME_PLATFORMS = "Platforms"
@@ -25,6 +29,7 @@ LAYER_NAME_PLAYER_BULLETS = "Player Bullets"
 LAYER_NAME_PLAYER_GRENADES = "Player Grenades"
 LAYER_NAME_ENEMY_BULLETS = "Enemy Bullets"
 LAYER_NAME_ALLIES = "Allies"
+LAYER_NAME_SHIELD = "Shield"
 
 class GameView(arcade.View):
     """ Main Window """
@@ -41,6 +46,19 @@ class GameView(arcade.View):
         # Add width and height
         self.width = SCREEN_WIDTH
         self.height = SCREEN_HEIGHT
+
+        # Add the screen title
+        start_x = 0
+        start_y = SCREEN_HEIGHT - DEFAULT_LINE_HEIGHT * 1.5
+        self.title = arcade.Text(
+            "Jinx's Adventure",
+            start_x,
+            start_y,
+            arcade.color.BLACK,
+            DEFAULT_FONT_SIZE * 2,
+            width=SCREEN_WIDTH,
+            align="center",
+        )
 
         # Player sprite
         self.player_sprite: Optional[PlayerSprite] = None
@@ -62,6 +80,7 @@ class GameView(arcade.View):
         self.up_pressed: bool = False
         self.down_pressed: bool = False
         self.shoot_pressed: bool = False
+        self.shield_pressed: bool = False
         self.mouse_pressed: bool = False
 
         # Physics engine
@@ -83,6 +102,10 @@ class GameView(arcade.View):
         self.can_shoot = False
         self.shoot_timer = 0
 
+        # Shielding mechanics
+        self.can_shield = True
+        self.shield_timer = 0
+
         # Keep track of the score
         self.score = 0
 
@@ -98,6 +121,9 @@ class GameView(arcade.View):
         # Level
         self.level = 0
 
+         # Level_Up
+        self.level_up = 0
+
         # Load sounds
         self.game_over = arcade.load_sound(file_path+"/resources/sounds/gameover2.wav")
         self.collect_coin_sound = arcade.load_sound(file_path+"/resources/sounds/coin1.wav")
@@ -108,11 +134,45 @@ class GameView(arcade.View):
     def setup(self):
         """ Set up everything with the game """
 
+        # Layer Specific Options for the Tilemap
+        layer_options = {
+            LAYER_NAME_PLATFORMS: {
+                "use_spatial_hash": True,
+            },
+            LAYER_NAME_ENEMIES: {
+                "use_spatial_hash": False,
+            },
+            LAYER_NAME_MOVING_PLATFORMS: {
+                "use_spatial_hash": False,
+                
+            },
+            LAYER_NAME_SHIELD: {
+                "use_spatial_hash": True,
+                
+            },
+            LAYER_NAME_LADDERS: {
+                "use_spatial_hash": True,
+            },
+            LAYER_NAME_COINS: {
+                "use_spatial_hash": True,
+            },
+            LAYER_NAME_DONT_TOUCH: {
+                "use_spatial_hash": True,
+            },
+        }
+
         # Set up the GUI Camera
         self.gui_camera = arcade.Camera(self.width, self.height)
 
         # Keep track of the score
         self.score = 0
+
+        # Level_Up
+        self.level_up = 0
+
+        # Shielding mechanics
+        self.can_shield = True
+        self.shield_timer = 0
 
         # Shooting mechanics
         self.can_shoot = True
@@ -124,7 +184,7 @@ class GameView(arcade.View):
         # Keep track of the score, make sure we keep the score if the player finishes a level
         if self.reset_score:
             self.score = 0
-        self.reset_score = True
+        self.reset_score = False
 
         # Set up the Camera
         self.camera = arcade.Camera(self.width, self.height)
@@ -137,25 +197,7 @@ class GameView(arcade.View):
         map_name = file_path + f"/resources/images/tiled_maps/level_{self.level}.json"
 
         # Load in TileMap
-        self.tile_map = arcade.load_tilemap(map_name, SPRITE_SCALING_TILES)
-
-        # May need to add spacial hashing later on if performance deteriorates as below
-        '''
-        layer_options = {
-            LAYER_NAME_PLATFORMS: {
-                "use_spatial_hash": True,
-            },
-            LAYER_NAME_MOVING_PLATFORMS: {
-                "use_spatial_hash": False,
-            },
-            LAYER_NAME_LADDERS: {
-                "use_spatial_hash": True,
-            },
-            LAYER_NAME_COINS: {
-                "use_spatial_hash": True,
-            },
-        }
-        '''
+        self.tile_map = arcade.load_tilemap(map_name, SPRITE_SCALING_TILES, layer_options)
         
         # Initiate New Scene with our TileMap, this will automatically add all layers
         # from the map as SpriteLists in the scene in the proper order.
@@ -232,6 +274,10 @@ class GameView(arcade.View):
 
         # Add bullet spritelist to Scene
         self.scene.add_sprite_list(LAYER_NAME_PLAYER_BULLETS)
+
+        # Add enemy bullets and shields
+        self.scene.add_sprite_list(LAYER_NAME_ENEMY_BULLETS)
+        self.scene.add_sprite_list(LAYER_NAME_SHIELD)
 
         # Add grenade spritelist to Scene
         self.scene.add_sprite_list(LAYER_NAME_PLAYER_GRENADES)
@@ -323,15 +369,34 @@ class GameView(arcade.View):
             # find out if player is standing on ground, and not on a ladder
             if self.physics_engine.is_on_ground(self.player_sprite) \
                     and not self.player_sprite.is_on_ladder:
-                # She is! Go ahead and jump
-                impulse = (0, PLAYER_JUMP_IMPULSE)
-                self.physics_engine.apply_impulse(self.player_sprite, impulse)
+                # if on ground use control flow to filter jump speed based on player level
+                if self.level_up == 0:
+                    # Go ahead and jump
+                    impulse = (0, PLAYER_JUMP_IMPULSE/2)
+                    self.physics_engine.apply_impulse(self.player_sprite, impulse)
+                elif self.level_up == 1:
+                    # Go ahead and jump
+                    impulse = (0, PLAYER_JUMP_IMPULSE/1.5)
+                    self.physics_engine.apply_impulse(self.player_sprite, impulse)
+                elif self.level_up == 2:
+                    # Go ahead and jump
+                    impulse = (0, PLAYER_JUMP_IMPULSE)
+                    self.physics_engine.apply_impulse(self.player_sprite, impulse)
+                elif self.level_up == 3:
+                    # Go ahead and jump
+                    impulse = (0, PLAYER_JUMP_IMPULSE*2)
+                    self.physics_engine.apply_impulse(self.player_sprite, impulse)
+
         elif key == arcade.key.DOWN or key == arcade.key.S:
             self.down_pressed = True
         
         # Adding shoot button
         if key == arcade.key.Q or key == arcade.key.N:
             self.shoot_pressed = True
+
+        # Adding shield button
+        if key == arcade.key.E or key == arcade.key.M:
+            self.shield_pressed = True
 
     def on_key_release(self, key, modifiers):
         """Called when the user releases a key. """
@@ -345,8 +410,13 @@ class GameView(arcade.View):
         elif key == arcade.key.DOWN or key == arcade.key.S:
             self.down_pressed = False
 
+        # Adding shoot button
         if key == arcade.key.Q or key == arcade.key.N:
             self.shoot_pressed = False
+
+        # Adding shield button
+        if key == arcade.key.E or key == arcade.key.M:
+            self.shield_pressed = False
 
 
     def on_mouse_press(self, x, y, button, modifiers):
@@ -376,6 +446,18 @@ class GameView(arcade.View):
         # Position the camera
         self.center_camera_to_player()
 
+        # Calculate Jinx's level
+        if self.score > 100:
+            # Advance to the next level
+            self.level_up = 1
+            if self.score >= 500:
+                # Advance to the next level
+                self.level_up = 2
+                if self.score >= 1000:
+                    # Advance to the next level
+                    self.level_up = 3
+
+        # Calculate if Jinx on ground
         is_on_ground = self.physics_engine.is_on_ground(self.player_sprite)
         # Update player forces based on keys pressed
         if self.left_pressed and not self.right_pressed:
@@ -469,59 +551,89 @@ class GameView(arcade.View):
                 self.can_shoot = True
                 self.shoot_timer = 0
 
+        # Add shielding
+        if self.can_shield:
+            if self.shield_pressed:
+                for x in range(1,10):
+                    shield = arcade.Sprite(
+                        file_path + "/resources/images/weapons/shieldGold.png", # later will make this weapon interchangeable
+                        SPRITE_SCALING_PROJECTILES,
+                    )
+
+                    if self.player_sprite.character_face_direction == RIGHT_FACING:
+                        shield.change_x = 1
+                    else:
+                        shield.change_x = -1
+
+                    shield.center_x = self.player_sprite.center_x + 50
+                    shield.center_y = self.player_sprite.center_y
+
+                    self.scene.add_sprite(LAYER_NAME_SHIELD, shield)
+
+                    self.can_shield = False
+        else:
+            self.shield_timer += 1
+            if self.shield_timer == SHIELD_SPEED:
+                self.can_shield = True
+                self.shield_timer = 0
+
         # Add mouse shooting
         if self.mouse_pressed:
-            grenade = GrenadeSprite(20, 5, arcade.color.DARK_CANDY_APPLE_RED)
-            self.grenade_list.append(grenade)
+            for x in range(1,10):
+                grenade = GrenadeSprite(20, 5, arcade.color.DARK_CANDY_APPLE_RED)
+                self.grenade_list.append(grenade)
 
-            # Position the grenade at the player's current location
-            start_x = self.player_sprite.center_x
-            start_y = self.player_sprite.center_y
-            grenade.position = self.player_sprite.position
+                # Position the grenade at the player's current location
+                start_x = self.player_sprite.center_x
+                start_y = self.player_sprite.center_y
+                grenade.position = self.player_sprite.position
 
-            # Get from the mouse the destination location for the grenade
-            # IMPORTANT! If you have a scrolling screen, you will also need
-            # to add in self.view_bottom and self.view_left.
-            dest_x = self.x
-            dest_y = self.y
+                # Get from the mouse the destination location for the grenade
+                # IMPORTANT! If you have a scrolling screen, you will also need
+                # to add in self.view_bottom and self.view_left.
+                dest_x = self.x
+                dest_y = self.y
 
-            # Do math to calculate how to get the grenade to the destination.
-            # Calculation the angle in radians between the start points
-            # and end points. This is the angle the grenade will travel.
-            x_diff = dest_x - start_x
-            y_diff = dest_y - start_y
-            angle = math.atan2(y_diff, x_diff)
+                # Do math to calculate how to get the grenade to the destination.
+                # Calculation the angle in radians between the start points
+                # and end points. This is the angle the grenade will travel.
+                x_diff = dest_x - start_x
+                y_diff = dest_y - start_y
+                angle = math.atan2(y_diff, x_diff)
 
-            # What is the 1/2 size of this sprite, so we can figure out how far
-            # away to spawn the grenade
-            size = max(self.player_sprite.width, self.player_sprite.height) / 2
+                # What is the 1/2 size of this sprite, so we can figure out how far
+                # away to spawn the grenade
+                size = max(self.player_sprite.width, self.player_sprite.height) / 2
 
-            # Use angle to to spawn bullet away from player in proper direction
-            grenade.center_x += size * math.cos(angle)
-            grenade.center_y += size * math.sin(angle)
+                # Use angle to to spawn bullet away from player in proper direction
+                grenade.center_x += size * math.cos(angle)
+                grenade.center_y += size * math.sin(angle)
 
-            # Set angle of bullet
-            grenade.angle = math.degrees(angle)
+                # Set angle of bullet
+                grenade.angle = math.degrees(angle)
 
-            # Gravity to use for the bullet
-            # If we don't use custom gravity, bullet drops too fast, or we have
-            # to make it go too fast.
-            # Force is in relation to bullet's angle.
-            grenade_gravity = (0, -BULLET_GRAVITY)
+                # Gravity to use for the bullet
+                # If we don't use custom gravity, bullet drops too fast, or we have
+                # to make it go too fast.
+                # Force is in relation to bullet's angle.
+                grenade_gravity = (0, -BULLET_GRAVITY)
 
-            # Add the sprite. This needs to be done AFTER setting the fields above.
-            self.physics_engine.add_sprite(grenade,
-                                        mass=BULLET_MASS,
-                                        damping=1.0,
-                                        friction=0.6,
-                                        collision_type="grenade",
-                                        gravity=grenade_gravity,
-                                        elasticity=0.9)
+                # Add the sprite. This needs to be done AFTER setting the fields above.
+                self.physics_engine.add_sprite(grenade,
+                                            mass=BULLET_MASS,
+                                            damping=1.0,
+                                            friction=0.6,
+                                            collision_type="grenade",
+                                            gravity=grenade_gravity,
+                                            elasticity=0.9)
 
-            # Add force to bullet
-            force = (BULLET_MOVE_FORCE, 0)
-            self.physics_engine.apply_force(grenade, force)
-            self.scene.add_sprite(LAYER_NAME_PLAYER_GRENADES, grenade)
+                # Add force to bullet
+                force = (BULLET_MOVE_FORCE, 0)
+                self.physics_engine.apply_force(grenade, force)
+                self.scene.add_sprite(LAYER_NAME_PLAYER_GRENADES, grenade)
+
+                # Reset
+                self.mouse_pressed = False
 
 
         # Check lives. If it is zero, flip to the game over view.
@@ -540,7 +652,7 @@ class GameView(arcade.View):
 
         # Update enemies and bullets
         self.scene.update(
-            [LAYER_NAME_ENEMIES, LAYER_NAME_PLAYER_BULLETS, LAYER_NAME_PLAYER_GRENADES]
+            [LAYER_NAME_ENEMIES, LAYER_NAME_ENEMY_BULLETS, LAYER_NAME_PLAYER_BULLETS, LAYER_NAME_PLAYER_GRENADES]
         )
 
         # See if the enemy hit a boundary and needs to reverse direction.
@@ -564,8 +676,10 @@ class GameView(arcade.View):
                 projectile,
                 [
                     self.scene[LAYER_NAME_ENEMIES],
-                    # self.scene[LAYER_NAME_PLATFORMS],
-                    # self.scene[LAYER_NAME_MOVING_PLATFORMS],
+                    self.scene[LAYER_NAME_PLATFORMS],
+                    self.scene[LAYER_NAME_MOVING_PLATFORMS],
+                    self.scene[LAYER_NAME_DYNAMIC_ITEMS],
+                    self.scene[LAYER_NAME_SHIELD],
                 ],
             )
 
@@ -578,11 +692,39 @@ class GameView(arcade.View):
                         in collision.sprite_lists
                     ):
                         # The collision was with an enemy
-                        collision.health -= PLAYER_BULLET_DAMAGE
+                        if self.level_up == 0:
+                            collision.health -= PLAYER_BULLET_DAMAGE/5
+                        elif self.level_up == 1:
+                            collision.health -= PLAYER_BULLET_DAMAGE/2
+                        elif self.level_up == 2:
+                            collision.health -= PLAYER_BULLET_DAMAGE
+                        elif self.level_up == 3:
+                            collision.health -= PLAYER_BULLET_DAMAGE*2         
 
                         if collision.health <= 0:
                             collision.remove_from_sprite_lists()
-                            self.score += 100
+                            if type(enemy) == type(GreenWorm()):
+                                self.score += int(getattr(GreenWorm(),"health"))
+                            elif type(enemy) == type(BlueSlime()):
+                                self.score += int(getattr(BlueSlime(),"health"))
+                            elif type(enemy) == type(LavaSnake()):
+                                self.score += int(getattr(LavaSnake(),"health"))
+                            elif type(enemy) == type(BlueSlimeBoss()):
+                                self.score += int(getattr(BlueSlimeBoss(),"health"))
+                            elif type(enemy) == type(RobotEnemy()):
+                                self.score += int(getattr(RobotEnemy(),"health"))
+                            elif type(enemy) == type(Chomper()):
+                                self.score += int(getattr(Chomper(),"health"))
+                            elif type(enemy) == type(DiamondShooter()):
+                                self.score += int(getattr(DiamondShooter(),"health"))
+                            elif type(enemy) == type(PrimarySlime()):
+                                self.score += int(getattr(PrimarySlime(),"health"))
+                            elif type(enemy) == type(Thunderer()):
+                                self.score += int(getattr(Thunderer(),"health"))
+                            elif type(enemy) == type(RolyPolyBot()):
+                                self.score += int(getattr(RolyPolyBot(),"health"))
+                            # elif type(enemy) == type(Masterverse()):
+                            #     self.score += int(getattr(Masterverse(),"health"))
 
                         # Hit sound
                         arcade.play_sound(self.hit_sound)
@@ -595,6 +737,31 @@ class GameView(arcade.View):
             ):
                 projectile.remove_from_sprite_lists()
 
+        # Loop through each enemy that we have to work out shooting mechanics
+        for enemy in self.scene[LAYER_NAME_ENEMIES]:
+            if type(enemy) == type(GreenWorm()):
+            # Have a random 1 in 200 change of shooting each 1/60th of a second
+                odds = 2000
+
+            # Adjust odds based on delta-time
+                adj_odds = int(odds * (1 / 60) / delta_time)
+
+                if random.randrange(adj_odds) == 0:
+                    bullet2 = arcade.Sprite(file_path + "/resources/images/weapons/meteorGrey_tiny2.png")
+                    bullet2.center_x = enemy.center_x
+                    bullet2.angle = 0
+                    bullet2.top = enemy.top
+                    bullet2.change_x = 1
+                    self.scene.add_sprite(LAYER_NAME_ENEMY_BULLETS, bullet2)
+
+                if random.randrange(adj_odds) == 0:
+                    bullet2 = arcade.Sprite(file_path + "/resources/images/weapons/meteorGrey_tiny2.png")
+                    bullet2.center_x = enemy.center_x
+                    bullet2.angle = 0
+                    bullet2.top = enemy.top
+                    bullet2.change_x = -1
+                    self.scene.add_sprite(LAYER_NAME_ENEMY_BULLETS, bullet2)
+
         # See if we hit any coins
         coin_hit_list = arcade.check_for_collision_with_list(
             self.player_sprite, self.coin_list
@@ -605,8 +772,25 @@ class GameView(arcade.View):
             self.player_sprite,
             [
                 self.scene[LAYER_NAME_ENEMIES],
+                self.scene[LAYER_NAME_ENEMY_BULLETS],
             ],
         )
+
+        # Loop Through Enemy Bullets and check for collisions
+
+        for bullet2 in self.scene[LAYER_NAME_ENEMY_BULLETS]:
+            hit_list = arcade.check_for_collision_with_lists(
+                bullet2,
+                [
+                    self.scene[LAYER_NAME_PLATFORMS],
+                    self.scene[LAYER_NAME_MOVING_PLATFORMS],
+                    self.scene[LAYER_NAME_DYNAMIC_ITEMS],
+                    self.scene[LAYER_NAME_SHIELD],
+                ],
+            )
+
+            if hit_list:
+                bullet2.remove_from_sprite_lists()
 
         # Loop through each coin we hit (if any) and remove it
         
@@ -623,10 +807,12 @@ class GameView(arcade.View):
             arcade.play_sound(self.collect_coin_sound)
 
         # Look through the enemies to see if we hit any:
-
         for collision in enemy_collision_list:
             if self.scene[LAYER_NAME_ENEMIES] in collision.sprite_lists:
             # If we collide with an enemy then reset the game - to be edited later on with life removal
+                arcade.play_sound(self.game_over)
+                self.setup()
+            elif self.scene[LAYER_NAME_ENEMY_BULLETS] in collision.sprite_lists:
                 arcade.play_sound(self.game_over)
                 self.setup()
                 return
@@ -679,13 +865,36 @@ class GameView(arcade.View):
         arcade.draw_text(
             score_text,
             10,
+            70,
+            arcade.csscolor.BLACK,
+            18,
+        )
+
+        # Draw our score on the screen, scrolling it with the viewport
+        level_text = f"Current Level: {self.level}"
+        arcade.draw_text(
+            level_text,
             10,
-            arcade.csscolor.WHITE,
+            40,
+            arcade.csscolor.DARK_BLUE,
+            18,
+        )
+
+        # Draw our score on the screen, scrolling it with the viewport
+        levelup_text = f"Player Level Up: {self.level_up}"
+        arcade.draw_text(
+            levelup_text,
+            10,
+            10,
+            arcade.csscolor.DARK_RED,
             18,
         )
 
         # Activate our Camera
         self.camera.use()
+
+        # Add Title
+        self.title.draw()
 
         # for item in self.player_list:
         #     item.draw_hit_box(arcade.color.RED)
