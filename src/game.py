@@ -4,7 +4,6 @@ Jinx and Gravity Game
 This is the main game script
 """
 import math
-import time
 import random
 from sys import builtin_module_names
 from typing import Optional
@@ -46,6 +45,9 @@ class GameView(arcade.View):
         # Add width and height
         self.width = SCREEN_WIDTH
         self.height = SCREEN_HEIGHT
+
+        # Initialise Frame Count
+        self.frame_count = 0
 
         # Add the screen title
         start_x = 0
@@ -165,7 +167,7 @@ class GameView(arcade.View):
         self.gui_camera = arcade.Camera(self.width, self.height)
 
         # Keep track of the score
-        self.score = 0
+        self.score = self.score
 
         # Level_Up
         self.level_up = 0
@@ -445,6 +447,9 @@ class GameView(arcade.View):
 
         # Position the camera
         self.center_camera_to_player()
+
+        # Add Frame Counter
+        self.frame_count += 1
 
         # Calculate Jinx's level
         if self.score > 100:
@@ -737,30 +742,90 @@ class GameView(arcade.View):
             ):
                 projectile.remove_from_sprite_lists()
 
+        # Randfire function
+        def randfire(odds, x, y, angle, origin_x, origin_top, weapon = "meteorGrey_tiny2.png"):
+            odds = 2000
+            adj_odds = int(odds * (1 / 60) / delta_time)
+            if random.randrange(adj_odds) == 0:
+                bullet2 = arcade.Sprite(file_path + f"/resources/images/weapons/{weapon}")
+                bullet2.center_x = origin_x
+                bullet2.angle = angle
+                bullet2.top = origin_top
+                bullet2.change_x = x
+                bullet2.change_y = y
+                return self.scene.add_sprite(LAYER_NAME_ENEMY_BULLETS, bullet2)  
+
+        # Aimingfire function
+        def aimingfire(rate, bullet_speed, origin_x, origin_y, aim_x, aim_y, weapon = "laserRed02.png"):
+            start_x = origin_x
+            start_y = origin_y
+
+            # Get the destination location for the bullet
+            dest_x = aim_x
+            dest_y = aim_y
+
+            # Do math to calculate how to get the bullet to the destination.
+            # Calculation the angle in radians between the start points
+            # and end points. This is the angle the bullet will travel.
+            x_diff = dest_x - start_x
+            y_diff = dest_y - start_y
+            angle = math.atan2(y_diff, x_diff)
+
+            # Set the enemy to face the player. Not Required Presently
+            # enemy.angle = math.degrees(angle) - 0
+            
+            # Shoot every 60 frames change of shooting each frame
+            if self.frame_count % rate == 0:
+                bullet2 = arcade.Sprite(file_path + f"/resources/images/weapons/{weapon}")
+                bullet2.center_x = start_x
+                bullet2.center_y = start_y
+
+                # Angle the bullet sprite
+                bullet2.angle = math.degrees(angle)
+
+                # Taking into account the angle, calculate our change_x
+                # and change_y. Velocity is how fast the bullet travels.
+                bullet2.change_x = math.cos(angle) * bullet_speed
+                bullet2.change_y = math.sin(angle) * bullet_speed
+
+                self.scene.add_sprite(LAYER_NAME_ENEMY_BULLETS, bullet2)      
+
         # Loop through each enemy that we have to work out shooting mechanics
         for enemy in self.scene[LAYER_NAME_ENEMIES]:
             if type(enemy) == type(GreenWorm()):
-            # Have a random 1 in 200 change of shooting each 1/60th of a second
-                odds = 2000
+                randfire(odds =2000, x=-1, y=0, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "meteorGrey_tiny1.png")
+                randfire(odds =2000, x=1, y=0, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "meteorGrey_tiny1.png")
 
-            # Adjust odds based on delta-time
-                adj_odds = int(odds * (1 / 60) / delta_time)
+            elif type(enemy) == type(BlueSlime()):
+                randfire(odds =1000, x=-2, y=0, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "candyBlue.png")
+                randfire(odds =1000, x=2, y=0, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "candyBlue.png")
 
-                if random.randrange(adj_odds) == 0:
-                    bullet2 = arcade.Sprite(file_path + "/resources/images/weapons/meteorGrey_tiny2.png")
-                    bullet2.center_x = enemy.center_x
-                    bullet2.angle = 0
-                    bullet2.top = enemy.top
-                    bullet2.change_x = 1
-                    self.scene.add_sprite(LAYER_NAME_ENEMY_BULLETS, bullet2)
+            elif type(enemy) == type(LavaSnake()):
+                randfire(odds =500, x=-4, y=0, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =500, x=4, y=0, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =500, x=-4, y=-1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =500, x=4, y=-1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =500, x=-4, y=1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =500, x=4, y=1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
 
-                if random.randrange(adj_odds) == 0:
-                    bullet2 = arcade.Sprite(file_path + "/resources/images/weapons/meteorGrey_tiny2.png")
-                    bullet2.center_x = enemy.center_x
-                    bullet2.angle = 0
-                    bullet2.top = enemy.top
-                    bullet2.change_x = -1
-                    self.scene.add_sprite(LAYER_NAME_ENEMY_BULLETS, bullet2)
+            elif type(enemy) == type(Thunderer()):
+                randfire(odds =500, x=1, y=-3, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "thunderbullet1.png")
+                randfire(odds =500, x=-1, y=-3, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "thunderbullet1.png")
+                randfire(odds =500, x=-2, y=-6, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "thunderbullet2.png")
+                randfire(odds =500, x=2, y=-6, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "thunderbullet2.png")
+                randfire(odds =500, x=0, y=-10, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "sparky.png")
+                aimingfire(rate = 360, bullet_speed=6, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "thunderbullet.png")
+            
+            elif type(enemy) == type(PrimarySlime()):   
+                aimingfire(rate = 360, bullet_speed=12, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "mupBiggest.png")
+                aimingfire(rate = 120, bullet_speed=8, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "mupBig.png")
+                aimingfire(rate = 60, bullet_speed=4, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "mupSmall.png")
+
+            elif type(enemy) == type(RobotEnemy()):    
+                aimingfire(rate = 60, bullet_speed=8, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "laserBlue01.png")
+
+            elif type(enemy) == type(RolyPolyBot()):    
+                aimingfire(rate = 30, bullet_speed=10, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "laserBlue01.png")
 
         # See if we hit any coins
         coin_hit_list = arcade.check_for_collision_with_list(
