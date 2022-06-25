@@ -9,7 +9,7 @@ class MenuView(arcade.View):
         self.clear()
         arcade.draw_text("Welcome to Jinx's Adventure", self.window.width / 2, self.window.height / 2,
                          arcade.color.BLACK, font_size=50, anchor_x="center")
-        arcade.draw_text("The world is at peace until suddenly its not", self.window.width / 2, self.window.height / 2 - 75,
+        arcade.draw_text("A crazy physics platformer", self.window.width / 2, self.window.height / 2 - 75,
                          arcade.color.RED_BROWN, font_size=25, anchor_x="center")
         arcade.draw_text("Click to advance", self.window.width / 2, self.window.height / 2 - 150,
                          arcade.color.REDWOOD, font_size=20, anchor_x="center")
@@ -33,12 +33,14 @@ class InstructionView(arcade.View):
         self.clear()
         arcade.draw_text("Instructions Screen", self.window.width / 2, self.window.height / 2,
                          arcade.color.WHITE, font_size=50, anchor_x="center")
-        arcade.draw_text("Click to fire, arrows to move", self.window.width / 2, self.window.height / 2-75,
-                         arcade.color.PINK_LAVENDER, font_size=30, anchor_x="center")
-        arcade.draw_text("Some objects can be moved around, others cannot", self.window.width / 2, self.window.height / 2-120,
+        arcade.draw_text("ASDW or arrows to move, Q/N for bullets", self.window.width / 2, self.window.height / 2-80,
+                         arcade.color.PINK_LAVENDER, font_size=25, anchor_x="center")
+        arcade.draw_text("E/M to shield, Click for grenades which level up as you do", self.window.width / 2, self.window.height / 2-120,
                          arcade.color.YELLOW_GREEN, font_size=25, anchor_x="center")
-        arcade.draw_text("Click to advance to game", self.window.width / 2, self.window.height / 2-150,
-                         arcade.color.DARK_CHESTNUT, font_size=20, anchor_x="center")
+        arcade.draw_text("Increasing your level improves bullets, damage and jump", self.window.width / 2, self.window.height / 2-160,
+                         arcade.color.DARK_CHESTNUT, font_size=25, anchor_x="center")
+        arcade.draw_text("Grenades activate at level one and become increasingly powerful", self.window.width / 2, self.window.height / 2-200,
+                         arcade.color.PINK_LAVENDER, font_size=25, anchor_x="center")
 
     def on_mouse_press(self, _x, _y, _button, _modifiers):
         """ If the user presses the mouse button, start the game. """

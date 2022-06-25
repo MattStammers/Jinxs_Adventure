@@ -372,19 +372,19 @@ class GameView(arcade.View):
             if self.physics_engine.is_on_ground(self.player_sprite) \
                     and not self.player_sprite.is_on_ladder:
                 # if on ground use control flow to filter jump speed based on player level
-                if self.level_up == 0:
+                if self.level_up <= 0:
                     # Go ahead and jump
                     impulse = (0, PLAYER_JUMP_IMPULSE/2)
                     self.physics_engine.apply_impulse(self.player_sprite, impulse)
-                elif self.level_up == 1:
+                elif self.level_up <= 2:
                     # Go ahead and jump
                     impulse = (0, PLAYER_JUMP_IMPULSE/1.5)
                     self.physics_engine.apply_impulse(self.player_sprite, impulse)
-                elif self.level_up == 2:
+                elif self.level_up <= 4:
                     # Go ahead and jump
                     impulse = (0, PLAYER_JUMP_IMPULSE)
                     self.physics_engine.apply_impulse(self.player_sprite, impulse)
-                elif self.level_up == 3:
+                elif self.level_up <= 6:
                     # Go ahead and jump
                     impulse = (0, PLAYER_JUMP_IMPULSE*2)
                     self.physics_engine.apply_impulse(self.player_sprite, impulse)
@@ -555,15 +555,31 @@ class GameView(arcade.View):
         if self.can_shoot:
             if self.shoot_pressed:
                 arcade.play_sound(self.shoot_sound)
-                player_bullet = arcade.Sprite(
-                    file_path + "/resources/images/weapons/swordBronze.png", # later will make this weapon interchangeable
-                    SPRITE_SCALING_PROJECTILES,
-                )
+                if self.level_up <= 3:
+                    player_bullet = arcade.Sprite(
+                        file_path + "/resources/images/weapons/swordBronze.png",
+                        SPRITE_SCALING_PROJECTILES/1.5,
+                    )
+                    
+                elif self.level_up <= 7:
+                    arcade.play_sound(self.shoot_sound)
+                    player_bullet = arcade.Sprite(
+                        file_path + "/resources/images/weapons/swordSilver.png", 
+                        SPRITE_SCALING_PROJECTILES/1.25,
+                    )
+                
+                elif self.level_up <= 10:
+                    arcade.play_sound(self.shoot_sound)
+                    player_bullet = arcade.Sprite(
+                        file_path + "/resources/images/weapons/swordGold.png", 
+                        SPRITE_SCALING_PROJECTILES,
+                    )
 
                 if self.player_sprite.character_face_direction == RIGHT_FACING:
-                    player_bullet.change_x = BULLET_SPEED
+                    player_bullet.change_x = BULLET_SPEED*(self.level_up+1)
                 else:
-                    player_bullet.change_x = -BULLET_SPEED
+                    player_bullet.change_x = -BULLET_SPEED*(self.level_up+1)
+                    player_bullet.angle = -180
 
                 player_bullet.center_x = self.player_sprite.center_x
                 player_bullet.center_y = self.player_sprite.center_y
@@ -571,44 +587,59 @@ class GameView(arcade.View):
                 self.scene.add_sprite(LAYER_NAME_PLAYER_BULLETS, player_bullet)
 
                 self.can_shoot = False
+
         else:
             self.shoot_timer += 1
-            if self.shoot_timer == SHOOT_SPEED:
+            if self.shoot_timer >= 165:
+                self.shoot_timer = 0
+            elif self.shoot_timer == SHOOT_SPEED/(self.level_up+1):
                 self.can_shoot = True
                 self.shoot_timer = 0
 
         # Add shielding
         if self.can_shield:
-            if self.level_up >1:
-                if self.shield_pressed:
+            if self.shield_pressed:
+                if self.level_up <=3:
                     for x in range(1,2):
-                        shield = arcade.Sprite(
-                            file_path + "/resources/images/weapons/shieldGold.png", # later will make this weapon interchangeable
+                        shield = arcade.Sprite(file_path + "/resources/images/weapons/shieldBronze.png", 
+                            SPRITE_SCALING_PROJECTILES/1.25,
+                        )
+                elif self.level_up <=6:
+                    for x in range(1,2):
+                        shield = arcade.Sprite(file_path + "/resources/images/weapons/shieldSilver.png", 
                             SPRITE_SCALING_PROJECTILES,
                         )
+                elif self.level_up <=9:
+                    for x in range(1,2):
+                        shield = arcade.Sprite(file_path + "/resources/images/weapons/shieldGold.png", 
+                            SPRITE_SCALING_PROJECTILES*1.25,
+                        )
 
-                        if self.player_sprite.character_face_direction == RIGHT_FACING:
-                            shield.change_x = 1
-                        else:
-                            shield.change_x = -1
+                if self.player_sprite.character_face_direction == RIGHT_FACING:
+                    shield.change_x = 1
+                    shield.center_x = self.player_sprite.center_x + 25
+                else:
+                    shield.change_x = -1
+                    shield.center_x = self.player_sprite.center_x - 25
+                
+                shield.center_y = self.player_sprite.center_y
 
-                        shield.center_x = self.player_sprite.center_x + 50
-                        shield.center_y = self.player_sprite.center_y
+                self.scene.add_sprite(LAYER_NAME_SHIELD, shield)
 
-                        self.scene.add_sprite(LAYER_NAME_SHIELD, shield)
-
-                        self.can_shield = False
-            else:
-                self.shield_timer += 1
-                if self.shield_timer == SHIELD_SPEED:
-                    self.can_shield = True
-                    self.shield_timer = 0
+                self.can_shield = False
+        else:
+            self.shield_timer += 1
+            if self.shield_timer >= 165:
+                self.shield_timer = 0
+            elif self.shield_timer == SHIELD_SPEED/(self.level_up+1):
+                self.can_shield = True
+                self.shield_timer = 0
 
         # Add mouse shooting
         if self.mouse_pressed:
-            if self.level_up>2:
-                for x in range(1,10):
-                    grenade = GrenadeSprite(20, 5, arcade.color.DARK_CANDY_APPLE_RED)
+            if self.level_up>=1:
+                for x in range(0,self.level_up):
+                    grenade = GrenadeSprite((5+self.level_up), self.level_up, arcade.color.RAZZLE_DAZZLE_ROSE)
                     self.grenade_list.append(grenade)
 
                     # Position the grenade at the player's current location
@@ -656,13 +687,12 @@ class GameView(arcade.View):
                                                 elasticity=0.9)
 
                     # Add force to bullet
-                    force = (BULLET_MOVE_FORCE, 0)
+                    force = (BULLET_MOVE_FORCE*self.level_up, 0)
                     self.physics_engine.apply_force(grenade, force)
                     self.scene.add_sprite(LAYER_NAME_PLAYER_GRENADES, grenade)
 
                     # Reset
                     self.mouse_pressed = False
-
 
         # Check lives. If it is zero, flip to the game over view.
         self.lives=3
@@ -670,8 +700,7 @@ class GameView(arcade.View):
             view = GameOverView()
             self.window.show_view(view)
 
-        # Add animations for scene sprites
-                # Update Animations
+        # Update Animations
         self.scene.update_animation(
             delta_time,
             [
