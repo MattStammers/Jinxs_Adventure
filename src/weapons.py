@@ -6,9 +6,9 @@ import random
 
 # Shooting Constants
 SPRITE_SCALING_PROJECTILES = 0.6
-SHOOT_SPEED = 40
+SHOOT_SPEED = 100
 BULLET_SPEED = 2
-SHIELD_SPEED = 500
+SHIELD_SPEED = 1000
 PLAYER_BULLET_DAMAGE = 10
 
 # How much force to put on the bullet

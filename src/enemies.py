@@ -49,7 +49,7 @@ class Entity(arcade.Sprite):
         # Hit box will be set based on the first image used. If you want to specify
         # a different hit box, you can do it like the code below.
         # self.set_hit_box([[-22, -64], [22, -64], [22, 28], [-22, 28]])
-        self.set_hit_box(self.texture.hit_box_points)
+        self.set_hit_box(self.texture.hit_box_points) 
 
 class Enemy(Entity):
     def __init__(self, name_folder, name_file):
@@ -114,6 +114,14 @@ class PrimarySlime(Enemy):
         super().__init__("primaryslime", "primaryslime")
 
         self.health = 200
+
+class SecondarySlime(Enemy):
+    def __init__(self):
+
+        # Set up parent class
+        super().__init__("secondaryslime", "secondaryslime")
+
+        self.health = 400
 
 class BlueSlimeBoss(Enemy):
     def __init__(self):

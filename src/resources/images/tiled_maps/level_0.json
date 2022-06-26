@@ -99,7 +99,7 @@
                         {
                          "name":"boundary_right",
                          "type":"int",
-                         "value":3150
+                         "value":3400
                         }, 
                         {
                          "name":"change_x",
@@ -132,7 +132,7 @@
                         {
                          "name":"boundary_right",
                          "type":"int",
-                         "value":3150
+                         "value":3400
                         }, 
                         {
                          "name":"change_x",
@@ -165,7 +165,7 @@
                         {
                          "name":"boundary_right",
                          "type":"int",
-                         "value":3150
+                         "value":3400
                         }, 
                         {
                          "name":"change_x",
@@ -198,7 +198,7 @@
                         {
                          "name":"boundary_right",
                          "type":"int",
-                         "value":3150
+                         "value":3400
                         }, 
                         {
                          "name":"change_x",
@@ -348,6 +348,39 @@
                  "width":0,
                  "x":8933.05,
                  "y":-13.47
+                }, 
+                {
+                 "height":0,
+                 "id":27,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"boundary_left",
+                         "type":"int",
+                         "value":2500
+                        }, 
+                        {
+                         "name":"boundary_right",
+                         "type":"int",
+                         "value":3400
+                        }, 
+                        {
+                         "name":"change_x",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"secondaryslime"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":8037.05,
+                 "y":2418.53
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -467,7 +500,7 @@
          "y":0
         }],
  "nextlayerid":10,
- "nextobjectid":27,
+ "nextobjectid":28,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.7.2",

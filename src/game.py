@@ -245,7 +245,9 @@ class GameView(arcade.View):
             elif enemy_type == "snakeLava":
                 enemy = LavaSnake()    
             elif enemy_type == "primaryslime":
-                enemy = PrimarySlime()  
+                enemy = PrimarySlime() 
+            elif enemy_type == "secondaryslime":
+                enemy = SecondarySlime()   
             elif enemy_type == "slimeBlueBoss":
                 enemy = BlueSlimeBoss()    
             elif enemy_type == "thunderer":
@@ -576,9 +578,9 @@ class GameView(arcade.View):
                     )
 
                 if self.player_sprite.character_face_direction == RIGHT_FACING:
-                    player_bullet.change_x = BULLET_SPEED*(self.level_up+1)
+                    player_bullet.change_x = round(BULLET_SPEED*(self.level_up+1),0)
                 else:
-                    player_bullet.change_x = -BULLET_SPEED*(self.level_up+1)
+                    player_bullet.change_x = round(-BULLET_SPEED*(self.level_up+1),0)
                     player_bullet.angle = -180
 
                 player_bullet.center_x = self.player_sprite.center_x
@@ -590,10 +592,10 @@ class GameView(arcade.View):
 
         else:
             self.shoot_timer += 1
-            if self.shoot_timer >= 165:
-                self.shoot_timer = 0
-            elif self.shoot_timer == SHOOT_SPEED/(self.level_up+1):
+            if self.shoot_timer == SHOOT_SPEED/round((self.level_up+1),0):
                 self.can_shoot = True
+                self.shoot_timer = 0
+            elif self.shoot_timer >= 165:
                 self.shoot_timer = 0
 
         # Add shielding
@@ -629,10 +631,11 @@ class GameView(arcade.View):
                 self.can_shield = False
         else:
             self.shield_timer += 1
-            if self.shield_timer >= 165:
-                self.shield_timer = 0
-            elif self.shield_timer == SHIELD_SPEED/(self.level_up+1):
+            print(self.shield_timer)
+            if self.shield_timer == SHIELD_SPEED/(self.level_up+1):
                 self.can_shield = True
+                self.shield_timer = 0
+            elif self.shield_timer >= 2000:
                 self.shield_timer = 0
 
         # Add mouse shooting
@@ -790,12 +793,12 @@ class GameView(arcade.View):
                                 self.score += int(getattr(DiamondShooter(),"health"))
                             elif type(enemy) == type(PrimarySlime()):
                                 self.score += int(getattr(PrimarySlime(),"health"))
+                            elif type(enemy) == type(SecondarySlime()):
+                                 self.score += int(getattr(SecondarySlime(),"health"))
                             elif type(enemy) == type(Thunderer()):
                                 self.score += int(getattr(Thunderer(),"health"))
                             elif type(enemy) == type(RolyPolyBot()):
                                 self.score += int(getattr(RolyPolyBot(),"health"))
-                            # elif type(enemy) == type(Masterverse()):
-                            #     self.score += int(getattr(Masterverse(),"health"))
 
                         # Hit sound
                         arcade.play_sound(self.hit_sound)
@@ -889,6 +892,11 @@ class GameView(arcade.View):
                 aimingfire(rate = 360, bullet_speed=12, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "mupBiggest.png")
                 aimingfire(rate = 120, bullet_speed=8, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "mupBig.png")
                 aimingfire(rate = 60, bullet_speed=4, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "mupSmall.png")
+
+            elif type(enemy) == type(SecondarySlime()):   
+                aimingfire(rate = 120, bullet_speed=12, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "mupBiggest2.png")
+                aimingfire(rate = 60, bullet_speed=8, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "mupBig2.png")
+                aimingfire(rate = 30, bullet_speed=4, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "mupSmall2.png")
 
             elif type(enemy) == type(DiamondShooter()):
                 randfire(odds =1000, x=-10, y=2, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "gemYellow.png")
