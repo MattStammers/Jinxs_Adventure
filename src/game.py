@@ -396,11 +396,27 @@ class GameView(arcade.View):
                     self.physics_engine.apply_impulse(self.player_sprite, impulse)
                 elif self.level_up <= 5:
                     # Go ahead and jump
-                    impulse = (0, PLAYER_JUMP_IMPULSE*1.5)
+                    impulse = (0, PLAYER_JUMP_IMPULSE*1.25)
                     self.physics_engine.apply_impulse(self.player_sprite, impulse)
                 elif self.level_up <= 6:
                     # Go ahead and jump
+                    impulse = (0, PLAYER_JUMP_IMPULSE*1.5)
+                    self.physics_engine.apply_impulse(self.player_sprite, impulse)
+                elif self.level_up <= 7:
+                    # Go ahead and jump
+                    impulse = (0, PLAYER_JUMP_IMPULSE*1.75)
+                    self.physics_engine.apply_impulse(self.player_sprite, impulse)
+                elif self.level_up <= 8:
+                    # Go ahead and jump
                     impulse = (0, PLAYER_JUMP_IMPULSE*2)
+                    self.physics_engine.apply_impulse(self.player_sprite, impulse)
+                elif self.level_up <= 9:
+                    # Go ahead and jump
+                    impulse = (0, PLAYER_JUMP_IMPULSE*2.25)
+                    self.physics_engine.apply_impulse(self.player_sprite, impulse)
+                elif self.level_up <= 10:
+                    # Go ahead and jump
+                    impulse = (0, PLAYER_JUMP_IMPULSE*2.5)
                     self.physics_engine.apply_impulse(self.player_sprite, impulse)
 
         elif key == arcade.key.DOWN or key == arcade.key.S:
@@ -493,9 +509,10 @@ class GameView(arcade.View):
                                         if self.score >= 1000000:
                                             # Advance to the next level
                                             self.level_up = 9
-                                            if self.score >= 10000000:
-                                                # Advance to the next level
-                                                self.level_up = 10
+                                            # level 10 to be reserved - needs debugging
+                                            #  if self.score >= 10000000:
+                                            #    # Advance to the next level
+                                            #    self.level_up = 10
 
         # Calculate if Jinx on ground
         is_on_ground = self.physics_engine.is_on_ground(self.player_sprite)
@@ -606,7 +623,7 @@ class GameView(arcade.View):
             self.shoot_timer += 1
             if self.shoot_timer >= 101:
                 self.shoot_timer = 0
-            elif self.shoot_timer == SHOOT_SPEED//(self.level_up+1):
+            elif self.shoot_timer == SHOOT_SPEED//(self.level_up*self.level_up+1):
                 self.can_shoot = True
                 self.shoot_timer = 0
             
@@ -643,7 +660,7 @@ class GameView(arcade.View):
             self.shield_timer += 1
             if self.shield_timer >= 1001:
                 self.shield_timer = 0
-            elif self.shield_timer == SHIELD_SPEED//(self.level_up+1):
+            elif self.shield_timer == SHIELD_SPEED//(self.level_up*self.level_up+1):
                 self.can_shield = True
                 self.shield_timer = 0
 
@@ -651,7 +668,7 @@ class GameView(arcade.View):
         if self.mouse_pressed:
             if self.level_up>=1:
                 for x in range(0,self.level_up):
-                    grenade = GrenadeSprite((5+self.level_up), self.level_up, arcade.color.RAZZLE_DAZZLE_ROSE)
+                    grenade = GrenadeSprite((5+self.level_up), self.level_up, arcade.color.ROMAN_SILVER)
                     self.grenade_list.append(grenade)
 
                     # Position the grenade at the player's current location
