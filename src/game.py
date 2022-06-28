@@ -592,29 +592,28 @@ class GameView(arcade.View):
 
         else:
             self.shoot_timer += 1
-            if self.shoot_timer == SHOOT_SPEED/round((self.level_up+1),0):
+            print(SHOOT_SPEED/(self.level_up+1))
+            if self.shoot_timer >= 101:
+                self.shoot_timer = 0
+            elif self.shoot_timer == SHOOT_SPEED/round((self.level_up+1),0):
                 self.can_shoot = True
                 self.shoot_timer = 0
-            elif self.shoot_timer >= 165:
-                self.shoot_timer = 0
+            
 
         # Add shielding
         if self.can_shield:
             if self.shield_pressed:
                 if self.level_up <=3:
-                    for x in range(1,2):
-                        shield = arcade.Sprite(file_path + "/resources/images/weapons/shieldBronze.png", 
-                            SPRITE_SCALING_PROJECTILES/1.25,
+                    shield = arcade.Sprite(file_path + "/resources/images/weapons/shieldBronze.png", 
+                        SPRITE_SCALING_PROJECTILES/1.25,
                         )
                 elif self.level_up <=6:
-                    for x in range(1,2):
-                        shield = arcade.Sprite(file_path + "/resources/images/weapons/shieldSilver.png", 
-                            SPRITE_SCALING_PROJECTILES,
+                    shield = arcade.Sprite(file_path + "/resources/images/weapons/shieldSilver.png", 
+                        SPRITE_SCALING_PROJECTILES,
                         )
                 elif self.level_up <=9:
-                    for x in range(1,2):
-                        shield = arcade.Sprite(file_path + "/resources/images/weapons/shieldGold.png", 
-                            SPRITE_SCALING_PROJECTILES*1.25,
+                    shield = arcade.Sprite(file_path + "/resources/images/weapons/shieldGold.png", 
+                        SPRITE_SCALING_PROJECTILES*1.25,
                         )
 
                 if self.player_sprite.character_face_direction == RIGHT_FACING:
@@ -631,11 +630,11 @@ class GameView(arcade.View):
                 self.can_shield = False
         else:
             self.shield_timer += 1
-            print(self.shield_timer)
-            if self.shield_timer == SHIELD_SPEED/(self.level_up+1):
-                self.can_shield = True
+            print(SHIELD_SPEED/(self.level_up+1))
+            if self.shield_timer >= 1001:
                 self.shield_timer = 0
-            elif self.shield_timer >= 2000:
+            elif self.shield_timer == SHIELD_SPEED/(self.level_up+1):
+                self.can_shield = True
                 self.shield_timer = 0
 
         # Add mouse shooting
