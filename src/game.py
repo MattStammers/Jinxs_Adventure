@@ -376,15 +376,27 @@ class GameView(arcade.View):
                 # if on ground use control flow to filter jump speed based on player level
                 if self.level_up <= 0:
                     # Go ahead and jump
-                    impulse = (0, PLAYER_JUMP_IMPULSE/2)
+                    impulse = (0, PLAYER_JUMP_IMPULSE//2)
+                    self.physics_engine.apply_impulse(self.player_sprite, impulse)
+                elif self.level_up <= 1:
+                    # Go ahead and jump
+                    impulse = (0, PLAYER_JUMP_IMPULSE//1.75)
                     self.physics_engine.apply_impulse(self.player_sprite, impulse)
                 elif self.level_up <= 2:
                     # Go ahead and jump
-                    impulse = (0, PLAYER_JUMP_IMPULSE/1.5)
+                    impulse = (0, PLAYER_JUMP_IMPULSE//1.5)
+                    self.physics_engine.apply_impulse(self.player_sprite, impulse)
+                elif self.level_up <= 3:
+                    # Go ahead and jump
+                    impulse = (0, PLAYER_JUMP_IMPULSE//1.25)
                     self.physics_engine.apply_impulse(self.player_sprite, impulse)
                 elif self.level_up <= 4:
                     # Go ahead and jump
                     impulse = (0, PLAYER_JUMP_IMPULSE)
+                    self.physics_engine.apply_impulse(self.player_sprite, impulse)
+                elif self.level_up <= 5:
+                    # Go ahead and jump
+                    impulse = (0, PLAYER_JUMP_IMPULSE*1.5)
                     self.physics_engine.apply_impulse(self.player_sprite, impulse)
                 elif self.level_up <= 6:
                     # Go ahead and jump
@@ -557,7 +569,7 @@ class GameView(arcade.View):
         if self.can_shoot:
             if self.shoot_pressed:
                 arcade.play_sound(self.shoot_sound)
-                if self.level_up <= 3:
+                if self.level_up <= 4:
                     player_bullet = arcade.Sprite(
                         file_path + "/resources/images/weapons/swordBronze.png",
                         SPRITE_SCALING_PROJECTILES/1.5,
@@ -592,10 +604,9 @@ class GameView(arcade.View):
 
         else:
             self.shoot_timer += 1
-            print(SHOOT_SPEED/(self.level_up+1))
             if self.shoot_timer >= 101:
                 self.shoot_timer = 0
-            elif self.shoot_timer == SHOOT_SPEED/round((self.level_up+1),0):
+            elif self.shoot_timer == SHOOT_SPEED//(self.level_up+1):
                 self.can_shoot = True
                 self.shoot_timer = 0
             
@@ -630,10 +641,9 @@ class GameView(arcade.View):
                 self.can_shield = False
         else:
             self.shield_timer += 1
-            print(SHIELD_SPEED/(self.level_up+1))
             if self.shield_timer >= 1001:
                 self.shield_timer = 0
-            elif self.shield_timer == SHIELD_SPEED/(self.level_up+1):
+            elif self.shield_timer == SHIELD_SPEED//(self.level_up+1):
                 self.can_shield = True
                 self.shield_timer = 0
 
