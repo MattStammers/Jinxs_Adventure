@@ -51,23 +51,26 @@ class InstructionView(arcade.View):
 class GameOverView(arcade.View):
     """ View to show when game is over """
 
-    def __init__(self):
+    def on_show_view(self):
         """ This is run once when we switch to this view """
-        super().__init__()
-        self.texture = arcade.load_texture(file_path + "/resources/images/tiles/sandtile.png")
+        arcade.set_background_color(arcade.csscolor.DARK_RED)
 
         # Reset the viewport, necessary if we have a scrolling game and we need
         # to reset the viewport back to the start so we can see what we draw.
-        arcade.set_viewport(0, SCREEN_WIDTH - 1, 0, SCREEN_HEIGHT - 1)
+        arcade.set_viewport(0, self.window.width, 0, self.window.height)
 
     def on_draw(self):
         """ Draw this view """
         self.clear()
-        self.texture.draw_sized(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
-                                SCREEN_WIDTH, SCREEN_HEIGHT)
+        arcade.draw_text("Game Over Screen", self.window.width / 2, self.window.height / 2,
+                         arcade.color.WHITE, font_size=50, anchor_x="center")
+        arcade.draw_text("You have run out of lives and thus have to restart the game", self.window.width / 2, self.window.height / 2-80,
+                         arcade.color.PINK_LAVENDER, font_size=25, anchor_x="center")
+        arcade.draw_text("Press to continue", self.window.width / 2, self.window.height / 2-120,
+                         arcade.color.YELLOW_GREEN, font_size=25, anchor_x="center")
 
     def on_mouse_press(self, _x, _y, _button, _modifiers):
-        """ If the user presses the mouse button, re-start the game. """
+        """ If the user presses the mouse button, start the game. """
         game_view = GameView()
         game_view.setup()
         self.window.show_view(game_view)

@@ -30,6 +30,30 @@ LAYER_NAME_ENEMY_BULLETS = "Enemy Bullets"
 LAYER_NAME_ALLIES = "Allies"
 LAYER_NAME_SHIELD = "Shield"
 
+class GameOverView(arcade.View):
+    """ View to show when game is over """
+
+    def __init__(self):
+        """ This is run once when we switch to this view """
+        super().__init__()
+        self.texture = arcade.load_texture(file_path + "/resources/images/tiles/custom_tiles/pizzaman.png")
+
+        # Reset the viewport, necessary if we have a scrolling game and we need
+        # to reset the viewport back to the start so we can see what we draw.
+        arcade.set_viewport(0, SCREEN_WIDTH - 1, 0, SCREEN_HEIGHT - 1)
+
+    def on_draw(self):
+        """ Draw this view """
+        self.clear()
+        self.texture.draw_sized(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
+                                SCREEN_WIDTH, SCREEN_HEIGHT)
+
+    def on_mouse_press(self, _x, _y, _button, _modifiers):
+        """ If the user presses the mouse button, re-start the game. """
+        game_view = GameView()
+        game_view.setup()
+        self.window.show_view(game_view)
+
 class GameView(arcade.View):
     """ Main Window """
 
@@ -171,6 +195,9 @@ class GameView(arcade.View):
 
         # Level_Up
         self.level_up = 0
+
+        # Lives at the start
+        self.lives=3 + self.level_up
 
         # Shielding mechanics
         self.can_shield = True
@@ -724,7 +751,6 @@ class GameView(arcade.View):
                     self.mouse_pressed = False
 
         # Check lives. If it is zero, flip to the game over view.
-        self.lives=3
         if self.lives == 0:
             view = GameOverView()
             self.window.show_view(view)
@@ -995,12 +1021,13 @@ class GameView(arcade.View):
         # Look through the enemies to see if we hit any:
         for collision in enemy_collision_list:
             if self.scene[LAYER_NAME_ENEMIES] in collision.sprite_lists:
-            # If we collide with an enemy then reset the game - to be edited later on with life removal
+            # If we collide with an enemy then we lose a life
                 arcade.play_sound(self.game_over)
-                self.setup()
+                self.lives -=1
+                return
             elif self.scene[LAYER_NAME_ENEMY_BULLETS] in collision.sprite_lists:
                 arcade.play_sound(self.game_over)
-                self.setup()
+                self.lives -=1
                 return
 
         # Did the player fall off the map?
@@ -1046,6 +1073,15 @@ class GameView(arcade.View):
         # Activate the GUI camera before drawing GUI elements
         self.gui_camera.use()
 
+        # Draw lives on the screen, scrolling it with the viewport
+        score_text = f"Remaining Life Points: {self.lives}"
+        arcade.draw_text(
+            score_text,
+            10,
+            100,
+            arcade.csscolor.DARK_GREEN,
+            18,
+        )
         # Draw our score on the screen, scrolling it with the viewport
         score_text = f"Score: {self.score}"
         arcade.draw_text(
