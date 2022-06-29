@@ -19,6 +19,7 @@ LAYER_NAME_PLAYER = "Player"
 LAYER_NAME_BACKGROUND = "Background"
 LAYER_NAME_FOREGROUND = "Foreground"
 LAYER_NAME_COINS = "Coins"
+LAYER_NAME_HEARTS = "Hearts"
 LAYER_NAME_DONT_TOUCH = "Don't Touch"
 LAYER_NAME_LADDERS = "Ladders"
 LAYER_NAME_MOVING_PLATFORMS = "Moving Platforms"
@@ -97,6 +98,7 @@ class GameView(arcade.View):
         self.moving_sprites_list: Optional[arcade.SpriteList] = None
         self.ladder_list: Optional[arcade.SpriteList] = None
         self.coin_list: Optional[arcade.SpriteList] = None
+        self.heart_list: Optional[arcade.SpriteList] = None
         self.enemies_list: Optional[Enemy] = None
         self.player_bullets: Optional[arcade.SpriteList] = None
 
@@ -129,8 +131,12 @@ class GameView(arcade.View):
         self.shoot_timer = 0
 
         # Shielding mechanics
-        self.can_shield = True
+        self.can_shield = False
         self.shield_timer = 0
+
+        # Life mechanics
+        self.can_die = False
+        self.death_timer = 0
 
         # Keep track of the score
         self.score = 0
@@ -147,8 +153,11 @@ class GameView(arcade.View):
         # Level
         self.level = 0
 
-         # Level_Up
+        # Level_Up
         self.level_up = 0
+
+        # Lives
+        self.lives = 0
 
         # Load sounds
         self.game_over = arcade.load_sound(file_path+"/resources/sounds/gameover2.wav")
@@ -196,8 +205,12 @@ class GameView(arcade.View):
         # Level_Up
         self.level_up = 0
 
-        # Lives at the start
-        self.lives=3 + self.level_up
+        # Lives at the start of each level
+        self.lives= (self.level_up + 3)
+
+        # Life mechanics
+        self.can_die = True
+        self.death_timer = 0
 
         # Shielding mechanics
         self.can_shield = True
@@ -236,6 +249,7 @@ class GameView(arcade.View):
         self.background_list = self.tile_map.sprite_lists[LAYER_NAME_BACKGROUND]
         self.wall_list = self.tile_map.sprite_lists[LAYER_NAME_PLATFORMS]
         self.coin_list = self.tile_map.sprite_lists[LAYER_NAME_COINS]
+        self.heart_list = self.tile_map.sprite_lists[LAYER_NAME_HEARTS]
         self.dont_touch_list = self.tile_map.sprite_lists[LAYER_NAME_DONT_TOUCH]
         self.item_list = self.tile_map.sprite_lists[LAYER_NAME_DYNAMIC_ITEMS]
         self.ladder_list = self.tile_map.sprite_lists[LAYER_NAME_LADDERS]
@@ -377,6 +391,11 @@ class GameView(arcade.View):
         self.physics_engine.add_sprite_list(self.coin_list,
                                             friction=DYNAMIC_ITEM_FRICTION,
                                             collision_type="coin")
+
+        # Add Hearts
+        self.physics_engine.add_sprite_list(self.heart_list,
+                                            friction=DYNAMIC_ITEM_FRICTION,
+                                            collision_type="heart")
 
         # Create the items
         self.physics_engine.add_sprite_list(self.item_list,
@@ -648,7 +667,7 @@ class GameView(arcade.View):
 
         else:
             self.shoot_timer += 1
-            if self.shoot_timer >= 101:
+            if self.shoot_timer >= SHOOT_SPEED+10:
                 self.shoot_timer = 0
             elif self.shoot_timer == SHOOT_SPEED//(self.level_up*self.level_up+1):
                 self.can_shoot = True
@@ -685,7 +704,7 @@ class GameView(arcade.View):
                 self.can_shield = False
         else:
             self.shield_timer += 1
-            if self.shield_timer >= 1001:
+            if self.shield_timer >= SHIELD_SPEED + 10:
                 self.shield_timer = 0
             elif self.shield_timer == SHIELD_SPEED//(self.level_up*self.level_up+1):
                 self.can_shield = True
@@ -979,6 +998,11 @@ class GameView(arcade.View):
             self.player_sprite, self.coin_list
         )
 
+        # See if we hit any hearts
+        heart_hit_list = arcade.check_for_collision_with_list(
+            self.player_sprite, self.heart_list
+        )
+
         # See if we hit any enemies
         enemy_collision_list = arcade.check_for_collision_with_lists(
             self.player_sprite,
@@ -1018,17 +1042,39 @@ class GameView(arcade.View):
             # Play a sound
             arcade.play_sound(self.collect_coin_sound)
 
+        for heart in heart_hit_list:
+            # Figure out how many lives this heart is worth
+            if "Lives" not in heart.properties:
+                print("Warning, collected a heart without a Lives property.")
+            else:
+                lives = int(heart.properties["Lives"])
+                self.lives += lives
+            # Remove the coin
+            heart.remove_from_sprite_lists()
+            # Play a sound
+            arcade.play_sound(self.collect_coin_sound)
+
         # Look through the enemies to see if we hit any:
         for collision in enemy_collision_list:
-            if self.scene[LAYER_NAME_ENEMIES] in collision.sprite_lists:
-            # If we collide with an enemy then we lose a life
-                arcade.play_sound(self.game_over)
-                self.lives -=1
-                return
-            elif self.scene[LAYER_NAME_ENEMY_BULLETS] in collision.sprite_lists:
-                arcade.play_sound(self.game_over)
-                self.lives -=1
-                return
+            if self.can_die:
+                if self.scene[LAYER_NAME_ENEMIES] in collision.sprite_lists:
+                # If we collide with an enemy then we lose a life
+                    arcade.play_sound(self.game_over)
+                    self.lives -=1
+                    self.can_die = False
+                    return
+                elif self.scene[LAYER_NAME_ENEMY_BULLETS] in collision.sprite_lists:
+                    arcade.play_sound(self.game_over)
+                    self.lives -=1
+                    self.can_die = False
+                    return
+            else:
+                self.death_timer +=1
+                if self.death_timer > DEATH_PROTECT + 5:
+                    self.death_timer = 0
+                elif self.death_timer == DEATH_PROTECT:
+                    self.can_die = True
+                    self.death_timer = 0
 
         # Did the player fall off the map?
         if self.player_sprite.center_y < -100:
@@ -1063,6 +1109,7 @@ class GameView(arcade.View):
         self.item_list.draw()
         self.player_list.draw()
         self.coin_list.draw()
+        self.heart_list.draw()
         self.dont_touch_list.draw()
         self.background_list.draw()
         self.foreground_list.draw()
@@ -1079,7 +1126,7 @@ class GameView(arcade.View):
             score_text,
             10,
             100,
-            arcade.csscolor.DARK_GREEN,
+            arcade.csscolor.LIGHT_GOLDENROD_YELLOW,
             18,
         )
         # Draw our score on the screen, scrolling it with the viewport
