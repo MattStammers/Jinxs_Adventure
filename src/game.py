@@ -76,13 +76,13 @@ class GameView(arcade.View):
 
         # Add the screen title
         start_x = 0
-        start_y = SCREEN_HEIGHT - DEFAULT_LINE_HEIGHT * 1.5
+        start_y = SCREEN_HEIGHT - DEFAULT_LINE_HEIGHT * 12
         self.title = arcade.Text(
-            "Jinx's Adventure",
+            "Welcome to Moontown",
             start_x,
             start_y,
             arcade.color.BLACK,
-            DEFAULT_FONT_SIZE * 2,
+            DEFAULT_FONT_SIZE * 1.5,
             width=SCREEN_WIDTH,
             align="center",
         )
