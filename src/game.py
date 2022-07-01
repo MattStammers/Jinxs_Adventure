@@ -87,11 +87,7 @@ class GameView(arcade.View):
             align="center",
         )
 
-        # Player sprite
-        self.player_sprite: Optional[PlayerSprite] = None
-
         # Sprite lists we need
-        self.player_list: Optional[arcade.SpriteList] = None
         self.wall_list: Optional[arcade.SpriteList] = None
         self.grenade_list: Optional[arcade.SpriteList] = None
         self.item_list: Optional[arcade.SpriteList] = None
@@ -101,6 +97,10 @@ class GameView(arcade.View):
         self.heart_list: Optional[arcade.SpriteList] = None
         self.enemies_list: Optional[Enemy] = None
         self.player_bullets: Optional[arcade.SpriteList] = None
+        self.player_list: Optional[arcade.SpriteList] = None
+
+        # Player sprite
+        self.player_sprite: Optional[PlayerSprite] = None
 
         # Track the current state of what key is pressed
         self.left_pressed: bool = False
@@ -145,7 +145,7 @@ class GameView(arcade.View):
         self.reset_score = True
 
         # Set background color
-        arcade.set_background_color(arcade.color.BLUE_SAPPHIRE)
+        arcade.set_background_color(arcade.color.BLEU_DE_FRANCE)
 
         # Where is the right edge of the map?
         self.end_of_map = 0
@@ -714,7 +714,7 @@ class GameView(arcade.View):
         if self.mouse_pressed:
             if self.level_up>=1:
                 for x in range(0,self.level_up):
-                    grenade = GrenadeSprite((5+self.level_up), self.level_up, arcade.color.ROMAN_SILVER)
+                    grenade = GrenadeSprite((5+self.level_up), self.level_up, arcade.color.PURPLE_HEART)
                     self.grenade_list.append(grenade)
 
                     # Position the grenade at the player's current location
@@ -1102,20 +1102,21 @@ class GameView(arcade.View):
     def on_draw(self):
         """ Draw everything """
         self.clear()
+
+        # This variable contains the enemies and bullets
+        self.scene.draw()
+
+        self.background_list.draw()
         self.wall_list.draw()
         self.ladder_list.draw()
         self.moving_sprites_list.draw()
         self.grenade_list.draw()
-        self.item_list.draw()
-        self.player_list.draw()
         self.coin_list.draw()
         self.heart_list.draw()
         self.dont_touch_list.draw()
-        self.background_list.draw()
+        self.item_list.draw()
+        self.player_list.draw()
         self.foreground_list.draw()
-
-        # This variable contains the enemies and bullets
-        self.scene.draw()
 
         # Activate the GUI camera before drawing GUI elements
         self.gui_camera.use()
