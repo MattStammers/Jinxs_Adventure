@@ -145,7 +145,7 @@ class GameView(arcade.View):
         self.reset_score = True
 
         # Set background color
-        arcade.set_background_color(arcade.color.AMAZON)
+        arcade.set_background_color(arcade.color.BLUE_SAPPHIRE)
 
         # Where is the right edge of the map?
         self.end_of_map = 0
