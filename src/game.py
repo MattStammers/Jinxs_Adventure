@@ -96,6 +96,7 @@ class GameView(arcade.View):
         self.coin_list: Optional[arcade.SpriteList] = None
         self.heart_list: Optional[arcade.SpriteList] = None
         self.enemies_list: Optional[Enemy] = None
+        self.allies_list: Optional[Enemy] = None
         self.player_bullets: Optional[arcade.SpriteList] = None
         self.player_list: Optional[arcade.SpriteList] = None
 
@@ -177,13 +178,14 @@ class GameView(arcade.View):
             LAYER_NAME_ENEMIES: {
                 "use_spatial_hash": False,
             },
+            LAYER_NAME_ALLIES: {
+                "use_spatial_hash": False,
+            },
             LAYER_NAME_MOVING_PLATFORMS: {
                 "use_spatial_hash": False,
-                
             },
             LAYER_NAME_SHIELD: {
                 "use_spatial_hash": True,
-                
             },
             LAYER_NAME_LADDERS: {
                 "use_spatial_hash": True,
@@ -273,7 +275,39 @@ class GameView(arcade.View):
 
         # -- Enemies
         self.enemies_list = self.tile_map.object_lists[LAYER_NAME_ENEMIES]
+        self.allies_list = self.tile_map.object_lists[LAYER_NAME_ALLIES]
 
+        # Map Allies
+        for my_object in self.allies_list:
+            cartesian = self.tile_map.get_cartesian(
+                my_object.shape[0], my_object.shape[1]
+            )
+            ally_type = my_object.properties["type"]
+            if ally_type == "hooboo":
+                ally = Hooboo()
+            elif ally_type == "flufflepop":
+                ally = FlufflePop()
+            elif ally_type == "pumbean":
+                ally = Pumbean()
+            elif ally_type == "excalibur":
+                ally = Excalibur()
+            else:
+                raise Exception(f"Unknown ally type {ally_type}.")
+            ally.center_x = math.floor(
+                cartesian[0] * SPRITE_SCALING_ALLIES * ALLY_SPRITE_IMAGE_SIZE
+            )
+            ally.center_y = math.floor(
+                (cartesian[1] + 1) * (SPRITE_SCALING_ALLIES * ALLY_SPRITE_IMAGE_SIZE)
+            )
+            if "boundary_left" in my_object.properties:
+                ally.boundary_left = my_object.properties["boundary_left"]
+            if "boundary_right" in my_object.properties:
+                ally.boundary_right = my_object.properties["boundary_right"]
+            if "change_x" in my_object.properties:
+                ally.change_x = my_object.properties["change_x"]
+            self.scene.add_sprite(LAYER_NAME_ALLIES, ally)
+
+        # Map Enemy Objects
         for my_object in self.enemies_list:
             cartesian = self.tile_map.get_cartesian(
                 my_object.shape[0], my_object.shape[1]
@@ -405,6 +439,12 @@ class GameView(arcade.View):
         # Add kinematic sprites
         self.physics_engine.add_sprite_list(self.moving_sprites_list,
                                             body_type=arcade.PymunkPhysicsEngine.KINEMATIC)
+
+        # self.physics_engine.add_sprite_list(self.enemies_list,
+        #                                     body_type=arcade.PymunkPhysicsEngine.KINEMATIC)
+
+        # self.physics_engine.add_sprite_list(self.allies_list,
+        #                                     body_type=arcade.PymunkPhysicsEngine.KINEMATIC)
 
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
@@ -778,29 +818,34 @@ class GameView(arcade.View):
         self.scene.update_animation(
             delta_time,
             [
-                LAYER_NAME_ENEMIES, ],
+                LAYER_NAME_ENEMIES,
+                LAYER_NAME_ALLIES],
         )
 
         # Update enemies and bullets
         self.scene.update(
-            [LAYER_NAME_ENEMIES, LAYER_NAME_ENEMY_BULLETS, LAYER_NAME_PLAYER_BULLETS, LAYER_NAME_PLAYER_GRENADES]
+            [LAYER_NAME_ENEMIES, 
+            LAYER_NAME_ENEMY_BULLETS, 
+            LAYER_NAME_PLAYER_BULLETS, 
+            LAYER_NAME_PLAYER_GRENADES,
+            LAYER_NAME_ALLIES]
         )
 
         # See if the enemy hit a boundary and needs to reverse direction.
-        for enemy in self.scene[LAYER_NAME_ENEMIES]:
+        for character in self.scene[LAYER_NAME_ENEMIES] and self.scene[LAYER_NAME_ALLIES]:
             if (
-                enemy.boundary_right
-                and enemy.right > enemy.boundary_right
-                and enemy.change_x > 0
+                character.boundary_right
+                and character.right > character.boundary_right
+                and character.change_x > 0
             ):
-                enemy.change_x *= -1
+                character.change_x *= -1
 
             if (
-                enemy.boundary_left
-                and enemy.left < enemy.boundary_left
-                and enemy.change_x < 0
+                character.boundary_left
+                and character.left < character.boundary_left
+                and character.change_x < 0
             ):
-                enemy.change_x *= -1
+                character.change_x *= -1
 
         for projectile in self.scene[LAYER_NAME_PLAYER_BULLETS] or self.scene[LAYER_NAME_PLAYER_GRENADES]:
             hit_list = arcade.check_for_collision_with_lists(
