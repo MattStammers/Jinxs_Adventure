@@ -75,17 +75,7 @@ class GameView(arcade.View):
         self.frame_count = 0
 
         # Add the screen title
-        start_x = 0
-        start_y = SCREEN_HEIGHT - DEFAULT_LINE_HEIGHT * 12
-        self.title = arcade.Text(
-            "Welcome to Moontown",
-            start_x,
-            start_y,
-            arcade.color.BLACK,
-            DEFAULT_FONT_SIZE * 1.5,
-            width=SCREEN_WIDTH,
-            align="center",
-        )
+        # If wanted later on can be added here
 
         # Sprite lists we need
         self.wall_list: Optional[arcade.SpriteList] = None
@@ -1038,6 +1028,20 @@ class GameView(arcade.View):
             elif type(enemy) == type(RolyPolyBot()):    
                 aimingfire(rate = 30, bullet_speed=10, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "laserBlue01.png")
 
+        # Allies Text
+        for ally in self.scene[LAYER_NAME_ALLIES]:
+            if type(ally) == type(Hooboo()):
+                # First text block
+                start_x = ally.center_x
+                start_y = ally.top + 10
+                self.welcome_message = arcade.Text(
+                    "Welcome to Moontown",
+                    start_x,
+                    start_y,
+                    arcade.color.BLACK,
+                    DEFAULT_FONT_SIZE    
+                )
+
         # See if we hit any coins
         coin_hit_list = arcade.check_for_collision_with_list(
             self.player_sprite, self.coin_list
@@ -1163,6 +1167,9 @@ class GameView(arcade.View):
         self.player_list.draw()
         self.foreground_list.draw()
 
+        # Draw Text
+        self.welcome_message.draw()
+
         # Activate the GUI camera before drawing GUI elements
         self.gui_camera.use()
 
@@ -1209,7 +1216,7 @@ class GameView(arcade.View):
         self.camera.use()
 
         # Add Title
-        self.title.draw()
+        # self.title.draw()
 
         # for item in self.player_list:
         #     item.draw_hit_box(arcade.color.RED)
