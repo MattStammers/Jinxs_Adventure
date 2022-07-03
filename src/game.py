@@ -6,7 +6,11 @@ This is the main game script
 import math
 import random
 from sys import builtin_module_names
+from tokenize import Name
 from typing import Optional
+from unicodedata import name
+
+from arcade import Point
 from views import *
 
 SCREEN_TITLE = "Jinx & Gravity"
@@ -156,6 +160,27 @@ class GameView(arcade.View):
         self.jump_sound = arcade.load_sound(file_path+"/resources/sounds/jump3.wav")
         self.hit_sound = arcade.load_sound(file_path+"/resources/sounds/hit2.wav")
         self.shoot_sound = arcade.load_sound(file_path+"/resources/sounds/hurt3.wav")
+
+        self.welcome_message = arcade.Text(
+           "Welcome to Moontown",
+                        start_x=10,
+                        start_y = SCREEN_HEIGHT - DEFAULT_LINE_HEIGHT * 3,
+                        color = arcade.color.BLACK,
+                        font_size = DEFAULT_FONT_SIZE)  
+
+        self.see_saw_message = arcade.Text(
+            "See if you can make it over the see-saw",
+                        start_x = 10,
+                        start_y = SCREEN_HEIGHT - DEFAULT_LINE_HEIGHT * 6,
+                        color = arcade.color.GREEN,
+                        font_size = DEFAULT_FONT_SIZE)
+
+        self.farm_message = arcade.Text(
+            "Can you save my farm from the big worms?",
+                        start_x = 10,
+                        start_y = SCREEN_HEIGHT - DEFAULT_LINE_HEIGHT * 9,
+                        color = arcade.color.RED,
+                        font_size = DEFAULT_FONT_SIZE)
 
     def setup(self):
         """ Set up everything with the game """
@@ -822,7 +847,7 @@ class GameView(arcade.View):
         )
 
         # See if the enemy hit a boundary and needs to reverse direction.
-        for character in self.scene[LAYER_NAME_ENEMIES] and self.scene[LAYER_NAME_ALLIES]:
+        for character in self.scene[LAYER_NAME_ENEMIES] or self.scene[LAYER_NAME_ALLIES]:
             if (
                 character.boundary_right
                 and character.right > character.boundary_right
@@ -1029,18 +1054,47 @@ class GameView(arcade.View):
                 aimingfire(rate = 30, bullet_speed=10, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "laserBlue01.png")
 
         # Allies Text
-        for ally in self.scene[LAYER_NAME_ALLIES]:
-            if type(ally) == type(Hooboo()):
-                # First text block
-                start_x = ally.center_x
-                start_y = ally.top + 10
-                self.welcome_message = arcade.Text(
-                    "Welcome to Moontown",
-                    start_x,
-                    start_y,
-                    arcade.color.BLACK,
-                    DEFAULT_FONT_SIZE    
-                )
+        # for ally in self.scene[LAYER_NAME_ALLIES]:
+        #     if type(ally) == type(Hooboo()):
+        #         # # First hooboo
+                # if ally[name] == 'Hooboo':
+                #     self.welcome_message = arcade.Text(
+                #         "Welcome to Moontown",
+                #         start_x=ally.center_x,
+                #         start_y=ally.top,
+                #         color = arcade.color.BLACK,
+                #         font_size = DEFAULT_FONT_SIZE    
+                #     )
+                #     return self.welcome_message
+                # # Second hooboo
+                # elif ally[name] == 'Hooboo2':
+                #     self.see_saw_message = arcade.Text(
+                #         "See if you can make it over the see-saw",
+                #         start_x=ally.center_x,
+                #         start_y=ally.top,
+                #         color = arcade.color.RED,
+                #         font_size = DEFAULT_FONT_SIZE     
+                #     )
+                #     return self.see_saw_message
+                # # Third Hooboo
+                # elif ally[name] == 'Hooboo3':
+                #     self.farm_message = arcade.Text(
+                #         "Can you save my farm from the big worms? ",
+                #         start_x=ally.center_x,
+                #         start_y=ally.top,
+                #         color = arcade.color.GREEN,
+                #         font_size = DEFAULT_FONT_SIZE     
+                #     )
+                #     return self.farm_message
+                # else:
+                # print(ally[name])
+                # self.welcome_message = arcade.Text(
+                #     "Welcome to Moontown",
+                #     start_x=ally.center_x,
+                #     start_y=ally.top,
+                #     color = arcade.color.BLACK,
+                #     font_size = DEFAULT_FONT_SIZE      
+                # )
 
         # See if we hit any coins
         coin_hit_list = arcade.check_for_collision_with_list(
@@ -1166,9 +1220,7 @@ class GameView(arcade.View):
         self.item_list.draw()
         self.player_list.draw()
         self.foreground_list.draw()
-
-        # Draw Text
-        self.welcome_message.draw()
+        # self.enemies_list.draw()
 
         # Activate the GUI camera before drawing GUI elements
         self.gui_camera.use()
@@ -1215,8 +1267,11 @@ class GameView(arcade.View):
         # Activate our Camera
         self.camera.use()
 
-        # Add Title
+        # Add Text
         # self.title.draw()
+        self.welcome_message.draw()
+        self.farm_message.draw()
+        self.see_saw_message.draw()
 
         # for item in self.player_list:
         #     item.draw_hit_box(arcade.color.RED)

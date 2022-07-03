@@ -3,7 +3,7 @@ from player import *
 SPRITE_SCALING_ENEMIES = 0.8
 ENEMY_SPRITE_IMAGE_SIZE = 64
 ALLY_SPRITE_IMAGE_SIZE = 64
-SPRITE_SCALING_ALLIES = 0.63
+SPRITE_SCALING_ALLIES = 0.8
 
 def load_texture_pair(filename):
     """
@@ -24,6 +24,7 @@ class Entity(arcade.Sprite):
 
         # Used for image sequences
         self.cur_texture = 0
+        self.scale = SPRITE_SCALING_ENEMIES
 
         main_path = file_path + f"/resources/images/animated_characters/{name_folder}/{name_file}"
 
