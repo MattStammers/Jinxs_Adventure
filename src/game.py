@@ -176,7 +176,10 @@ class GameView(arcade.View):
         self.shoot_sound = arcade.load_sound(file_path+"/resources/sounds/hurt3.wav")
 
         # Add messages
-        self.messages_list = []
+        self.message1 = None
+        self.message2 = None
+        self.message3 = None
+        self.message = "Hi"
 
     def setup(self):
         """ Set up everything with the game """
@@ -1067,18 +1070,6 @@ class GameView(arcade.View):
 
             elif type(enemy) == type(RolyPolyBot()):    
                 aimingfire(rate = 30, bullet_speed=10, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "laserBlue01.png")
-
-        # # Allies Text Talk
-        # for ally in self.scene[LAYER_NAME_ALLIES]:
-        #     self.messages_list = []
-        #     self.message = arcade.Text(
-        #         ally.speech,
-        #         start_x=ally.center_x,
-        #         start_y=ally.top,
-        #         color = arcade.color.BLACK,
-        #         font_size = DEFAULT_FONT_SIZE    
-        #     )
-        #     self.messages_list.append(self.message)
                  
         # See if we hit any coins
         coin_hit_list = arcade.check_for_collision_with_list(
@@ -1188,6 +1179,23 @@ class GameView(arcade.View):
             # Load the next level
             self.setup()
 
+        # Allies Text Talk
+        for ally in self.scene[LAYER_NAME_ALLIES]:
+            message_list = []
+            for speech in ally.speech:
+                speech = arcade.Text(
+                ally.speech,
+                start_x=ally.center_x,
+                start_y=ally.top,
+                color = arcade.color.BLACK,
+                font_size = DEFAULT_FONT_SIZE    
+            )
+                return message_list.append(speech)
+
+        self.message1 = message_list[0]
+        self.message2 = message_list[1]
+        self.message3 = message_list[2]
+
     def on_draw(self):
         """ Draw everything """
         self.clear()
@@ -1259,6 +1267,10 @@ class GameView(arcade.View):
         # self.title.draw()
         # Call our drawing functions.
         # draw_background()
+        # self.message.draw()
+        self.message1.draw()
+        self.message2.draw()
+        self.message3.draw()
 
         # for item in self.player_list:
         #     item.draw_hit_box(arcade.color.RED)
