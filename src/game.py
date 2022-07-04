@@ -55,7 +55,7 @@ class GameOverView(arcade.View):
     def __init__(self):
         """ This is run once when we switch to this view """
         super().__init__()
-        self.texture = arcade.load_texture(file_path + "/resources/images/tiles/custom_tiles/pizzaman.png")
+        self.texture = arcade.load_texture(file_path + "/resources/images/tiles/custom_tiles/pizzaman2.png")
 
         # Reset the viewport, necessary if we have a scrolling game and we need
         # to reset the viewport back to the start so we can see what we draw.
@@ -1096,10 +1096,11 @@ class GameView(arcade.View):
             hit_list = arcade.check_for_collision_with_lists(
                 bullet2,
                 [
+                    self.scene[LAYER_NAME_DYNAMIC_ITEMS],
                     self.scene[LAYER_NAME_PLATFORMS],
                     self.scene[LAYER_NAME_MOVING_PLATFORMS],
-                    self.scene[LAYER_NAME_DYNAMIC_ITEMS],
                     self.scene[LAYER_NAME_SHIELD],
+                    self.scene[LAYER_NAME_ALLIES],
                 ],
             )
 
