@@ -35,6 +35,20 @@ LAYER_NAME_ENEMY_BULLETS = "Enemy Bullets"
 LAYER_NAME_ALLIES = "Allies"
 LAYER_NAME_SHIELD = "Shield"
 
+def draw_background():
+    """
+    This function draws the background. Specifically, the sky and ground.
+    """
+    # Draw the sky in the top two-thirds
+    arcade.draw_rectangle_filled(SCREEN_WIDTH / 2, SCREEN_HEIGHT * 2 / 3,
+                                SCREEN_WIDTH - 1, SCREEN_HEIGHT * 2 / 3,
+                                arcade.color.SKY_BLUE)
+
+    # Draw the ground in the bottom third
+    arcade.draw_rectangle_filled(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 6,
+                                SCREEN_WIDTH - 1, SCREEN_HEIGHT / 3,
+                                arcade.color.DARK_SPRING_GREEN)
+
 class GameOverView(arcade.View):
     """ View to show when game is over """
 
@@ -152,7 +166,7 @@ class GameView(arcade.View):
         self.level_up = 0
 
         # Lives
-        self.lives = 0
+        self.lives = 3
 
         # Load sounds
         self.game_over = arcade.load_sound(file_path+"/resources/sounds/gameover2.wav")
@@ -162,7 +176,7 @@ class GameView(arcade.View):
         self.shoot_sound = arcade.load_sound(file_path+"/resources/sounds/hurt3.wav")
 
         # Add messages
-        self.message = None
+        self.messages_list = []
 
     def setup(self):
         """ Set up everything with the game """
@@ -205,7 +219,7 @@ class GameView(arcade.View):
         self.level_up = 0
 
         # Lives at the start of each level
-        self.lives= (self.level_up + 3)
+        self.lives = self.lives
 
         # Life mechanics
         self.can_die = True
@@ -1056,6 +1070,7 @@ class GameView(arcade.View):
 
         # # Allies Text Talk
         # for ally in self.scene[LAYER_NAME_ALLIES]:
+        #     self.messages_list = []
         #     self.message = arcade.Text(
         #         ally.speech,
         #         start_x=ally.center_x,
@@ -1063,6 +1078,7 @@ class GameView(arcade.View):
         #         color = arcade.color.BLACK,
         #         font_size = DEFAULT_FONT_SIZE    
         #     )
+        #     self.messages_list.append(self.message)
                  
         # See if we hit any coins
         coin_hit_list = arcade.check_for_collision_with_list(
@@ -1150,6 +1166,7 @@ class GameView(arcade.View):
         # Did the player fall off the map?
         if self.player_sprite.center_y < -100:
             arcade.play_sound(self.game_over)
+            self.lives -=1
             self.setup()
 
         # Did the player touch something they should not?
@@ -1157,6 +1174,7 @@ class GameView(arcade.View):
             self.player_sprite, self.dont_touch_list
         ):
             arcade.play_sound(self.game_over)
+            self.lives -=1
             self.setup()
 
         # See if the user got to the end of the level
@@ -1174,17 +1192,19 @@ class GameView(arcade.View):
         """ Draw everything """
         self.clear()
 
-        # This variable contains the enemies and bullets
-        self.scene.draw()
-
+        # Behind items
         self.background_list.draw()
         self.wall_list.draw()
         self.ladder_list.draw()
-        self.moving_sprites_list.draw()
-        self.grenade_list.draw()
         self.coin_list.draw()
         self.heart_list.draw()
         self.dont_touch_list.draw()
+
+        # This variable contains the enemies and bullets
+        self.scene.draw()
+
+        self.moving_sprites_list.draw()
+        self.grenade_list.draw()
         self.item_list.draw()
         self.player_list.draw()
         self.foreground_list.draw()
@@ -1237,7 +1257,8 @@ class GameView(arcade.View):
 
         # Add Text
         # self.title.draw()
-        # self.message.draw()
+        # Call our drawing functions.
+        # draw_background()
 
         # for item in self.player_list:
         #     item.draw_hit_box(arcade.color.RED)
