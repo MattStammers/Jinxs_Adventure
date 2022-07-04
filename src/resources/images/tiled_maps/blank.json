@@ -758,7 +758,13 @@
                  "id":90,
                  "image":"..\/tiles\/main_collection\/cherry.png",
                  "imageheight":128,
-                 "imagewidth":128
+                 "imagewidth":128,
+                 "properties":[
+                        {
+                         "name":"Lives",
+                         "type":"int",
+                         "value":1
+                        }]
                 }, 
                 {
                  "id":91,
