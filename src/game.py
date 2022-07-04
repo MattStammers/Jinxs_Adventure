@@ -302,9 +302,10 @@ class GameView(arcade.View):
                 ally.boundary_right = my_object.properties["boundary_right"]
             if "change_x" in my_object.properties:
                 ally.change_x = my_object.properties["change_x"]
-            if "text" in my_object.properties:
-                ally.text = str(my_object.properties["text"])
+            if "speech" in my_object.properties:
+                ally.speech = my_object.properties["speech"]
             self.scene.add_sprite(LAYER_NAME_ALLIES, ally)
+            #print(my_object.properties)
 
         # Map Enemy Objects
         for my_object in self.enemies_list:
@@ -831,20 +832,36 @@ class GameView(arcade.View):
         )
 
         # See if the enemy hit a boundary and needs to reverse direction.
-        for character in self.scene[LAYER_NAME_ENEMIES] or self.scene[LAYER_NAME_ALLIES]:
+        for enemy in self.scene[LAYER_NAME_ENEMIES]:
             if (
-                character.boundary_right
-                and character.right > character.boundary_right
-                and character.change_x > 0
+                enemy.boundary_right
+                and enemy.right > enemy.boundary_right
+                and enemy.change_x > 0
             ):
-                character.change_x *= -1
+                enemy.change_x *= -1
 
             if (
-                character.boundary_left
-                and character.left < character.boundary_left
-                and character.change_x < 0
+                enemy.boundary_left
+                and enemy.left < enemy.boundary_left
+                and enemy.change_x < 0
             ):
-                character.change_x *= -1
+                enemy.change_x *= -1
+
+        # See if the ally hit a boundary and needs to reverse direction.
+        for ally in self.scene[LAYER_NAME_ALLIES]:
+            if (
+                ally.boundary_right
+                and ally.right > ally.boundary_right
+                and ally.change_x > 0
+            ):
+                ally.change_x *= -1
+
+            if (
+                ally.boundary_left
+                and ally.left < ally.boundary_left
+                and ally.change_x < 0
+            ):
+                ally.change_x *= -1
 
         for projectile in self.scene[LAYER_NAME_PLAYER_BULLETS] or self.scene[LAYER_NAME_PLAYER_GRENADES]:
             hit_list = arcade.check_for_collision_with_lists(
@@ -1037,17 +1054,16 @@ class GameView(arcade.View):
             elif type(enemy) == type(RolyPolyBot()):    
                 aimingfire(rate = 30, bullet_speed=10, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "laserBlue01.png")
 
-        # Allies Text Talk
-        for ally in self.scene[LAYER_NAME_ALLIES]:
-            self.message = arcade.Text(
-                ally.boundary_bottom,
-                start_x=ally.center_x,
-                start_y=ally.top,
-                color = arcade.color.BLACK,
-                font_size = DEFAULT_FONT_SIZE    
-            )
+        # # Allies Text Talk
+        # for ally in self.scene[LAYER_NAME_ALLIES]:
+        #     self.message = arcade.Text(
+        #         ally.speech,
+        #         start_x=ally.center_x,
+        #         start_y=ally.top,
+        #         color = arcade.color.BLACK,
+        #         font_size = DEFAULT_FONT_SIZE    
+        #     )
                  
-
         # See if we hit any coins
         coin_hit_list = arcade.check_for_collision_with_list(
             self.player_sprite, self.coin_list
@@ -1221,7 +1237,7 @@ class GameView(arcade.View):
 
         # Add Text
         # self.title.draw()
-        self.message.draw()
+        # self.message.draw()
 
         # for item in self.player_list:
         #     item.draw_hit_box(arcade.color.RED)
