@@ -229,6 +229,11 @@
                          "value":1
                         }, 
                         {
+                         "name":"text",
+                         "type":"string",
+                         "value":"Welcome to MoonTown Jinx"
+                        }, 
+                        {
                          "name":"type",
                          "type":"string",
                          "value":"hooboo"
@@ -260,6 +265,11 @@
                          "name":"change_x",
                          "type":"int",
                          "value":1
+                        }, 
+                        {
+                         "name":"text",
+                         "type":"string",
+                         "value":"Can you get over this see-saw here?"
                         }, 
                         {
                          "name":"type",
@@ -295,6 +305,11 @@
                          "value":1
                         }, 
                         {
+                         "name":"text",
+                         "type":"string",
+                         "value":"my name is Hooboo"
+                        }, 
+                        {
                          "name":"type",
                          "type":"string",
                          "value":"hooboo"
@@ -326,6 +341,11 @@
                          "name":"change_x",
                          "type":"int",
                          "value":1
+                        }, 
+                        {
+                         "name":"text",
+                         "type":"string",
+                         "value":"Can you save my farm Jinx?"
                         }, 
                         {
                          "name":"type",

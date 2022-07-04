@@ -161,26 +161,8 @@ class GameView(arcade.View):
         self.hit_sound = arcade.load_sound(file_path+"/resources/sounds/hit2.wav")
         self.shoot_sound = arcade.load_sound(file_path+"/resources/sounds/hurt3.wav")
 
-        self.welcome_message = arcade.Text(
-           "Welcome to Moontown",
-                        start_x=10,
-                        start_y = SCREEN_HEIGHT - DEFAULT_LINE_HEIGHT * 3,
-                        color = arcade.color.BLACK,
-                        font_size = DEFAULT_FONT_SIZE)  
-
-        self.see_saw_message = arcade.Text(
-            "See if you can make it over the see-saw",
-                        start_x = 10,
-                        start_y = SCREEN_HEIGHT - DEFAULT_LINE_HEIGHT * 6,
-                        color = arcade.color.GREEN,
-                        font_size = DEFAULT_FONT_SIZE)
-
-        self.farm_message = arcade.Text(
-            "Can you save my farm from the big worms?",
-                        start_x = 10,
-                        start_y = SCREEN_HEIGHT - DEFAULT_LINE_HEIGHT * 9,
-                        color = arcade.color.RED,
-                        font_size = DEFAULT_FONT_SIZE)
+        # Add messages
+        self.message = None
 
     def setup(self):
         """ Set up everything with the game """
@@ -320,6 +302,8 @@ class GameView(arcade.View):
                 ally.boundary_right = my_object.properties["boundary_right"]
             if "change_x" in my_object.properties:
                 ally.change_x = my_object.properties["change_x"]
+            if "text" in my_object.properties:
+                ally.text = str(my_object.properties["text"])
             self.scene.add_sprite(LAYER_NAME_ALLIES, ally)
 
         # Map Enemy Objects
@@ -1053,48 +1037,16 @@ class GameView(arcade.View):
             elif type(enemy) == type(RolyPolyBot()):    
                 aimingfire(rate = 30, bullet_speed=10, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "laserBlue01.png")
 
-        # Allies Text
-        # for ally in self.scene[LAYER_NAME_ALLIES]:
-        #     if type(ally) == type(Hooboo()):
-        #         # # First hooboo
-                # if ally[name] == 'Hooboo':
-                #     self.welcome_message = arcade.Text(
-                #         "Welcome to Moontown",
-                #         start_x=ally.center_x,
-                #         start_y=ally.top,
-                #         color = arcade.color.BLACK,
-                #         font_size = DEFAULT_FONT_SIZE    
-                #     )
-                #     return self.welcome_message
-                # # Second hooboo
-                # elif ally[name] == 'Hooboo2':
-                #     self.see_saw_message = arcade.Text(
-                #         "See if you can make it over the see-saw",
-                #         start_x=ally.center_x,
-                #         start_y=ally.top,
-                #         color = arcade.color.RED,
-                #         font_size = DEFAULT_FONT_SIZE     
-                #     )
-                #     return self.see_saw_message
-                # # Third Hooboo
-                # elif ally[name] == 'Hooboo3':
-                #     self.farm_message = arcade.Text(
-                #         "Can you save my farm from the big worms? ",
-                #         start_x=ally.center_x,
-                #         start_y=ally.top,
-                #         color = arcade.color.GREEN,
-                #         font_size = DEFAULT_FONT_SIZE     
-                #     )
-                #     return self.farm_message
-                # else:
-                # print(ally[name])
-                # self.welcome_message = arcade.Text(
-                #     "Welcome to Moontown",
-                #     start_x=ally.center_x,
-                #     start_y=ally.top,
-                #     color = arcade.color.BLACK,
-                #     font_size = DEFAULT_FONT_SIZE      
-                # )
+        # Allies Text Talk
+        for ally in self.scene[LAYER_NAME_ALLIES]:
+            self.message = arcade.Text(
+                ally.boundary_bottom,
+                start_x=ally.center_x,
+                start_y=ally.top,
+                color = arcade.color.BLACK,
+                font_size = DEFAULT_FONT_SIZE    
+            )
+                 
 
         # See if we hit any coins
         coin_hit_list = arcade.check_for_collision_with_list(
@@ -1269,9 +1221,7 @@ class GameView(arcade.View):
 
         # Add Text
         # self.title.draw()
-        self.welcome_message.draw()
-        self.farm_message.draw()
-        self.see_saw_message.draw()
+        self.message.draw()
 
         # for item in self.player_list:
         #     item.draw_hit_box(arcade.color.RED)
