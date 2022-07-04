@@ -1,6 +1,6 @@
 # This is the main weapons script
 
-from enemies import *
+from characters import *
 from objects import *
 import random
 

@@ -2,6 +2,8 @@ from player import *
 
 SPRITE_SCALING_ENEMIES = 0.8
 ENEMY_SPRITE_IMAGE_SIZE = 64
+ALLY_SPRITE_IMAGE_SIZE = 64
+SPRITE_SCALING_ALLIES = 0.8
 
 def load_texture_pair(filename):
     """
@@ -58,6 +60,7 @@ class Enemy(Entity):
         super().__init__(name_folder, name_file)
 
         self.should_update_walk = 0
+        self.scale = SPRITE_SCALING_ENEMIES
 
     def update_animation(self, delta_time: float = 1 / 60):
 
@@ -170,3 +173,69 @@ class RolyPolyBot(Enemy):
         super().__init__("rolypolybot", "rolypolybot")
 
         self.health = 500
+
+# Now for ally characters
+class Ally(Entity):
+    def __init__(self, name_folder, name_file):
+
+        # Setup parent class
+        super().__init__(name_folder, name_file)
+
+        self.should_update_walk = 0
+        self.scale = SPRITE_SCALING_ALLIES
+
+    def update_animation(self, delta_time: float = 1 / 60):
+
+        # Figure out if we need to flip face left or right
+        if self.change_x < 0 and self.facing_direction == RIGHT_FACING:
+            self.facing_direction = LEFT_FACING
+        elif self.change_x > 0 and self.facing_direction == LEFT_FACING:
+            self.facing_direction = RIGHT_FACING
+
+        # Idle animation
+        if self.change_x == 0:
+            self.texture = self.idle_texture_pair[self.facing_direction]
+            return
+
+        # Walking animation
+        if self.should_update_walk == 3:
+            self.cur_texture += 1
+            if self.cur_texture > 7:
+                self.cur_texture = 0
+            self.texture = self.walk_textures[self.cur_texture][self.facing_direction]
+            self.should_update_walk = 0
+            return
+
+        self.should_update_walk += 1
+
+class Hooboo(Ally):
+    def __init__(self):
+
+        # Set up parent class
+        super().__init__("hooboo", "hooboo")
+
+        self.health = 500
+
+class FlufflePop(Ally):
+    def __init__(self):
+
+        # Set up parent class
+        super().__init__("flufflepop", "flufflepop")
+
+        self.health = 1000
+
+class Pumbean(Ally):
+    def __init__(self):
+
+        # Set up parent class
+        super().__init__("pumbean", "pumbean")
+
+        self.health = 1500
+
+class Excalibur(Ally):
+    def __init__(self):
+
+        # Set up parent class
+        super().__init__("excalibur", "excalibur")
+
+        self.health = 2500

@@ -6,7 +6,11 @@ This is the main game script
 import math
 import random
 from sys import builtin_module_names
+from tokenize import Name
 from typing import Optional
+from unicodedata import name
+
+from arcade import Point
 from views import *
 
 SCREEN_TITLE = "Jinx & Gravity"
@@ -30,6 +34,20 @@ LAYER_NAME_PLAYER_GRENADES = "Player Grenades"
 LAYER_NAME_ENEMY_BULLETS = "Enemy Bullets"
 LAYER_NAME_ALLIES = "Allies"
 LAYER_NAME_SHIELD = "Shield"
+
+def draw_background():
+    """
+    This function draws the background. Specifically, the sky and ground.
+    """
+    # Draw the sky in the top two-thirds
+    arcade.draw_rectangle_filled(SCREEN_WIDTH / 2, SCREEN_HEIGHT * 2 / 3,
+                                SCREEN_WIDTH - 1, SCREEN_HEIGHT * 2 / 3,
+                                arcade.color.SKY_BLUE)
+
+    # Draw the ground in the bottom third
+    arcade.draw_rectangle_filled(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 6,
+                                SCREEN_WIDTH - 1, SCREEN_HEIGHT / 3,
+                                arcade.color.DARK_SPRING_GREEN)
 
 class GameOverView(arcade.View):
     """ View to show when game is over """
@@ -75,17 +93,7 @@ class GameView(arcade.View):
         self.frame_count = 0
 
         # Add the screen title
-        start_x = 0
-        start_y = SCREEN_HEIGHT - DEFAULT_LINE_HEIGHT * 12
-        self.title = arcade.Text(
-            "Welcome to Moontown",
-            start_x,
-            start_y,
-            arcade.color.BLACK,
-            DEFAULT_FONT_SIZE * 1.5,
-            width=SCREEN_WIDTH,
-            align="center",
-        )
+        # If wanted later on can be added here
 
         # Sprite lists we need
         self.wall_list: Optional[arcade.SpriteList] = None
@@ -96,6 +104,7 @@ class GameView(arcade.View):
         self.coin_list: Optional[arcade.SpriteList] = None
         self.heart_list: Optional[arcade.SpriteList] = None
         self.enemies_list: Optional[Enemy] = None
+        self.allies_list: Optional[Enemy] = None
         self.player_bullets: Optional[arcade.SpriteList] = None
         self.player_list: Optional[arcade.SpriteList] = None
 
@@ -157,7 +166,7 @@ class GameView(arcade.View):
         self.level_up = 0
 
         # Lives
-        self.lives = 0
+        self.lives = 3
 
         # Load sounds
         self.game_over = arcade.load_sound(file_path+"/resources/sounds/gameover2.wav")
@@ -165,6 +174,12 @@ class GameView(arcade.View):
         self.jump_sound = arcade.load_sound(file_path+"/resources/sounds/jump3.wav")
         self.hit_sound = arcade.load_sound(file_path+"/resources/sounds/hit2.wav")
         self.shoot_sound = arcade.load_sound(file_path+"/resources/sounds/hurt3.wav")
+
+        # Add messages
+        # self.message1 = None
+        # self.message2 = None
+        # self.message3 = None
+        self.message = "Hi"
 
     def setup(self):
         """ Set up everything with the game """
@@ -177,13 +192,14 @@ class GameView(arcade.View):
             LAYER_NAME_ENEMIES: {
                 "use_spatial_hash": False,
             },
+            LAYER_NAME_ALLIES: {
+                "use_spatial_hash": False,
+            },
             LAYER_NAME_MOVING_PLATFORMS: {
                 "use_spatial_hash": False,
-                
             },
             LAYER_NAME_SHIELD: {
                 "use_spatial_hash": True,
-                
             },
             LAYER_NAME_LADDERS: {
                 "use_spatial_hash": True,
@@ -206,7 +222,7 @@ class GameView(arcade.View):
         self.level_up = 0
 
         # Lives at the start of each level
-        self.lives= (self.level_up + 3)
+        self.lives = self.lives
 
         # Life mechanics
         self.can_die = True
@@ -273,7 +289,42 @@ class GameView(arcade.View):
 
         # -- Enemies
         self.enemies_list = self.tile_map.object_lists[LAYER_NAME_ENEMIES]
+        self.allies_list = self.tile_map.object_lists[LAYER_NAME_ALLIES]
 
+        # Map Allies
+        for my_object in self.allies_list:
+            cartesian = self.tile_map.get_cartesian(
+                my_object.shape[0], my_object.shape[1]
+            )
+            ally_type = my_object.properties["type"]
+            if ally_type == "hooboo":
+                ally = Hooboo()
+            elif ally_type == "flufflepop":
+                ally = FlufflePop()
+            elif ally_type == "pumbean":
+                ally = Pumbean()
+            elif ally_type == "excalibur":
+                ally = Excalibur()
+            else:
+                raise Exception(f"Unknown ally type {ally_type}.")
+            ally.center_x = math.floor(
+                cartesian[0] * SPRITE_SCALING_ALLIES * ALLY_SPRITE_IMAGE_SIZE
+            )
+            ally.center_y = math.floor(
+                (cartesian[1] + 1) * (SPRITE_SCALING_ALLIES * ALLY_SPRITE_IMAGE_SIZE)
+            )
+            if "boundary_left" in my_object.properties:
+                ally.boundary_left = my_object.properties["boundary_left"]
+            if "boundary_right" in my_object.properties:
+                ally.boundary_right = my_object.properties["boundary_right"]
+            if "change_x" in my_object.properties:
+                ally.change_x = my_object.properties["change_x"]
+            if "speech" in my_object.properties:
+                ally.speech = my_object.properties["speech"]
+            self.scene.add_sprite(LAYER_NAME_ALLIES, ally)
+            #print(my_object.properties)
+
+        # Map Enemy Objects
         for my_object in self.enemies_list:
             cartesian = self.tile_map.get_cartesian(
                 my_object.shape[0], my_object.shape[1]
@@ -405,6 +456,12 @@ class GameView(arcade.View):
         # Add kinematic sprites
         self.physics_engine.add_sprite_list(self.moving_sprites_list,
                                             body_type=arcade.PymunkPhysicsEngine.KINEMATIC)
+
+        # self.physics_engine.add_sprite_list(self.enemies_list,
+        #                                     body_type=arcade.PymunkPhysicsEngine.KINEMATIC)
+
+        # self.physics_engine.add_sprite_list(self.allies_list,
+        #                                     body_type=arcade.PymunkPhysicsEngine.KINEMATIC)
 
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
@@ -778,12 +835,17 @@ class GameView(arcade.View):
         self.scene.update_animation(
             delta_time,
             [
-                LAYER_NAME_ENEMIES, ],
+                LAYER_NAME_ENEMIES,
+                LAYER_NAME_ALLIES],
         )
 
         # Update enemies and bullets
         self.scene.update(
-            [LAYER_NAME_ENEMIES, LAYER_NAME_ENEMY_BULLETS, LAYER_NAME_PLAYER_BULLETS, LAYER_NAME_PLAYER_GRENADES]
+            [LAYER_NAME_ENEMIES, 
+            LAYER_NAME_ENEMY_BULLETS, 
+            LAYER_NAME_PLAYER_BULLETS, 
+            LAYER_NAME_PLAYER_GRENADES,
+            LAYER_NAME_ALLIES]
         )
 
         # See if the enemy hit a boundary and needs to reverse direction.
@@ -801,6 +863,22 @@ class GameView(arcade.View):
                 and enemy.change_x < 0
             ):
                 enemy.change_x *= -1
+
+        # See if the ally hit a boundary and needs to reverse direction.
+        for ally in self.scene[LAYER_NAME_ALLIES]:
+            if (
+                ally.boundary_right
+                and ally.right > ally.boundary_right
+                and ally.change_x > 0
+            ):
+                ally.change_x *= -1
+
+            if (
+                ally.boundary_left
+                and ally.left < ally.boundary_left
+                and ally.change_x < 0
+            ):
+                ally.change_x *= -1
 
         for projectile in self.scene[LAYER_NAME_PLAYER_BULLETS] or self.scene[LAYER_NAME_PLAYER_GRENADES]:
             hit_list = arcade.check_for_collision_with_lists(
@@ -992,7 +1070,7 @@ class GameView(arcade.View):
 
             elif type(enemy) == type(RolyPolyBot()):    
                 aimingfire(rate = 30, bullet_speed=10, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "laserBlue01.png")
-
+                 
         # See if we hit any coins
         coin_hit_list = arcade.check_for_collision_with_list(
             self.player_sprite, self.coin_list
@@ -1079,6 +1157,7 @@ class GameView(arcade.View):
         # Did the player fall off the map?
         if self.player_sprite.center_y < -100:
             arcade.play_sound(self.game_over)
+            self.lives -=1
             self.setup()
 
         # Did the player touch something they should not?
@@ -1086,6 +1165,7 @@ class GameView(arcade.View):
             self.player_sprite, self.dont_touch_list
         ):
             arcade.play_sound(self.game_over)
+            self.lives -=1
             self.setup()
 
         # See if the user got to the end of the level
@@ -1099,24 +1179,38 @@ class GameView(arcade.View):
             # Load the next level
             self.setup()
 
+        # Allies Text Talk - this bit is a bit dodgy atm
+        for ally in self.scene[LAYER_NAME_ALLIES]:
+            self.message = arcade.Text(
+            ally.speech,
+            start_x=ally.center_x,
+            start_y=ally.top,
+            color = arcade.color.BLACK,
+            font_size = DEFAULT_FONT_SIZE    
+            )
+            return self.message
+            
     def on_draw(self):
         """ Draw everything """
         self.clear()
 
-        # This variable contains the enemies and bullets
-        self.scene.draw()
-
+        # Behind items
         self.background_list.draw()
         self.wall_list.draw()
         self.ladder_list.draw()
-        self.moving_sprites_list.draw()
-        self.grenade_list.draw()
         self.coin_list.draw()
         self.heart_list.draw()
         self.dont_touch_list.draw()
+
+        # This variable contains the enemies and bullets
+        self.scene.draw()
+
+        self.moving_sprites_list.draw()
+        self.grenade_list.draw()
         self.item_list.draw()
         self.player_list.draw()
         self.foreground_list.draw()
+        # self.enemies_list.draw()
 
         # Activate the GUI camera before drawing GUI elements
         self.gui_camera.use()
@@ -1163,8 +1257,12 @@ class GameView(arcade.View):
         # Activate our Camera
         self.camera.use()
 
-        # Add Title
-        self.title.draw()
+        # Add Text
+        # self.title.draw()
+        # Call our drawing functions.
+        # draw_background()
+        # self.message.draw()
+        self.message.draw()
 
         # for item in self.player_list:
         #     item.draw_hit_box(arcade.color.RED)
