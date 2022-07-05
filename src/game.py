@@ -179,7 +179,8 @@ class GameView(arcade.View):
         # self.message1 = None
         # self.message2 = None
         # self.message3 = None
-        self.message = "Hi"
+        self.hooboo_message = None
+        self.pumbean_message = None
 
     def setup(self):
         """ Set up everything with the game """
@@ -1182,14 +1183,24 @@ class GameView(arcade.View):
 
         # Allies Text Talk - this bit is a bit dodgy atm
         for ally in self.scene[LAYER_NAME_ALLIES]:
-            self.message = arcade.Text(
-            ally.speech,
-            start_x=ally.center_x,
-            start_y=ally.top,
-            color = arcade.color.BLACK,
-            font_size = DEFAULT_FONT_SIZE    
-            )
-            return self.message
+            if type(ally) == type(Hooboo()):
+                self.hooboo_message = arcade.Text(
+                text = ally.speech,
+                start_x=ally.center_x,
+                start_y=ally.top,
+                color = arcade.color.BLACK,
+                font_size = DEFAULT_FONT_SIZE    
+                )
+                return self.hooboo_message
+            # elif type(ally) == type(Pumbean()):
+            #     self.pumbean_message = arcade.Text(
+            #     text = ally.speech,
+            #     start_x=ally.center_x,
+            #     start_y=ally.top,
+            #     color = arcade.color.BLACK,
+            #     font_size = DEFAULT_FONT_SIZE    
+            #     )
+            #     return self.pumbean_message
             
     def on_draw(self):
         """ Draw everything """
@@ -1263,7 +1274,8 @@ class GameView(arcade.View):
         # Call our drawing functions.
         # draw_background()
         # self.message.draw()
-        self.message.draw()
+        self.hooboo_message.draw()
+        # self.pumbean_message.draw()
 
         # for item in self.player_list:
         #     item.draw_hit_box(arcade.color.RED)
