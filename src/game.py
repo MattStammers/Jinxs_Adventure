@@ -321,9 +321,23 @@ class GameView(arcade.View):
             if "change_x" in my_object.properties:
                 ally.change_x = my_object.properties["change_x"]
             if "speech" in my_object.properties:
-                ally.speech = my_object.properties["speech"]
+                ally.speech = my_object.properties["speech"] 
             self.scene.add_sprite(LAYER_NAME_ALLIES, ally)
             #print(my_object.properties)
+        
+        self.hooboo_message = arcade.Text(
+        text = ally.speech,
+        start_x=ally.center_x,
+        start_y=ally.top,
+        color = arcade.color.BLACK,
+        font_size = DEFAULT_FONT_SIZE)
+
+        self.pumbean_message = arcade.Text(
+        text = ally.speech,
+        start_x=ally.center_x,
+        start_y=ally.top,
+        color = arcade.color.RED,
+        font_size = DEFAULT_FONT_SIZE)
 
         # Map Enemy Objects
         for my_object in self.enemies_list:
@@ -1181,26 +1195,25 @@ class GameView(arcade.View):
             # Load the next level
             self.setup()
 
-        # Allies Text Talk - this bit is a bit dodgy atm
-        for ally in self.scene[LAYER_NAME_ALLIES]:
-            if type(ally) == type(Hooboo()):
-                self.hooboo_message = arcade.Text(
-                text = ally.speech,
-                start_x=ally.center_x,
-                start_y=ally.top,
-                color = arcade.color.BLACK,
-                font_size = DEFAULT_FONT_SIZE    
-                )
-                return self.hooboo_message
-            # elif type(ally) == type(Pumbean()):
-            #     self.pumbean_message = arcade.Text(
-            #     text = ally.speech,
-            #     start_x=ally.center_x,
-            #     start_y=ally.top,
-            #     color = arcade.color.BLACK,
-            #     font_size = DEFAULT_FONT_SIZE    
-            #     )
-            #     return self.pumbean_message
+        # # Allies Text Talk - this bit is a bit dodgy atm
+        # if type(ally) in self.scene[LAYER_NAME_ALLIES] == type(Hooboo()):
+        #     self.hooboo_message = arcade.Text(
+        #     text = ally.speech,
+        #     start_x=ally.center_x,
+        #     start_y=ally.top,
+        #     color = arcade.color.BLACK,
+        #     font_size = DEFAULT_FONT_SIZE    
+        #     )
+        #     return self.hooboo_message
+        # elif type(ally) in self.scene[LAYER_NAME_ALLIES] == type(Pumbean()):
+        #     self.pumbean_message = arcade.Text(
+        #     text = ally.speech,
+        #     start_x=ally.center_x,
+        #     start_y=ally.top,
+        #     color = arcade.color.RED,
+        #     font_size = DEFAULT_FONT_SIZE    
+        #     )
+        #     return self.pumbean_message
             
     def on_draw(self):
         """ Draw everything """
@@ -1274,8 +1287,9 @@ class GameView(arcade.View):
         # Call our drawing functions.
         # draw_background()
         # self.message.draw()
+        self.pumbean_message.draw()
         self.hooboo_message.draw()
-        # self.pumbean_message.draw()
+ 
 
         # for item in self.player_list:
         #     item.draw_hit_box(arcade.color.RED)
