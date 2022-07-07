@@ -69,9 +69,9 @@ class GameOverView(arcade.View):
 
     def on_mouse_press(self, _x, _y, _button, _modifiers):
         """ If the user presses the mouse button, re-start the game. """
-        game_view = GameView()
-        game_view.setup()
-        self.window.show_view(game_view)
+        menu_view = MenuView()
+        menu_view.setup()
+        self.window.show_view(menu_view)
 
 class GameView(arcade.View):
     """ Main Window """
@@ -179,10 +179,8 @@ class GameView(arcade.View):
         self.message1 = None
         self.message2 = None
         self.message3 = None
-        # self.message4 = None
-        # self.hooboo_message = None
-        # self.pumbean_message = None
-        # self.speech = None
+        self.message4 = None
+        self.message5 = None
 
     def setup(self):
         """ Set up everything with the game """
@@ -334,30 +332,13 @@ class GameView(arcade.View):
                 font_size = DEFAULT_FONT_SIZE)
                 speech_list.append(self.speech)
             self.scene.add_sprite(LAYER_NAME_ALLIES, ally)
-            #print(my_object.properties)
-
+        
+        # Assign speech objects
         self.message1 = speech_list[0]
         self.message2 = speech_list[1]
         self.message3 = speech_list[2]
-        # self.message3 = speech_list[2]
-        
-        print(speech_list)
-        # print(ally.speech)
-        # self.hooboo_message = arcade.Text(
-        # text = ally.speech.split("?")[0],
-        # start_x=ally.center_x,
-        # start_y=ally.top,
-        # color = arcade.color.BLACK,
-        # font_size = DEFAULT_FONT_SIZE)
-        # print(self.hooboo_message)
-
-        # self.pumbean_message = arcade.Text(
-        # text = ally.speech.split("?")[-1],
-        # start_x=ally.center_x,
-        # start_y=ally.top,
-        # color = arcade.color.RED,
-        # font_size = DEFAULT_FONT_SIZE)
-        # print(self.pumbean_message)
+        self.message4 = speech_list[3]
+        self.message5 = speech_list[4]
 
         # Map Enemy Objects
         for my_object in self.enemies_list:
@@ -1303,21 +1284,11 @@ class GameView(arcade.View):
         self.camera.use()
 
         # Add Text
-        # self.title.draw()
-        # Call our drawing functions.
-        # draw_background()
-        # self.message.draw()
-        # self.pumbean_message.draw()
-        # self.hooboo_message.draw()
         self.message1.draw()
         self.message2.draw()
         self.message3.draw()
-        # self.message4.draw()
-
-        # for item in self.player_list:
-        #     item.draw_hit_box(arcade.color.RED)
-        # for item in self.item_list:
-        #     item.draw_hit_box(arcade.color.RED)
+        self.message4.draw()
+        self.message5.draw()
 
 def main():
     """ Main function """
