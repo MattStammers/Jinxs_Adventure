@@ -176,11 +176,13 @@ class GameView(arcade.View):
         self.shoot_sound = arcade.load_sound(file_path+"/resources/sounds/hurt3.wav")
 
         # Add messages
-        # self.message1 = None
-        # self.message2 = None
-        # self.message3 = None
-        self.hooboo_message = None
-        self.pumbean_message = None
+        self.message1 = None
+        self.message2 = None
+        self.message3 = None
+        # self.message4 = None
+        # self.hooboo_message = None
+        # self.pumbean_message = None
+        # self.speech = None
 
     def setup(self):
         """ Set up everything with the game """
@@ -292,6 +294,9 @@ class GameView(arcade.View):
         self.enemies_list = self.tile_map.object_lists[LAYER_NAME_ENEMIES]
         self.allies_list = self.tile_map.object_lists[LAYER_NAME_ALLIES]
 
+        # Speech
+        speech_list = []
+
         # Map Allies
         for my_object in self.allies_list:
             cartesian = self.tile_map.get_cartesian(
@@ -321,23 +326,38 @@ class GameView(arcade.View):
             if "change_x" in my_object.properties:
                 ally.change_x = my_object.properties["change_x"]
             if "speech" in my_object.properties:
-                ally.speech = my_object.properties["speech"] 
+                self.speech = arcade.Text(
+                text = my_object.properties["speech"],
+                start_x=ally.center_x,
+                start_y=ally.top,
+                color = arcade.color.BLACK,
+                font_size = DEFAULT_FONT_SIZE)
+                speech_list.append(self.speech)
             self.scene.add_sprite(LAYER_NAME_ALLIES, ally)
             #print(my_object.properties)
-        
-        self.hooboo_message = arcade.Text(
-        text = ally.speech,
-        start_x=ally.center_x,
-        start_y=ally.top,
-        color = arcade.color.BLACK,
-        font_size = DEFAULT_FONT_SIZE)
 
-        self.pumbean_message = arcade.Text(
-        text = ally.speech,
-        start_x=ally.center_x,
-        start_y=ally.top,
-        color = arcade.color.RED,
-        font_size = DEFAULT_FONT_SIZE)
+        self.message1 = speech_list[0]
+        self.message2 = speech_list[1]
+        self.message3 = speech_list[2]
+        # self.message3 = speech_list[2]
+        
+        print(speech_list)
+        # print(ally.speech)
+        # self.hooboo_message = arcade.Text(
+        # text = ally.speech.split("?")[0],
+        # start_x=ally.center_x,
+        # start_y=ally.top,
+        # color = arcade.color.BLACK,
+        # font_size = DEFAULT_FONT_SIZE)
+        # print(self.hooboo_message)
+
+        # self.pumbean_message = arcade.Text(
+        # text = ally.speech.split("?")[-1],
+        # start_x=ally.center_x,
+        # start_y=ally.top,
+        # color = arcade.color.RED,
+        # font_size = DEFAULT_FONT_SIZE)
+        # print(self.pumbean_message)
 
         # Map Enemy Objects
         for my_object in self.enemies_list:
@@ -1287,9 +1307,12 @@ class GameView(arcade.View):
         # Call our drawing functions.
         # draw_background()
         # self.message.draw()
-        self.pumbean_message.draw()
-        self.hooboo_message.draw()
- 
+        # self.pumbean_message.draw()
+        # self.hooboo_message.draw()
+        self.message1.draw()
+        self.message2.draw()
+        self.message3.draw()
+        # self.message4.draw()
 
         # for item in self.player_list:
         #     item.draw_hit_box(arcade.color.RED)

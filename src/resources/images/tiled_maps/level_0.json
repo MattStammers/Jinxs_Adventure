@@ -243,7 +243,7 @@
                 {
                  "height":0,
                  "id":19,
-                 "name":"Hooboo",
+                 "name":"Hooboo3",
                  "point":true,
                  "properties":[
                         {
@@ -275,7 +275,7 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":16896,
+                 "x":16640,
                  "y":2688
                 }, 
                 {
@@ -314,6 +314,44 @@
                  "visible":true,
                  "width":0,
                  "x":7168,
+                 "y":3712
+                }, 
+                {
+                 "height":0,
+                 "id":27,
+                 "name":"Pumbean2",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"boundary_left",
+                         "type":"int",
+                         "value":2200
+                        }, 
+                        {
+                         "name":"boundary_right",
+                         "type":"int",
+                         "value":2600
+                        }, 
+                        {
+                         "name":"change_x",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"speech",
+                         "type":"string",
+                         "value":"Help, save me from the worm"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"pumbean"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":2560,
                  "y":3712
                 }],
          "opacity":1,
@@ -434,7 +472,7 @@
          "y":0
         }],
  "nextlayerid":12,
- "nextobjectid":27,
+ "nextobjectid":29,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.7.2",
