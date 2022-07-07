@@ -69,9 +69,9 @@ class GameOverView(arcade.View):
 
     def on_mouse_press(self, _x, _y, _button, _modifiers):
         """ If the user presses the mouse button, re-start the game. """
-        menu_view = MenuView()
-        menu_view.setup()
-        self.window.show_view(menu_view)
+        game_view = GameView()
+        game_view.setup()
+        self.window.show_view(game_view)
 
 class GameView(arcade.View):
     """ Main Window """

@@ -264,7 +264,7 @@
                         {
                          "name":"speech",
                          "type":"string",
-                         "value":"Hooboo: Can you help save my farm Jinx from the green worms? Use E to shield"
+                         "value":"Hooboo: Can you help save my farm Jinx from the green worms? Click to grenade them over the rocks"
                         }, 
                         {
                          "name":"type",
@@ -378,7 +378,7 @@
                         {
                          "name":"speech",
                          "type":"string",
-                         "value":"See if you can get up this ladder and knock the stones down "
+                         "value":"See if you can get up this ladder and knock the stones down. Remember you can use E to shield"
                         }, 
                         {
                          "name":"type",
@@ -416,7 +416,7 @@
                         {
                          "name":"speech",
                          "type":"string",
-                         "value":"Thanks for killing the worms. Let me welcome you to Lord Flufflepop's castle to the castle."
+                         "value":"Thanks for killing the worms. Let me welcome you to Lord Flufflepop's castle"
                         }, 
                         {
                          "name":"type",
