@@ -1232,10 +1232,10 @@ class GameView(arcade.View):
         self.scene.draw()
 
         self.moving_sprites_list.draw()
+        self.foreground_list.draw()
         self.grenade_list.draw()
         self.item_list.draw()
         self.player_list.draw()
-        self.foreground_list.draw()
         # self.enemies_list.draw()
 
         # Activate the GUI camera before drawing GUI elements

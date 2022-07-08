@@ -66,7 +66,7 @@ PLAYER_JUMP_IMPULSE = 1100
 DEAD_ZONE = 1
 
 # Close enough to not-moving to have the animation go to idle.
-DEATH_PROTECT = 10
+DEATH_PROTECT = 15
 
 # Constants used to track if the player is facing left or right
 RIGHT_FACING = 0
