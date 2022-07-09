@@ -5,6 +5,7 @@ This is the main game script
 """
 import math
 import random
+# from signal import pause
 from sys import builtin_module_names
 from tokenize import Name
 from typing import Optional
@@ -178,6 +179,8 @@ class GameView(arcade.View):
             arcade.set_background_color(arcade.color.MIDNIGHT_BLUE)
         if self.level == 2:
             arcade.set_background_color(arcade.color.ASH_GREY)
+        if self.level == 3:
+            arcade.set_background_color(arcade.color.PURPLE_MOUNTAIN_MAJESTY)
         else:
             arcade.set_background_color(arcade.color.BLEU_DE_FRANCE)
 
@@ -570,8 +573,11 @@ class GameView(arcade.View):
         """ Called whenever the mouse button is clicked. """
 
         self.mouse_pressed = True
-        self.x = self.player_centered[0] + x
-        self.y = self.player_centered[1] + y
+        try:
+            self.x = self.player_centered[0] + x
+            self.y = self.player_centered[1] + y
+        except:
+            print("An mouse exception occurred")
 
     def center_camera_to_player(self):
         screen_center_x = self.player_sprite.center_x - (self.camera.viewport_width / 2)
