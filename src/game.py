@@ -35,20 +35,6 @@ LAYER_NAME_ENEMY_BULLETS = "Enemy Bullets"
 LAYER_NAME_ALLIES = "Allies"
 LAYER_NAME_SHIELD = "Shield"
 
-def draw_background():
-    """
-    This function draws the background. Specifically, the sky and ground.
-    """
-    # Draw the sky in the top two-thirds
-    arcade.draw_rectangle_filled(SCREEN_WIDTH / 2, SCREEN_HEIGHT * 2 / 3,
-                                SCREEN_WIDTH - 1, SCREEN_HEIGHT * 2 / 3,
-                                arcade.color.SKY_BLUE)
-
-    # Draw the ground in the bottom third
-    arcade.draw_rectangle_filled(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 6,
-                                SCREEN_WIDTH - 1, SCREEN_HEIGHT / 3,
-                                arcade.color.DARK_SPRING_GREEN)
-
 class GameOverView(arcade.View):
     """ View to show when game is over """
 
@@ -184,6 +170,16 @@ class GameView(arcade.View):
 
     def setup(self):
         """ Set up everything with the game """
+
+        # Set background color
+        if self.level == 0:
+            arcade.set_background_color(arcade.color.BLEU_DE_FRANCE)
+        if self.level == 1:
+            arcade.set_background_color(arcade.color.MIDNIGHT_BLUE)
+        if self.level == 2:
+            arcade.set_background_color(arcade.color.ASH_GREY)
+        else:
+            arcade.set_background_color(arcade.color.BLEU_DE_FRANCE)
 
         # Layer Specific Options for the Tilemap
         layer_options = {

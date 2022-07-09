@@ -340,7 +340,7 @@
                         {
                          "name":"speech",
                          "type":"string",
-                         "value":"Moontown is over there. Can you help, save me from the worm so I can get home? Use Q to shoot"
+                         "value":"Moontown is over there. Can you help, save me from the worm so I can get home? Use Q\/N to shoot"
                         }, 
                         {
                          "name":"type",
@@ -378,7 +378,7 @@
                         {
                          "name":"speech",
                          "type":"string",
-                         "value":"See if you can get up this ladder and knock the stones down. Remember you can use E to shield"
+                         "value":"See if you can get up this ladder and knock the stones down. Remember you can use E\/M to shield"
                         }, 
                         {
                          "name":"type",
