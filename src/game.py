@@ -182,7 +182,7 @@ class GameView(arcade.View):
         if self.level == 3:
             arcade.set_background_color(arcade.color.PURPLE_MOUNTAIN_MAJESTY)
         else:
-            arcade.set_background_color(arcade.color.BLEU_DE_FRANCE)
+            arcade.set_background_color(arcade.color.ASH_GREY)
 
         # Layer Specific Options for the Tilemap
         layer_options = {
@@ -308,6 +308,12 @@ class GameView(arcade.View):
                 ally = Pumbean()
             elif ally_type == "excalibur":
                 ally = Excalibur()
+            elif ally_type == "masterverse":
+                ally = MasterVerse()
+            elif ally_type == "rolypolybot":
+                ally = RolyPolyBot()
+            elif ally_type == "secondaryslime":
+                ally = SecondarySlime()
             else:
                 raise Exception(f"Unknown ally type {ally_type}.")
             ally.center_x = math.floor(
@@ -609,10 +615,10 @@ class GameView(arcade.View):
             if self.score >= 500:
                 # Advance to the next level
                 self.level_up = 2
-                if self.score >= 1000:
+                if self.score >= 1250:
                     # Advance to the next level
                     self.level_up = 3
-                    if self.score >= 2500:
+                    if self.score >= 3000:
                         # Advance to the next level
                         self.level_up = 4
                         if self.score >= 10000:
@@ -1225,18 +1231,17 @@ class GameView(arcade.View):
         # Behind items
         self.background_list.draw()
         self.wall_list.draw()
+        self.foreground_list.draw()
         self.ladder_list.draw()
+        self.item_list.draw()
         self.coin_list.draw()
         self.heart_list.draw()
         self.dont_touch_list.draw()
-
         # This variable contains the enemies and bullets
         self.scene.draw()
 
         self.moving_sprites_list.draw()
-        self.foreground_list.draw()
         self.grenade_list.draw()
-        self.item_list.draw()
         self.player_list.draw()
         # self.enemies_list.draw()
 

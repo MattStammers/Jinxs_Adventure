@@ -239,3 +239,27 @@ class Excalibur(Ally):
         super().__init__("excalibur", "excalibur")
 
         self.health = 2500
+
+class MasterVerse(Ally):
+    def __init__(self):
+
+        # Set up parent class
+        super().__init__("masterverse", "masterverse")
+
+        self.health = 25000
+
+class RolyPolyBot(Ally):
+    def __init__(self):
+
+        # Set up parent class
+        super().__init__("rolypolybot", "rolypolybot")
+
+        self.health = 500
+
+class SecondarySlime(Ally):
+    def __init__(self):
+
+        # Set up parent class
+        super().__init__("secondaryslime", "secondaryslime")
+
+        self.health = 400
