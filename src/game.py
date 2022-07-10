@@ -176,13 +176,15 @@ class GameView(arcade.View):
         if self.level == 0:
             arcade.set_background_color(arcade.color.BLEU_DE_FRANCE)
         if self.level == 1:
-            arcade.set_background_color(arcade.color.MIDNIGHT_BLUE)
+            arcade.set_background_color(arcade.color.DARK_BLUE)
         if self.level == 2:
             arcade.set_background_color(arcade.color.ASH_GREY)
         if self.level == 3:
             arcade.set_background_color(arcade.color.PURPLE_MOUNTAIN_MAJESTY)
+        if self.level == 4:
+            arcade.set_background_color(arcade.color.ORANGE_PEEL)
         else:
-            arcade.set_background_color(arcade.color.ASH_GREY)
+            arcade.set_background_color(arcade.color.BLEU_DE_FRANCE)
 
         # Layer Specific Options for the Tilemap
         layer_options = {
