@@ -182,6 +182,8 @@ class GameView(arcade.View):
         if self.level == 3:
             arcade.set_background_color(arcade.color.PURPLE_MOUNTAIN_MAJESTY)
         if self.level == 4:
+            arcade.set_background_color(arcade.color.DARK_BROWN)
+        if self.level == 5:
             arcade.set_background_color(arcade.color.ORANGE_PEEL)
         else:
             arcade.set_background_color(arcade.color.BLEU_DE_FRANCE)
