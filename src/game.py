@@ -30,6 +30,7 @@ LAYER_NAME_LADDERS = "Ladders"
 LAYER_NAME_MOVING_PLATFORMS = "Moving Platforms"
 LAYER_NAME_ENEMIES = "Enemies"
 LAYER_NAME_DYNAMIC_ITEMS = "Dynamic Items"
+LAYER_NAME_DYNAMIC_TILES = "Dynamic Tiles"
 LAYER_NAME_PLAYER_BULLETS = "Player Bullets"
 LAYER_NAME_PLAYER_GRENADES = "Player Grenades"
 LAYER_NAME_ENEMY_BULLETS = "Enemy Bullets"
@@ -86,6 +87,7 @@ class GameView(arcade.View):
         self.wall_list: Optional[arcade.SpriteList] = None
         self.grenade_list: Optional[arcade.SpriteList] = None
         self.item_list: Optional[arcade.SpriteList] = None
+        self.block_list: Optional[arcade.SpriteList] = None
         self.moving_sprites_list: Optional[arcade.SpriteList] = None
         self.ladder_list: Optional[arcade.SpriteList] = None
         self.coin_list: Optional[arcade.SpriteList] = None
@@ -256,6 +258,7 @@ class GameView(arcade.View):
         self.heart_list = self.tile_map.sprite_lists[LAYER_NAME_HEARTS]
         self.dont_touch_list = self.tile_map.sprite_lists[LAYER_NAME_DONT_TOUCH]
         self.item_list = self.tile_map.sprite_lists[LAYER_NAME_DYNAMIC_ITEMS]
+        self.block_list = self.tile_map.sprite_lists[LAYER_NAME_DYNAMIC_TILES]
         self.ladder_list = self.tile_map.sprite_lists[LAYER_NAME_LADDERS]
         self.moving_sprites_list = self.tile_map.sprite_lists[LAYER_NAME_MOVING_PLATFORMS]
 
@@ -416,12 +419,12 @@ class GameView(arcade.View):
 
         self.physics_engine.add_collision_handler("grenade", "wall", post_handler=wall_hit_handler)
 
-#        def item_hit_handler(bullet_sprite, item_sprite, _arbiter, _space, _data):
-#           """ Called for bullet/wall collision """
-#            bullet_sprite.remove_from_sprite_lists()
-#            item_sprite.remove_from_sprite_lists()
-#
-#        self.physics_engine.add_collision_handler("bullet", "item", post_handler=item_hit_handler)
+        def block_hit_handler(grenade_sprite, block_sprite, _arbiter, _space, _data):
+            """ Called for bullet/wall collision """
+            grenade_sprite.remove_from_sprite_lists()
+            block_sprite.remove_from_sprite_lists()
+
+        self.physics_engine.add_collision_handler("grenade", "block", post_handler=block_hit_handler)
 
         # Add the player.
         # For the player, we set the damping to a lower value, which increases
@@ -467,6 +470,12 @@ class GameView(arcade.View):
         self.physics_engine.add_sprite_list(self.item_list,
                                             friction=DYNAMIC_ITEM_FRICTION,
                                             collision_type="item")
+
+        # Create the blocks
+        self.physics_engine.add_sprite_list(self.block_list,
+                                            friction=DYNAMIC_ITEM_FRICTION,
+                                            collision_type="block",
+                                            body_type=arcade.PymunkPhysicsEngine.STATIC)
 
         # Add kinematic sprites
         self.physics_engine.add_sprite_list(self.moving_sprites_list,
@@ -1299,6 +1308,7 @@ class GameView(arcade.View):
         self.wall_list.draw()
         self.ladder_list.draw()
         self.item_list.draw()
+        self.block_list.draw()
         self.coin_list.draw()
         self.heart_list.draw()
         # This variable contains the enemies and bullets
