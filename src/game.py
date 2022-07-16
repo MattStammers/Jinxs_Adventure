@@ -149,7 +149,7 @@ class GameView(arcade.View):
         self.end_of_map = 0
 
         # Level
-        self.level = 6
+        self.level = 7
 
         # Level_Up
         self.level_up = 0
@@ -944,6 +944,7 @@ class GameView(arcade.View):
                     self.scene[LAYER_NAME_MOVING_PLATFORMS],
                     self.scene[LAYER_NAME_DYNAMIC_ITEMS],
                     self.scene[LAYER_NAME_SHIELD],
+                    self.scene[LAYER_NAME_DYNAMIC_TILES],
                 ],
             )
 
@@ -1199,6 +1200,7 @@ class GameView(arcade.View):
                     self.scene[LAYER_NAME_MOVING_PLATFORMS],
                     self.scene[LAYER_NAME_SHIELD],
                     self.scene[LAYER_NAME_ALLIES],
+                    self.scene[LAYER_NAME_DYNAMIC_TILES],
                 ],
             )
 
