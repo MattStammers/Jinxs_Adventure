@@ -433,120 +433,6 @@
                 }, 
                 {
                  "height":0,
-                 "id":9,
-                 "name":"Flufflepop",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"boundary_left",
-                         "type":"int",
-                         "value":50
-                        }, 
-                        {
-                         "name":"boundary_right",
-                         "type":"int",
-                         "value":250
-                        }, 
-                        {
-                         "name":"change_x",
-                         "type":"int",
-                         "value":1
-                        }, 
-                        {
-                         "name":"speech",
-                         "type":"string",
-                         "value":"See if you can get up these mineshafts to the top of the cavern"
-                        }, 
-                        {
-                         "name":"type",
-                         "type":"string",
-                         "value":"flufflepop"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":3328,
-                 "y":12672
-                }, 
-                {
-                 "height":0,
-                 "id":10,
-                 "name":"Flufflepop",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"boundary_left",
-                         "type":"int",
-                         "value":50
-                        }, 
-                        {
-                         "name":"boundary_right",
-                         "type":"int",
-                         "value":250
-                        }, 
-                        {
-                         "name":"change_x",
-                         "type":"int",
-                         "value":1
-                        }, 
-                        {
-                         "name":"speech",
-                         "type":"string",
-                         "value":"See if you can get up these mineshafts to the top of the cavern"
-                        }, 
-                        {
-                         "name":"type",
-                         "type":"string",
-                         "value":"flufflepop"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":3584,
-                 "y":12672
-                }, 
-                {
-                 "height":0,
-                 "id":11,
-                 "name":"Flufflepop",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"boundary_left",
-                         "type":"int",
-                         "value":50
-                        }, 
-                        {
-                         "name":"boundary_right",
-                         "type":"int",
-                         "value":250
-                        }, 
-                        {
-                         "name":"change_x",
-                         "type":"int",
-                         "value":1
-                        }, 
-                        {
-                         "name":"speech",
-                         "type":"string",
-                         "value":"See if you can get up these mineshafts to the top of the cavern"
-                        }, 
-                        {
-                         "name":"type",
-                         "type":"string",
-                         "value":"flufflepop"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":3840,
-                 "y":12672
-                }, 
-                {
-                 "height":0,
                  "id":25,
                  "name":"Hooboo",
                  "point":true,
@@ -582,6 +468,120 @@
                  "width":0,
                  "x":1152,
                  "y":384
+                }, 
+                {
+                 "height":0,
+                 "id":27,
+                 "name":"Hooboo",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"boundary_left",
+                         "type":"int",
+                         "value":3500
+                        }, 
+                        {
+                         "name":"boundary_right",
+                         "type":"int",
+                         "value":3800
+                        }, 
+                        {
+                         "name":"change_x",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"speech",
+                         "type":"string",
+                         "value":"Ahh its a purple slime!"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"hooboo"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":8192,
+                 "y":7680
+                }, 
+                {
+                 "height":0,
+                 "id":28,
+                 "name":"Pumbean",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"boundary_left",
+                         "type":"int",
+                         "value":3250
+                        }, 
+                        {
+                         "name":"boundary_right",
+                         "type":"int",
+                         "value":3500
+                        }, 
+                        {
+                         "name":"change_x",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"speech",
+                         "type":"string",
+                         "value":"Woah, that was amazing"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"pumbean"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":9728,
+                 "y":6400
+                }, 
+                {
+                 "height":0,
+                 "id":29,
+                 "name":"Flufflepop",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"boundary_left",
+                         "type":"int",
+                         "value":3500
+                        }, 
+                        {
+                         "name":"boundary_right",
+                         "type":"int",
+                         "value":4500
+                        }, 
+                        {
+                         "name":"change_x",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"speech",
+                         "type":"string",
+                         "value":"the blueslimeboss is ahead"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"flufflepop"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":10496,
+                 "y":896
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -713,7 +713,7 @@
          "y":0
         }],
  "nextlayerid":12,
- "nextobjectid":26,
+ "nextobjectid":30,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.7.2",
