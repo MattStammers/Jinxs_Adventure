@@ -4328,7 +4328,7 @@
                         {
                          "name":"Points",
                          "type":"int",
-                         "value":50
+                         "value":100
                         }]
                 }, 
                 {

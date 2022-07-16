@@ -149,7 +149,7 @@ class GameView(arcade.View):
         self.end_of_map = 0
 
         # Level
-        self.level = 7
+        self.level = 0
 
         # Level_Up
         self.level_up = 0
@@ -500,6 +500,10 @@ class GameView(arcade.View):
             arcade.set_background_color(arcade.color.DARK_BROWN)
         elif self.level == 5:
             arcade.set_background_color(arcade.color.ORANGE_PEEL)
+        elif self.level == 6:
+            arcade.set_background_color(arcade.color.YELLOW_GREEN)
+        elif self.level == 7:
+            arcade.set_background_color(arcade.color.VANILLA)
         else:
             arcade.set_background_color(arcade.color.BLEU_DE_FRANCE)
 
