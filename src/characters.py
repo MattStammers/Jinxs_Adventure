@@ -110,13 +110,37 @@ class LavaSnake(Enemy):
 
         self.health = 50
 
+class GreenSlime(Enemy):
+    def __init__(self):
+
+        # Set up parent class
+        super().__init__("slimeGreen", "slimeGreen")
+
+        self.health = 50
+
+class PurpleSlime(Enemy):
+    def __init__(self):
+
+        # Set up parent class
+        super().__init__("slimePurple", "slimePurple")
+
+        self.health = 100
+
+class SilverSlime(Enemy):
+    def __init__(self):
+
+        # Set up parent class
+        super().__init__("slimeSilver", "slimeSilver")
+
+        self.health = 250
+
 class PrimarySlime(Enemy):
     def __init__(self):
 
         # Set up parent class
         super().__init__("primaryslime", "primaryslime")
 
-        self.health = 200
+        self.health = 2000
 
 class SecondarySlime(Enemy):
     def __init__(self):
@@ -124,7 +148,7 @@ class SecondarySlime(Enemy):
         # Set up parent class
         super().__init__("secondaryslime", "secondaryslime")
 
-        self.health = 400
+        self.health = 4000
 
 class BlueSlimeBoss(Enemy):
     def __init__(self):
@@ -132,7 +156,7 @@ class BlueSlimeBoss(Enemy):
         # Set up parent class
         super().__init__("slimeBlueBoss", "slimeBlueBoss")
 
-        self.health = 2000
+        self.health = 10000
 
 class Thunderer(Enemy):
     def __init__(self):
@@ -171,6 +195,14 @@ class RolyPolyBot(Enemy):
 
         # Set up parent class
         super().__init__("rolypolybot", "rolypolybot")
+
+        self.health = 500
+
+class MasterVerse(Enemy):
+    def __init__(self):
+
+        # Set up parent class
+        super().__init__("masterverse", "masterverse")
 
         self.health = 500
 

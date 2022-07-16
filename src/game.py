@@ -360,13 +360,19 @@ class GameView(arcade.View):
             elif enemy_type == "slimeBlue":
                 enemy = BlueSlime()
             elif enemy_type == "snakeLava":
-                enemy = LavaSnake()    
+                enemy = LavaSnake()  
+            elif enemy_type == "slimeGreen":
+                enemy = GreenSlime() 
+            elif enemy_type == "slimePurple":
+                enemy = PurpleSlime() 
+            elif enemy_type == "slimeSilver":
+                enemy = SilverSlime()   
+            elif enemy_type == "slimeBlueBoss":
+                enemy = BlueSlimeBoss()  
             elif enemy_type == "primaryslime":
                 enemy = PrimarySlime() 
             elif enemy_type == "secondaryslime":
-                enemy = SecondarySlime()   
-            elif enemy_type == "slimeBlueBoss":
-                enemy = BlueSlimeBoss()    
+                enemy = SecondarySlime()     
             elif enemy_type == "thunderer":
                 enemy = Thunderer()
             elif enemy_type == "chomper":
@@ -1047,12 +1053,25 @@ class GameView(arcade.View):
                 randfire(odds =1000, x=2, y=0, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "candyBlue.png")
 
             elif type(enemy) == type(LavaSnake()):
-                randfire(odds =500, x=-4, y=0, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
-                randfire(odds =500, x=4, y=0, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
-                randfire(odds =500, x=-4, y=-1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
-                randfire(odds =500, x=4, y=-1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
-                randfire(odds =500, x=-4, y=1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
-                randfire(odds =500, x=4, y=1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =500, x=-4, y=0, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "lava_ball.png")
+                randfire(odds =500, x=4, y=0, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "lava_ball.png")
+                randfire(odds =500, x=-4, y=-1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "lava_ball.png")
+                randfire(odds =500, x=4, y=-1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "lava_ball.png")
+                randfire(odds =500, x=-4, y=1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "lava_ball.png")
+                randfire(odds =500, x=4, y=1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "lava_ball.png")
+
+            elif type(enemy) == type(GreenSlime()):
+                randfire(odds =500, x=-3, y=-1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "candyGreen.png")
+                randfire(odds =500, x=3, y=1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "candyGreen.png")
+
+            elif type(enemy) == type(PurpleSlime()):
+                randfire(odds =500, x=-4, y=-1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "candyRed.png")
+                randfire(odds =500, x=4, y=1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "candyRed.png")
+                randfire(odds =500, x=-4, y=-1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "candyRed.png")
+                randfire(odds =500, x=4, y=-1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "candyRed.png")
+            
+            elif type(enemy) == type(SilverSlime()):    
+                aimingfire(rate = 120, bullet_speed=8, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "spinner.png")
 
             elif type(enemy) == type(Thunderer()):
                 randfire(odds =500, x=1, y=-3, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "thunderbullet1.png")
