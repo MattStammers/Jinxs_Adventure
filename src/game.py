@@ -147,7 +147,7 @@ class GameView(arcade.View):
         self.end_of_map = 0
 
         # Level
-        self.level = 0
+        self.level = 4
 
         # Level_Up
         self.level_up = 0
