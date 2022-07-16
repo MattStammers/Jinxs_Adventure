@@ -172,22 +172,6 @@ class GameView(arcade.View):
     def setup(self):
         """ Set up everything with the game """
 
-        # Set background color
-        if self.level == 0:
-            arcade.set_background_color(arcade.color.BLEU_DE_FRANCE)
-        if self.level == 1:
-            arcade.set_background_color(arcade.color.DARK_BLUE)
-        if self.level == 2:
-            arcade.set_background_color(arcade.color.ASH_GREY)
-        if self.level == 3:
-            arcade.set_background_color(arcade.color.PURPLE_MOUNTAIN_MAJESTY)
-        if self.level == 4:
-            arcade.set_background_color(arcade.color.DARK_BROWN)
-        if self.level == 5:
-            arcade.set_background_color(arcade.color.ORANGE_PEEL)
-        else:
-            arcade.set_background_color(arcade.color.BLEU_DE_FRANCE)
-
         # Layer Specific Options for the Tilemap
         layer_options = {
             LAYER_NAME_PLATFORMS: {
@@ -494,6 +478,23 @@ class GameView(arcade.View):
         # self.physics_engine.add_sprite_list(self.allies_list,
         #                                     body_type=arcade.PymunkPhysicsEngine.KINEMATIC)
 
+        # Set background color
+        if self.level == 0:
+            arcade.set_background_color(arcade.color.BLEU_DE_FRANCE)
+        elif self.level == 1:
+            arcade.set_background_color(arcade.color.DARK_BLUE)
+        elif self.level == 2:
+            arcade.set_background_color(arcade.color.ASH_GREY)
+        elif self.level == 3:
+            arcade.set_background_color(arcade.color.PURPLE_MOUNTAIN_MAJESTY)
+        elif self.level == 4:
+            arcade.set_background_color(arcade.color.DARK_BROWN)
+        elif self.level == 5:
+            arcade.set_background_color(arcade.color.ORANGE_PEEL)
+        else:
+            arcade.set_background_color(arcade.color.BLEU_DE_FRANCE)
+
+
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
 
@@ -628,7 +629,7 @@ class GameView(arcade.View):
                 if self.score >= 1250:
                     # Advance to the next level
                     self.level_up = 3
-                    if self.score >= 3000:
+                    if self.score >= 4000:
                         # Advance to the next level
                         self.level_up = 4
                         if self.score >= 10000:
@@ -723,23 +724,30 @@ class GameView(arcade.View):
         if self.can_shoot:
             if self.shoot_pressed:
                 arcade.play_sound(self.shoot_sound)
-                if self.level_up <= 4:
+                if self.level_up <= 3:
                     player_bullet = arcade.Sprite(
                         file_path + "/resources/images/weapons/swordBronze.png",
                         SPRITE_SCALING_PROJECTILES/1.5,
                     )
                     
-                elif self.level_up <= 7:
+                elif self.level_up <= 6:
                     arcade.play_sound(self.shoot_sound)
                     player_bullet = arcade.Sprite(
                         file_path + "/resources/images/weapons/swordSilver.png", 
                         SPRITE_SCALING_PROJECTILES/1.25,
                     )
                 
-                elif self.level_up <= 10:
+                elif self.level_up <= 9:
                     arcade.play_sound(self.shoot_sound)
                     player_bullet = arcade.Sprite(
                         file_path + "/resources/images/weapons/swordGold.png", 
+                        SPRITE_SCALING_PROJECTILES,
+                    )
+                
+                elif self.level_up <= 10:
+                    arcade.play_sound(self.shoot_sound)
+                    player_bullet = arcade.Sprite(
+                        file_path + "/resources/images/weapons/laserGreenHorizontal.png", 
                         SPRITE_SCALING_PROJECTILES,
                     )
 
@@ -778,6 +786,10 @@ class GameView(arcade.View):
                         )
                 elif self.level_up <=9:
                     shield = arcade.Sprite(file_path + "/resources/images/weapons/shieldGold.png", 
+                        SPRITE_SCALING_PROJECTILES*1.25,
+                        )
+                elif self.level_up <=10:
+                    shield = arcade.Sprite(file_path + "/resources/images/weapons/chomper_bullet.png", 
                         SPRITE_SCALING_PROJECTILES*1.25,
                         )
 
@@ -964,6 +976,12 @@ class GameView(arcade.View):
                                 self.score += int(getattr(GreenWorm(),"health"))
                             elif type(enemy) == type(BlueSlime()):
                                 self.score += int(getattr(BlueSlime(),"health"))
+                            elif type(enemy) == type(GreenSlime()):
+                                self.score += int(getattr(GreenSlime(),"health"))
+                            elif type(enemy) == type(PurpleSlime()):
+                                self.score += int(getattr(PurpleSlime(),"health"))
+                            elif type(enemy) == type(SilverSlime()):
+                                self.score += int(getattr(SilverSlime(),"health"))
                             elif type(enemy) == type(LavaSnake()):
                                 self.score += int(getattr(LavaSnake(),"health"))
                             elif type(enemy) == type(BlueSlimeBoss()):
@@ -982,6 +1000,8 @@ class GameView(arcade.View):
                                 self.score += int(getattr(Thunderer(),"health"))
                             elif type(enemy) == type(RolyPolyBot()):
                                 self.score += int(getattr(RolyPolyBot(),"health"))
+                            elif type(enemy) == type(MasterVerse()):
+                                self.score += int(getattr(MasterVerse(),"health"))
 
                         # Hit sound
                         arcade.play_sound(self.hit_sound)
@@ -1053,22 +1073,25 @@ class GameView(arcade.View):
                 randfire(odds =1000, x=2, y=0, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "candyBlue.png")
 
             elif type(enemy) == type(LavaSnake()):
-                randfire(odds =500, x=-4, y=0, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "lava_ball.png")
-                randfire(odds =500, x=4, y=0, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "lava_ball.png")
-                randfire(odds =500, x=-4, y=-1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "lava_ball.png")
-                randfire(odds =500, x=4, y=-1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "lava_ball.png")
-                randfire(odds =500, x=-4, y=1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "lava_ball.png")
-                randfire(odds =500, x=4, y=1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "lava_ball.png")
+                randfire(odds =500, x=-4, y=0, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "lava_ball_small.png")
+                randfire(odds =500, x=4, y=0, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "lava_ball_small.png")
+                randfire(odds =500, x=-4, y=-1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "lava_ball_small.png")
+                randfire(odds =500, x=4, y=-1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "lava_ball_small.png")
+                randfire(odds =500, x=-4, y=1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "lava_ball_small.png")
+                randfire(odds =500, x=4, y=1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "lava_ball_small.png")
 
             elif type(enemy) == type(GreenSlime()):
-                randfire(odds =500, x=-3, y=-1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "candyGreen.png")
+                randfire(odds =500, x=-3, y=0, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "candyGreen.png")
+                randfire(odds =500, x=-3, y=1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "candyGreen.png")
+                randfire(odds =500, x=3, y=0, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "candyGreen.png")
                 randfire(odds =500, x=3, y=1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "candyGreen.png")
 
+
             elif type(enemy) == type(PurpleSlime()):
-                randfire(odds =500, x=-4, y=-1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "candyRed.png")
-                randfire(odds =500, x=4, y=1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "candyRed.png")
-                randfire(odds =500, x=-4, y=-1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "candyRed.png")
-                randfire(odds =500, x=4, y=-1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "candyRed.png")
+                randfire(odds =250, x=-4, y=0, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "candyRed.png")
+                randfire(odds =250, x=4, y=0, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "candyRed.png")
+                randfire(odds =250, x=-4, y=1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "candyRed.png")
+                randfire(odds =250, x=4, y=1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "candyRed.png")
             
             elif type(enemy) == type(SilverSlime()):    
                 aimingfire(rate = 120, bullet_speed=8, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "spinner.png")
@@ -1110,7 +1133,26 @@ class GameView(arcade.View):
                 randfire(odds =1000, x=0, y=10, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "gemYellow.png")
 
             elif type(enemy) == type(BlueSlimeBoss()):    
-                aimingfire(rate = 30, bullet_speed=6, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "candyBlue.png")
+                aimingfire(rate = 60, bullet_speed=6, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "spinner.png")
+                randfire(odds =1000, x=-10, y=0, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =1000, x=-10, y=1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =1000, x=-10, y=2, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =1000, x=-10, y=3, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =1000, x=-10, y=4, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =1000, x=-10, y=-1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =1000, x=-10, y=-2, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =1000, x=-10, y=-3, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =1000, x=-10, y=-4, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =1000, x=10, y=0, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =1000, x=10, y=1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =1000, x=10, y=2, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =1000, x=10, y=3, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =1000, x=10, y=4, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =1000, x=10, y=-1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =1000, x=10, y=-2, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =1000, x=10, y=-3, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =1000, x=10, y=-4, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+    
 
             elif type(enemy) == type(RobotEnemy()):    
                 aimingfire(rate = 60, bullet_speed=8, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "laserBlue01.png")
@@ -1253,17 +1295,17 @@ class GameView(arcade.View):
 
         # Behind items
         self.background_list.draw()
-        self.wall_list.draw()
         self.foreground_list.draw()
+        self.wall_list.draw()
         self.ladder_list.draw()
         self.item_list.draw()
         self.coin_list.draw()
         self.heart_list.draw()
-        self.dont_touch_list.draw()
         # This variable contains the enemies and bullets
         self.scene.draw()
 
         self.moving_sprites_list.draw()
+        self.dont_touch_list.draw()
         self.grenade_list.draw()
         self.player_list.draw()
         # self.enemies_list.draw()

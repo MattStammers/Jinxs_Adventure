@@ -126,6 +126,22 @@ class PurpleSlime(Enemy):
 
         self.health = 100
 
+class Thunderer(Enemy):
+    def __init__(self):
+
+        # Set up parent class
+        super().__init__("thunderer", "thunderer")
+
+        self.health = 100
+
+class BlueSlimeBoss(Enemy):
+    def __init__(self):
+
+        # Set up parent class
+        super().__init__("slimeBlueBoss", "slimeBlueBoss")
+
+        self.health = 2500
+
 class SilverSlime(Enemy):
     def __init__(self):
 
@@ -149,22 +165,6 @@ class SecondarySlime(Enemy):
         super().__init__("secondaryslime", "secondaryslime")
 
         self.health = 4000
-
-class BlueSlimeBoss(Enemy):
-    def __init__(self):
-
-        # Set up parent class
-        super().__init__("slimeBlueBoss", "slimeBlueBoss")
-
-        self.health = 10000
-
-class Thunderer(Enemy):
-    def __init__(self):
-
-        # Set up parent class
-        super().__init__("thunderer", "thunderer")
-
-        self.health = 100
 
 class Chomper(Enemy):
     def __init__(self):
