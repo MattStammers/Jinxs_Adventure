@@ -2,7 +2,6 @@
 
 from characters import *
 from objects import *
-import random
 
 # Shooting Constants
 SPRITE_SCALING_PROJECTILES = 0.6
