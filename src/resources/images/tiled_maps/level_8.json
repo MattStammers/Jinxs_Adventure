@@ -131,8 +131,160 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":5888,
-                 "y":3584
+                 "x":5376,
+                 "y":3712
+                }, 
+                {
+                 "height":0,
+                 "id":9,
+                 "name":"Hooboo",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"boundary_left",
+                         "type":"int",
+                         "value":400
+                        }, 
+                        {
+                         "name":"boundary_right",
+                         "type":"int",
+                         "value":850
+                        }, 
+                        {
+                         "name":"change_x",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"speech",
+                         "type":"string",
+                         "value":"An army of slimes is coming with some unusual looking diamonds behind them, help!"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"hooboo"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":640,
+                 "y":3712
+                }, 
+                {
+                 "height":0,
+                 "id":10,
+                 "name":"Hooboo",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"boundary_left",
+                         "type":"int",
+                         "value":400
+                        }, 
+                        {
+                         "name":"boundary_right",
+                         "type":"int",
+                         "value":850
+                        }, 
+                        {
+                         "name":"change_x",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"speech",
+                         "type":"string",
+                         "value":"See if you can beat the robot"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"hooboo"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":3200,
+                 "y":3712
+                }, 
+                {
+                 "height":0,
+                 "id":11,
+                 "name":"Hooboo",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"boundary_left",
+                         "type":"int",
+                         "value":400
+                        }, 
+                        {
+                         "name":"boundary_right",
+                         "type":"int",
+                         "value":850
+                        }, 
+                        {
+                         "name":"change_x",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"speech",
+                         "type":"string",
+                         "value":"See if you can beat the robot"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"hooboo"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":7424,
+                 "y":3712
+                }, 
+                {
+                 "height":0,
+                 "id":12,
+                 "name":"Hooboo",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"boundary_left",
+                         "type":"int",
+                         "value":400
+                        }, 
+                        {
+                         "name":"boundary_right",
+                         "type":"int",
+                         "value":850
+                        }, 
+                        {
+                         "name":"change_x",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"speech",
+                         "type":"string",
+                         "value":"See if you can beat the robot"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"hooboo"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":10368,
+                 "y":3712
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -276,7 +428,7 @@
          "y":0
         }],
  "nextlayerid":13,
- "nextobjectid":9,
+ "nextobjectid":13,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.7.2",
