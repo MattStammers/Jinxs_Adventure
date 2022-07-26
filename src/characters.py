@@ -142,37 +142,21 @@ class BlueSlimeBoss(Enemy):
 
         self.health = 2500
 
-class SilverSlime(Enemy):
-    def __init__(self):
-
-        # Set up parent class
-        super().__init__("slimeSilver", "slimeSilver")
-
-        self.health = 250
-
-class PrimarySlime(Enemy):
-    def __init__(self):
-
-        # Set up parent class
-        super().__init__("primaryslime", "primaryslime")
-
-        self.health = 2000
-
-class SecondarySlime(Enemy):
-    def __init__(self):
-
-        # Set up parent class
-        super().__init__("secondaryslime", "secondaryslime")
-
-        self.health = 4000
-
 class Chomper(Enemy):
     def __init__(self):
 
         # Set up parent class
         super().__init__("chomper", "chomper")
 
-        self.health = 300
+        self.health = 350
+
+class SilverSlime(Enemy):
+    def __init__(self):
+
+        # Set up parent class
+        super().__init__("slimeSilver", "slimeSilver")
+
+        self.health = 1000
 
 class DiamondShooter(Enemy):
     def __init__(self):
@@ -180,7 +164,23 @@ class DiamondShooter(Enemy):
         # Set up parent class
         super().__init__("diamondshooter", "diamondshooter")
 
-        self.health = 150
+        self.health = 500
+
+class PrimarySlime(Enemy):
+    def __init__(self):
+
+        # Set up parent class
+        super().__init__("primaryslime", "primaryslime")
+
+        self.health = 1500
+
+class SecondarySlime(Enemy):
+    def __init__(self):
+
+        # Set up parent class
+        super().__init__("secondaryslime", "secondaryslime")
+
+        self.health = 3000
 
 class RobotEnemy(Enemy):
     def __init__(self):
@@ -188,7 +188,7 @@ class RobotEnemy(Enemy):
         # Set up parent class
         super().__init__("robot", "robot")
 
-        self.health = 500
+        self.health = 5000
 
 class RolyPolyBot(Enemy):
     def __init__(self):
@@ -196,7 +196,7 @@ class RolyPolyBot(Enemy):
         # Set up parent class
         super().__init__("rolypolybot", "rolypolybot")
 
-        self.health = 500
+        self.health = 10000
 
 class MasterVerse(Enemy):
     def __init__(self):
@@ -204,7 +204,15 @@ class MasterVerse(Enemy):
         # Set up parent class
         super().__init__("masterverse", "masterverse")
 
-        self.health = 500
+        self.health = 50000
+
+class FlufflePop(Enemy):
+    def __init__(self):
+
+        # Set up parent class
+        super().__init__("flufflepop", "flufflepop")
+
+        self.health = 100000
 
 # Now for ally characters
 class Ally(Entity):

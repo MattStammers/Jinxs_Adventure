@@ -43,14 +43,47 @@
                         {
                          "name":"type",
                          "type":"string",
-                         "value":"secondaryslime"
+                         "value":"diamondshooter"
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":4992,
-                 "y":3456
+                 "x":6272,
+                 "y":3712
+                }, 
+                {
+                 "height":0,
+                 "id":8,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"boundary_left",
+                         "type":"int",
+                         "value":4000
+                        }, 
+                        {
+                         "name":"boundary_right",
+                         "type":"int",
+                         "value":4400
+                        }, 
+                        {
+                         "name":"change_x",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"slimeSilver"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":5120,
+                 "y":3712
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -243,7 +276,7 @@
          "y":0
         }],
  "nextlayerid":13,
- "nextobjectid":8,
+ "nextobjectid":9,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.7.2",

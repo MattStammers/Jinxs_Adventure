@@ -28,12 +28,12 @@
                         {
                          "name":"boundary_left",
                          "type":"int",
-                         "value":2000
+                         "value":2100
                         }, 
                         {
                          "name":"boundary_right",
                          "type":"int",
-                         "value":2500
+                         "value":2300
                         }, 
                         {
                          "name":"change_x",
@@ -61,12 +61,12 @@
                         {
                          "name":"boundary_left",
                          "type":"int",
-                         "value":3500
+                         "value":3600
                         }, 
                         {
                          "name":"boundary_right",
                          "type":"int",
-                         "value":4000
+                         "value":3900
                         }, 
                         {
                          "name":"change_x",
@@ -83,6 +83,39 @@
                  "visible":true,
                  "width":0,
                  "x":9984,
+                 "y":3712
+                }, 
+                {
+                 "height":0,
+                 "id":17,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"boundary_left",
+                         "type":"int",
+                         "value":4000
+                        }, 
+                        {
+                         "name":"boundary_right",
+                         "type":"int",
+                         "value":4400
+                        }, 
+                        {
+                         "name":"change_x",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"slimeSilver"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":12544,
                  "y":3712
                 }],
          "opacity":1,
@@ -234,7 +267,7 @@
                         {
                          "name":"speech",
                          "type":"string",
-                         "value":"well done for getting through there. Looks like it's candyland up ahead"
+                         "value":"if you can get past this silver slime we can head into candyland"
                         }, 
                         {
                          "name":"type",
@@ -272,7 +305,7 @@
                         {
                          "name":"speech",
                          "type":"string",
-                         "value":"we are nearly through now. Just one more slice up to go"
+                         "value":"we are nearly through now. Just one more slice up to go then beat the silver slime to get out!"
                         }, 
                         {
                          "name":"type",
@@ -428,7 +461,7 @@
          "y":0
         }],
  "nextlayerid":13,
- "nextobjectid":17,
+ "nextobjectid":18,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.7.2",
