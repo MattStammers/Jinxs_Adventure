@@ -193,7 +193,7 @@
                         {
                          "name":"boundary_left",
                          "type":"int",
-                         "value":4000
+                         "value":4200
                         }, 
                         {
                          "name":"boundary_right",
@@ -391,12 +391,12 @@
                         {
                          "name":"boundary_left",
                          "type":"int",
-                         "value":3600
+                         "value":3800
                         }, 
                         {
                          "name":"boundary_right",
                          "type":"int",
-                         "value":3800
+                         "value":4000
                         }, 
                         {
                          "name":"change_x",
@@ -762,34 +762,6 @@
                  "width":256,
                  "x":3072,
                  "y":9216
-                }, 
-                {
-                 "gid":78,
-                 "height":128,
-                 "id":36,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"boundary_bottom",
-                         "type":"int",
-                         "value":350
-                        }, 
-                        {
-                         "name":"boundary_top",
-                         "type":"int",
-                         "value":250
-                        }, 
-                        {
-                         "name":"change_y",
-                         "type":"int",
-                         "value":80
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":256,
-                 "x":5376,
-                 "y":12032
                 }, 
                 {
                  "gid":78,

@@ -504,6 +504,8 @@ class GameView(arcade.View):
             arcade.set_background_color(arcade.color.YELLOW_GREEN)
         elif self.level == 7:
             arcade.set_background_color(arcade.color.VANILLA)
+        elif self.level == 8:
+            arcade.set_background_color(arcade.color.PINK)
         else:
             arcade.set_background_color(arcade.color.BLEU_DE_FRANCE)
 
