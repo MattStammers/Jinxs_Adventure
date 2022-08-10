@@ -630,7 +630,7 @@
                         {
                          "name":"speech",
                          "type":"string",
-                         "value":"Well done for defeating the silver slimes and diamondshooters"
+                         "value":"Well done for beating the silver slimes and diamondshooters"
                         }, 
                         {
                          "name":"type",
