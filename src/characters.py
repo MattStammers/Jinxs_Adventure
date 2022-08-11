@@ -182,6 +182,14 @@ class SecondarySlime(Enemy):
 
         self.health = 3000
 
+class SuperThunderer(Enemy):
+    def __init__(self):
+
+        # Set up parent class
+        super().__init__("superthunderer", "superthunderer")
+
+        self.health = 10000
+
 class RobotEnemy(Enemy):
     def __init__(self):
 

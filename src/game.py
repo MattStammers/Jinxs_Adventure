@@ -149,7 +149,7 @@ class GameView(arcade.View):
         self.end_of_map = 0
 
         # Level
-        self.level = 8
+        self.level = 9
 
         # Level_Up
         self.level_up = 0
@@ -362,6 +362,8 @@ class GameView(arcade.View):
                 enemy = SecondarySlime()     
             elif enemy_type == "thunderer":
                 enemy = Thunderer()
+            elif enemy_type == "superthunderer":
+                enemy = SuperThunderer()
             elif enemy_type == "chomper":
                 enemy = Chomper()
             elif enemy_type == "diamondshooter":
@@ -1016,6 +1018,8 @@ class GameView(arcade.View):
                                  self.score += int(getattr(SecondarySlime(),"health"))
                             elif type(enemy) == type(Thunderer()):
                                 self.score += int(getattr(Thunderer(),"health"))
+                            elif type(enemy) == type(SuperThunderer()):
+                                self.score += int(getattr(SuperThunderer(),"health"))
                             elif type(enemy) == type(RolyPolyBot()):
                                 self.score += int(getattr(RolyPolyBot(),"health"))
                             elif type(enemy) == type(MasterVerse()):
@@ -1121,6 +1125,14 @@ class GameView(arcade.View):
                 randfire(odds =500, x=2, y=-6, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "thunderbullet2.png")
                 randfire(odds =500, x=0, y=-10, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "sparky.png")
                 aimingfire(rate = 360, bullet_speed=6, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "thunderbullet.png")
+
+            elif type(enemy) == type(SuperThunderer()):
+                randfire(odds =100, x=1, y=-3, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "thunderbullet1.png")
+                randfire(odds =100, x=-1, y=-3, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "thunderbullet1.png")
+                randfire(odds =100, x=-2, y=-6, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "thunderbullet2.png")
+                randfire(odds =100, x=2, y=-6, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "thunderbullet2.png")
+                randfire(odds =100, x=0, y=-10, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "sparky.png")
+                aimingfire(rate = 30, bullet_speed=12, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "thunderbullet.png")
 
             elif type(enemy) == type(Chomper()):    
                 aimingfire(rate = 100, bullet_speed=8, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "chomper_bullet.png")
