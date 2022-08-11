@@ -292,7 +292,7 @@
                         {
                          "name":"boundary_left",
                          "type":"int",
-                         "value":4000
+                         "value":1
                         }, 
                         {
                          "name":"boundary_right",
@@ -592,7 +592,7 @@
                         {
                          "name":"speech",
                          "type":"string",
-                         "value":"There are som cany towers up ahead. If you shoot the bottoms you should be able to block the enemy bullets"
+                         "value":"There are some candy towers up ahead. If you grenade the bases you should be able to release the candy"
                         }, 
                         {
                          "name":"type",
@@ -681,6 +681,34 @@
                  "width":0,
                  "x":21072,
                  "y":3664
+                }, 
+                {
+                 "gid":122,
+                 "height":128,
+                 "id":60,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"boundary_bottom",
+                         "type":"int",
+                         "value":100
+                        }, 
+                        {
+                         "name":"boundary_top",
+                         "type":"int",
+                         "value":500
+                        }, 
+                        {
+                         "name":"change_y",
+                         "type":"int",
+                         "value":1
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":208,
+                 "x":5480,
+                 "y":3672
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -728,35 +756,7 @@
          "draworder":"topdown",
          "id":2,
          "name":"Moving Platforms",
-         "objects":[
-                {
-                 "gid":78,
-                 "height":128,
-                 "id":5,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"boundary_bottom",
-                         "type":"int",
-                         "value":200
-                        }, 
-                        {
-                         "name":"boundary_top",
-                         "type":"int",
-                         "value":500
-                        }, 
-                        {
-                         "name":"change_y",
-                         "type":"int",
-                         "value":1
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":256,
-                 "x":5376,
-                 "y":3584
-                }],
+         "objects":[],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -824,7 +824,7 @@
          "y":0
         }],
  "nextlayerid":13,
- "nextobjectid":60,
+ "nextobjectid":61,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.7.2",
