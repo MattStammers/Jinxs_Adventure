@@ -76,7 +76,7 @@
                         {
                          "name":"type",
                          "type":"string",
-                         "value":"secondaryslime"
+                         "value":"slimeSilver"
                         }],
                  "rotation":0,
                  "type":"",
@@ -142,7 +142,7 @@
                         {
                          "name":"type",
                          "type":"string",
-                         "value":"secondaryslime"
+                         "value":"primaryslime"
                         }],
                  "rotation":0,
                  "type":"",
@@ -183,6 +183,72 @@
                  "width":0,
                  "x":9952,
                  "y":472
+                }, 
+                {
+                 "height":0,
+                 "id":51,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"boundary_left",
+                         "type":"int",
+                         "value":3000
+                        }, 
+                        {
+                         "name":"boundary_right",
+                         "type":"int",
+                         "value":4500
+                        }, 
+                        {
+                         "name":"change_x",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"slimeSilver"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":9528,
+                 "y":5472
+                }, 
+                {
+                 "height":0,
+                 "id":52,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"boundary_left",
+                         "type":"int",
+                         "value":3000
+                        }, 
+                        {
+                         "name":"boundary_right",
+                         "type":"int",
+                         "value":4500
+                        }, 
+                        {
+                         "name":"change_x",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"slimeSilver"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":9632,
+                 "y":3536
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -913,7 +979,7 @@
          "y":0
         }],
  "nextlayerid":13,
- "nextobjectid":51,
+ "nextobjectid":53,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.7.2",
