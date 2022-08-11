@@ -165,12 +165,12 @@
                         {
                          "name":"boundary_right",
                          "type":"int",
-                         "value":4500
+                         "value":5200
                         }, 
                         {
                          "name":"change_x",
                          "type":"int",
-                         "value":1
+                         "value":5
                         }, 
                         {
                          "name":"type",
@@ -181,8 +181,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":9584,
-                 "y":704
+                 "x":9952,
+                 "y":472
                 }],
          "opacity":1,
          "type":"objectgroup",
