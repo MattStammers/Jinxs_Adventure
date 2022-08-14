@@ -756,7 +756,35 @@
          "draworder":"topdown",
          "id":2,
          "name":"Moving Platforms",
-         "objects":[],
+         "objects":[
+                {
+                 "gid":78,
+                 "height":128,
+                 "id":61,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"boundary_bottom",
+                         "type":"int",
+                         "value":200
+                        }, 
+                        {
+                         "name":"boundary_top",
+                         "type":"int",
+                         "value":1000
+                        }, 
+                        {
+                         "name":"change_y",
+                         "type":"int",
+                         "value":1
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":256,
+                 "x":9912,
+                 "y":3568
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -824,7 +852,7 @@
          "y":0
         }],
  "nextlayerid":13,
- "nextobjectid":61,
+ "nextobjectid":62,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.7.2",
