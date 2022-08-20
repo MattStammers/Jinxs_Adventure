@@ -132,7 +132,7 @@ class Thunderer(Enemy):
         # Set up parent class
         super().__init__("thunderer", "thunderer")
 
-        self.health = 100
+        self.health = 150
 
 class BlueSlimeBoss(Enemy):
     def __init__(self):
