@@ -1192,7 +1192,7 @@ class GameView(arcade.View):
                 aimingfire(rate = 10, bullet_speed=2, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "laserBlue01.png")
                 
             elif type(enemy) == type(RolyPolyBot()):    
-                aimingfire(rate = 30, bullet_speed=10, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "laserBlue01.png")
+                aimingfire(rate = 20, bullet_speed=10, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "laserBlue01.png")
                  
         # See if we hit any coins
         coin_hit_list = arcade.check_for_collision_with_list(
