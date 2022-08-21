@@ -374,6 +374,8 @@ class GameView(arcade.View):
                 enemy = RolyPolyBot()
             elif enemy_type == "masterverse":
                 enemy = MasterVerse()
+            elif enemy_type == "flufflepop":
+                enemy = FlufflePop()
             else:
                 raise Exception(f"Unknown enemy type {enemy_type}.")
             enemy.center_x = math.floor(
@@ -1034,6 +1036,8 @@ class GameView(arcade.View):
                                 self.score += int(getattr(RolyPolyBot(),"health"))
                             elif type(enemy) == type(MasterVerse()):
                                 self.score += int(getattr(MasterVerse(),"health"))
+                            elif type(enemy) == type(FlufflePop()):
+                                self.score += int(getattr(FlufflePop(),"health"))
 
                         # Hit sound
                         arcade.play_sound(self.hit_sound)
@@ -1207,7 +1211,30 @@ class GameView(arcade.View):
                 aimingfire(rate = 30, bullet_speed=10, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "laserGreenHorizontal.png")
                 aimingfire(rate = 20, bullet_speed=5, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "laserRed02.png")
                 aimingfire(rate = 10, bullet_speed=2, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "laserBlue01.png")
- 
+
+            elif type(enemy) == type(FlufflePop()): 
+                aimingfire(rate = 20, bullet_speed=20, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "laserPurple.png") 
+                aimingfire(rate = 10, bullet_speed=10, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "laserGreenHorizontal.png")
+                aimingfire(rate = 5, bullet_speed=5, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "laserRed02.png")
+                randfire(odds =1000, x=-10, y=0, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =1000, x=-10, y=1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =1000, x=-10, y=2, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =1000, x=-10, y=3, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =1000, x=-10, y=4, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =1000, x=-10, y=-1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =1000, x=-10, y=-2, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =1000, x=-10, y=-3, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =1000, x=-10, y=-4, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =1000, x=10, y=0, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =1000, x=10, y=1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =1000, x=10, y=2, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =1000, x=10, y=3, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =1000, x=10, y=4, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =1000, x=10, y=-1, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =1000, x=10, y=-2, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =1000, x=10, y=-3, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+                randfire(odds =1000, x=10, y=-4, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
+  
                  
         # See if we hit any coins
         coin_hit_list = arcade.check_for_collision_with_list(
