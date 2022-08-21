@@ -149,7 +149,7 @@ class GameView(arcade.View):
         self.end_of_map = 0
 
         # Level
-        self.level = 12
+        self.level = 13
 
         # Level_Up
         self.level_up = 0
@@ -372,6 +372,8 @@ class GameView(arcade.View):
                 enemy = RobotEnemy()
             elif enemy_type == "rolypolybot":
                 enemy = RolyPolyBot()
+            elif enemy_type == "masterverse":
+                enemy = MasterVerse()
             else:
                 raise Exception(f"Unknown enemy type {enemy_type}.")
             enemy.center_x = math.floor(
@@ -514,8 +516,10 @@ class GameView(arcade.View):
             arcade.set_background_color(arcade.color.GRAY_BLUE)
         elif self.level == 11:
             arcade.set_background_color(arcade.color.CADET_GREY)
-        elif self.level == 11:
+        elif self.level == 12:
             arcade.set_background_color(arcade.color.DAVY_GREY)
+        elif self.level == 13:
+            arcade.set_background_color(arcade.color.BLACK_OLIVE)
         else:
             arcade.set_background_color(arcade.color.BLEU_DE_FRANCE)
 
@@ -1190,11 +1194,20 @@ class GameView(arcade.View):
                 randfire(odds =1000, x=10, y=-4, angle=0, origin_x = enemy.center_x, origin_top = enemy.top, weapon = "spinner.png")
     
             elif type(enemy) == type(RobotEnemy()):    
-                aimingfire(rate = 60, bullet_speed=8, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "laserBlue01.png")
-                aimingfire(rate = 10, bullet_speed=2, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "laserBlue01.png")
-                
+                aimingfire(rate = 60, bullet_speed=5, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "laserRed02.png")
+                aimingfire(rate = 20, bullet_speed=2, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "laserBlue01.png")
+               
             elif type(enemy) == type(RolyPolyBot()):    
-                aimingfire(rate = 20, bullet_speed=10, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "laserBlue01.png")
+                aimingfire(rate = 40, bullet_speed=10, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "laserGreenHorizontal.png")
+                aimingfire(rate = 30, bullet_speed=5, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "laserRed02.png")
+                aimingfire(rate = 20, bullet_speed=2, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "laserBlue01.png")
+ 
+            elif type(enemy) == type(MasterVerse()): 
+                aimingfire(rate = 60, bullet_speed=20, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "laserPurple.png") 
+                aimingfire(rate = 30, bullet_speed=10, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "laserGreenHorizontal.png")
+                aimingfire(rate = 20, bullet_speed=5, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "laserRed02.png")
+                aimingfire(rate = 10, bullet_speed=2, origin_x=enemy.center_x, origin_y=enemy.center_y, aim_x=self.player_sprite.center_x, aim_y=self.player_sprite.center_y, weapon = "laserBlue01.png")
+ 
                  
         # See if we hit any coins
         coin_hit_list = arcade.check_for_collision_with_list(
