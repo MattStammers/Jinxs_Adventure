@@ -61,12 +61,12 @@
                         {
                          "name":"boundary_left",
                          "type":"int",
-                         "value":3500
+                         "value":3300
                         }, 
                         {
                          "name":"boundary_right",
                          "type":"int",
-                         "value":4800
+                         "value":5000
                         }, 
                         {
                          "name":"change_x",
@@ -94,12 +94,12 @@
                         {
                          "name":"boundary_left",
                          "type":"int",
-                         "value":3500
+                         "value":3300
                         }, 
                         {
                          "name":"boundary_right",
                          "type":"int",
-                         "value":4800
+                         "value":5000
                         }, 
                         {
                          "name":"change_x",
@@ -138,12 +138,12 @@
                         {
                          "name":"boundary_left",
                          "type":"int",
-                         "value":3500
+                         "value":4300
                         }, 
                         {
                          "name":"boundary_right",
                          "type":"int",
-                         "value":4000
+                         "value":4400
                         }, 
                         {
                          "name":"change_x",
@@ -252,12 +252,12 @@
                         {
                          "name":"boundary_left",
                          "type":"int",
-                         "value":3500
+                         "value":3300
                         }, 
                         {
                          "name":"boundary_right",
                          "type":"int",
-                         "value":3600
+                         "value":3400
                         }, 
                         {
                          "name":"change_x",
@@ -290,12 +290,12 @@
                         {
                          "name":"boundary_left",
                          "type":"int",
-                         "value":400
+                         "value":4800
                         }, 
                         {
                          "name":"boundary_right",
                          "type":"int",
-                         "value":850
+                         "value":5000
                         }, 
                         {
                          "name":"change_x",
