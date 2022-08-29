@@ -149,7 +149,7 @@ class GameView(arcade.View):
         self.end_of_map = 0
 
         # Level
-        self.level = 12
+        self.level = 13
 
         # Level_Up
         self.level_up = 0
@@ -768,7 +768,7 @@ class GameView(arcade.View):
                         SPRITE_SCALING_PROJECTILES/1.25,
                     )
                 
-                elif self.level_up <= 9:
+                elif self.level_up <= 8:
                     arcade.play_sound(self.shoot_sound)
                     player_bullet = arcade.Sprite(
                         file_path + "/resources/images/weapons/swordGold.png", 

@@ -132,18 +132,18 @@
                 {
                  "height":0,
                  "id":7,
-                 "name":"Hooboo",
+                 "name":"Pumbean",
                  "point":true,
                  "properties":[
                         {
                          "name":"boundary_left",
                          "type":"int",
-                         "value":4300
+                         "value":4000
                         }, 
                         {
                          "name":"boundary_right",
                          "type":"int",
-                         "value":4400
+                         "value":4200
                         }, 
                         {
                          "name":"change_x",
@@ -202,7 +202,7 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":12288,
+                 "x":12160,
                  "y":3712
                 }, 
                 {
