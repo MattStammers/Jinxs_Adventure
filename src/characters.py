@@ -270,7 +270,7 @@ class FlufflePop(Ally):
         # Set up parent class
         super().__init__("flufflepop", "flufflepop")
 
-        self.health = 1000
+        self.health = 100000
 
 class Pumbean(Ally):
     def __init__(self):
@@ -310,4 +310,4 @@ class SecondarySlime(Ally):
         # Set up parent class
         super().__init__("secondaryslime", "secondaryslime")
 
-        self.health = 400
+        self.health = 3000
