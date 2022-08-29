@@ -522,6 +522,10 @@ class GameView(arcade.View):
             arcade.set_background_color(arcade.color.DAVY_GREY)
         elif self.level == 13:
             arcade.set_background_color(arcade.color.BLACK_OLIVE)
+        elif self.level == 14:
+            arcade.set_background_color(arcade.color.CARROT_ORANGE)
+        elif self.level == 15:
+            arcade.set_background_color(arcade.color.GIANTS_ORANGE)
         else:
             arcade.set_background_color(arcade.color.BLEU_DE_FRANCE)
 
