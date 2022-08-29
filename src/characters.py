@@ -294,7 +294,7 @@ class MasterVerse(Ally):
         # Set up parent class
         super().__init__("masterverse", "masterverse")
 
-        self.health = 25000
+        self.health = 50000
 
 class RolyPolyBot(Ally):
     def __init__(self):
@@ -302,7 +302,7 @@ class RolyPolyBot(Ally):
         # Set up parent class
         super().__init__("rolypolybot", "rolypolybot")
 
-        self.health = 500
+        self.health = 10000
 
 class SecondarySlime(Ally):
     def __init__(self):
