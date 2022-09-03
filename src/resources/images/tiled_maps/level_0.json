@@ -4273,7 +4273,7 @@
                         {
                          "name":"Invincibility",
                          "type":"int",
-                         "value":1000
+                         "value":10000
                         }]
                 }, 
                 {

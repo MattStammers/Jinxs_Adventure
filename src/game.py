@@ -136,7 +136,7 @@ class GameView(arcade.View):
         # Life mechanics
         self.can_die = False
         self.death_timer = 0
-        self.invincibility = 0
+        self.invincibility_timer = 0
 
         # Keep track of the score
         self.score = 0
@@ -219,7 +219,7 @@ class GameView(arcade.View):
         # Life mechanics
         self.can_die = True
         self.death_timer = 0
-        self.invincibility = 0
+        self.invincibility_timer = 0
 
         # Shielding mechanics
         self.can_shield = True
@@ -1323,18 +1323,24 @@ class GameView(arcade.View):
 
         for power_up in power_up_hit_list:
             # Figure out the attributes of this power up
-            if "Speed" in power_up.properties:
+            if "Invincibility" in power_up.properties:
+                invincibility = int(power_up.properties["Invincibility"])
+                self.can_die = False
+                for x in range(invincibility):
+                    x += 1
+                    if x == invincibility:
+                        self.can_die = True
+                    print(self.invincibility_timer)
+                    if self.invincibility_timer > invincibility + 200:
+                        self.invincibility_timer = 0
+                    elif self.invincibility_timer == invincibility:
+                        self.can_die = True
+                        self.invincibility_timer = 0
+            elif "Speed" in power_up.properties:
                 speed = int(power_up.properties["Speed"])       
             elif "Gravity" in power_up.properties:
                 gravity = int(power_up.properties["Gravity"])
-            elif "Invincibility" in power_up.properties:
-                self.invincibility = int(power_up.properties["Invincibility"])
-                self.invincibility -= 1
-                if self.invincibility > 0:
-                    self.can_die = False
-                else:
-                    self.can_die = True
-                print(self.invincibility)
+                    
             else:
                 print("Warning, collected a power_up without a property.")
             
@@ -1360,9 +1366,9 @@ class GameView(arcade.View):
                     return
             else:
                 self.death_timer +=1
-                if self.death_timer > DEATH_PROTECT + 5 + self.level_up:
+                if self.death_timer > DEATH_PROTECT + 200:
                     self.death_timer = 0
-                elif self.death_timer == DEATH_PROTECT:
+                elif self.death_timer == DEATH_PROTECT + 5 + self.level_up:
                     self.can_die = True
                     self.death_timer = 0
 
@@ -1437,6 +1443,15 @@ class GameView(arcade.View):
         # Activate the GUI camera before drawing GUI elements
         self.gui_camera.use()
 
+        # Draw lives on the screen, scrolling it with the viewport
+        score_text = f"Invincibility Time Remaining: {self.invincibility_timer}"
+        arcade.draw_text(
+            score_text,
+            10,
+            130,
+            arcade.csscolor.ORANGE_RED,
+            18,
+        )
         # Draw lives on the screen, scrolling it with the viewport
         score_text = f"Remaining Life Points: {self.lives}"
         arcade.draw_text(
