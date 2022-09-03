@@ -1324,23 +1324,12 @@ class GameView(arcade.View):
         for power_up in power_up_hit_list:
             # Figure out the attributes of this power up
             if "Invincibility" in power_up.properties:
-                invincibility = int(power_up.properties["Invincibility"])
+                self.invincibility_timer = int(power_up.properties["Invincibility"])
                 self.can_die = False
-                for x in range(invincibility):
-                    x += 1
-                    if x == invincibility:
-                        self.can_die = True
-                    print(self.invincibility_timer)
-                    if self.invincibility_timer > invincibility + 200:
-                        self.invincibility_timer = 0
-                    elif self.invincibility_timer == invincibility:
-                        self.can_die = True
-                        self.invincibility_timer = 0
             elif "Speed" in power_up.properties:
                 speed = int(power_up.properties["Speed"])       
             elif "Gravity" in power_up.properties:
                 gravity = int(power_up.properties["Gravity"])
-                    
             else:
                 print("Warning, collected a power_up without a property.")
             
@@ -1366,9 +1355,13 @@ class GameView(arcade.View):
                     return
             else:
                 self.death_timer +=1
+                self.invincibility_timer -= 1
                 if self.death_timer > DEATH_PROTECT + 200:
                     self.death_timer = 0
-                elif self.death_timer == DEATH_PROTECT + 5 + self.level_up:
+                elif self.invincibility_timer == 0:
+                    self.can_die = True
+                    self.invincibility_timer = 0          
+                elif self.death_timer == DEATH_PROTECT + 5 + self.invincibility_timer + self.level_up:
                     self.can_die = True
                     self.death_timer = 0
 
