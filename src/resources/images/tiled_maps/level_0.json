@@ -302,7 +302,7 @@
                         {
                          "name":"speech",
                          "type":"string",
-                         "value":"Welcome to Moontown. If you find a cherry bomb it will give you an extra life point"
+                         "value":"Here is the Moonstone. The prize of Moontown. If you find a cherry bomb it will give you an extra life point"
                         }, 
                         {
                          "name":"type",
@@ -313,7 +313,7 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":7168,
+                 "x":6016,
                  "y":3712
                 }, 
                 {
@@ -378,7 +378,7 @@
                         {
                          "name":"speech",
                          "type":"string",
-                         "value":"See if you can get up this ladder and knock the stones down. Remember you can use E\/M to shield"
+                         "value":"Ladders you can climb. You can use E\/M to shield"
                         }, 
                         {
                          "name":"type",
