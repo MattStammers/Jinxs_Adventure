@@ -36,6 +36,7 @@ LAYER_NAME_PLAYER_GRENADES = "Player Grenades"
 LAYER_NAME_ENEMY_BULLETS = "Enemy Bullets"
 LAYER_NAME_ALLIES = "Allies"
 LAYER_NAME_SHIELD = "Shield"
+LAYER_NAME_POWER_UPS = "Power Ups"
 
 class GameOverView(arcade.View):
     """ View to show when game is over """
@@ -135,6 +136,7 @@ class GameView(arcade.View):
         # Life mechanics
         self.can_die = False
         self.death_timer = 0
+        self.invincibility = 0
 
         # Keep track of the score
         self.score = 0
@@ -217,6 +219,7 @@ class GameView(arcade.View):
         # Life mechanics
         self.can_die = True
         self.death_timer = 0
+        self.invincibility = 0
 
         # Shielding mechanics
         self.can_shield = True
@@ -261,6 +264,7 @@ class GameView(arcade.View):
         self.block_list = self.tile_map.sprite_lists[LAYER_NAME_DYNAMIC_TILES]
         self.ladder_list = self.tile_map.sprite_lists[LAYER_NAME_LADDERS]
         self.moving_sprites_list = self.tile_map.sprite_lists[LAYER_NAME_MOVING_PLATFORMS]
+        self.power_ups_list = self.tile_map.sprite_lists[LAYER_NAME_POWER_UPS]
 
         # Create player sprite
         self.player_sprite = PlayerSprite(self.ladder_list, hit_box_algorithm="Detailed")
@@ -471,6 +475,11 @@ class GameView(arcade.View):
         self.physics_engine.add_sprite_list(self.heart_list,
                                             friction=DYNAMIC_ITEM_FRICTION,
                                             collision_type="heart")
+
+        # Add Power Ups
+        self.physics_engine.add_sprite_list(self.power_ups_list,
+                                            friction=DYNAMIC_ITEM_FRICTION,
+                                            collision_type="power_up")
 
         # Create the items
         self.physics_engine.add_sprite_list(self.item_list,
@@ -1254,6 +1263,11 @@ class GameView(arcade.View):
             self.player_sprite, self.heart_list
         )
 
+        # See if we hit any power ups
+        power_up_hit_list = arcade.check_for_collision_with_list(
+            self.player_sprite, self.power_ups_list
+        )
+
         # See if we hit any enemies
         enemy_collision_list = arcade.check_for_collision_with_lists(
             self.player_sprite,
@@ -1307,6 +1321,29 @@ class GameView(arcade.View):
             # Play a sound
             arcade.play_sound(self.collect_coin_sound)
 
+        for power_up in power_up_hit_list:
+            # Figure out the attributes of this power up
+            if "Speed" in power_up.properties:
+                speed = int(power_up.properties["Speed"])       
+            elif "Gravity" in power_up.properties:
+                gravity = int(power_up.properties["Gravity"])
+            elif "Invincibility" in power_up.properties:
+                self.invincibility = int(power_up.properties["Invincibility"])
+                self.invincibility -= 1
+                if self.invincibility > 0:
+                    self.can_die = False
+                else:
+                    self.can_die = True
+                print(self.invincibility)
+            else:
+                print("Warning, collected a power_up without a property.")
+            
+                
+            # Remove the coin
+            power_up.remove_from_sprite_lists()
+            # Play a sound
+            arcade.play_sound(self.collect_coin_sound)
+
         # Look through the enemies to see if we hit any:
         for collision in enemy_collision_list:
             if self.can_die:
@@ -1323,7 +1360,7 @@ class GameView(arcade.View):
                     return
             else:
                 self.death_timer +=1
-                if self.death_timer > DEATH_PROTECT + 5:
+                if self.death_timer > DEATH_PROTECT + 5 + self.level_up:
                     self.death_timer = 0
                 elif self.death_timer == DEATH_PROTECT:
                     self.can_die = True
@@ -1387,6 +1424,7 @@ class GameView(arcade.View):
         self.block_list.draw()
         self.coin_list.draw()
         self.heart_list.draw()
+        self.power_ups_list.draw()
         # This variable contains the enemies and bullets
         self.scene.draw()
 
