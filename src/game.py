@@ -1358,7 +1358,7 @@ class GameView(arcade.View):
                 self.invincibility_timer -= 1
                 if self.death_timer > DEATH_PROTECT + 200:
                     self.death_timer = 0
-                elif self.invincibility_timer == 0:
+                elif self.invincibility_timer <= 0:
                     self.can_die = True
                     self.invincibility_timer = 0          
                 elif self.death_timer == DEATH_PROTECT + 5 + self.invincibility_timer + self.level_up:
@@ -1437,7 +1437,7 @@ class GameView(arcade.View):
         self.gui_camera.use()
 
         # Draw lives on the screen, scrolling it with the viewport
-        score_text = f"Invincibility Time Remaining: {self.invincibility_timer}"
+        score_text = f"Shield Time Remaining: {self.invincibility_timer}"
         arcade.draw_text(
             score_text,
             10,
