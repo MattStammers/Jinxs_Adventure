@@ -4,6 +4,7 @@ Jinx and Gravity Game
 This is the main game script
 """
 import math
+import time
 import random
 # from signal import pause
 from sys import builtin_module_names
@@ -1325,9 +1326,7 @@ class GameView(arcade.View):
             # Figure out the attributes of this power up
             if "Invincibility" in power_up.properties:
                 self.invincibility_timer = int(power_up.properties["Invincibility"])
-                t_end = delta_time + 60 * 15
-                while delta_time < t_end:
-                    self.can_die = False
+                self.can_die = False
             elif "Speed" in power_up.properties:
                 speed = int(power_up.properties["Speed"])       
             elif "Gravity" in power_up.properties:
@@ -1358,14 +1357,16 @@ class GameView(arcade.View):
             else:
                 self.death_timer +=1
                 self.invincibility_timer -= 1
-                if self.death_timer > DEATH_PROTECT + 200:
+                if self.invincibility_timer > 0:
+                    self.can_die = False
+                elif self.death_timer > DEATH_PROTECT + 200 :
+                    self.death_timer = 0
+                elif self.invincibility_timer <= 0 and self.death_timer >= DEATH_PROTECT:
+                    self.can_die = True
+                    self.invincibility_timer = 0 
                     self.death_timer = 0
                 elif self.invincibility_timer <= 0:
-                    self.can_die = True
-                    self.invincibility_timer = 0          
-                elif self.death_timer == DEATH_PROTECT + 5 + self.invincibility_timer + self.level_up:
-                    self.can_die = True
-                    self.death_timer = 0
+                    self.invincibility_timer = 0 
 
         # Did the player fall off the map?
         if self.player_sprite.center_y < -100:
@@ -1439,12 +1440,21 @@ class GameView(arcade.View):
         self.gui_camera.use()
 
         # Draw lives on the screen, scrolling it with the viewport
-        score_text = f"Shield Time Remaining: {self.invincibility_timer}"
+        score_text = f"Invincibility Shield Remaining: {self.invincibility_timer}"
+        arcade.draw_text(
+            score_text,
+            10,
+            160,
+            arcade.csscolor.ORANGE_RED,
+            18,
+        )
+        # Draw invincibility drive
+        score_text = f"Life-Loss Shield Time Remaining: {DEATH_PROTECT-self.death_timer}"
         arcade.draw_text(
             score_text,
             10,
             130,
-            arcade.csscolor.ORANGE_RED,
+            arcade.csscolor.MEDIUM_PURPLE,
             18,
         )
         # Draw lives on the screen, scrolling it with the viewport
