@@ -1011,11 +1011,11 @@ class GameView(arcade.View):
                         elif self.level_up == 6:
                             collision.health -= PLAYER_BULLET_DAMAGE*2
                         elif self.level_up == 7:
-                            collision.health -= PLAYER_BULLET_DAMAGE*3  
+                            collision.health -= PLAYER_BULLET_DAMAGE*4  
                         elif self.level_up == 8:
-                            collision.health -= PLAYER_BULLET_DAMAGE*4 
+                            collision.health -= PLAYER_BULLET_DAMAGE*6 
                         elif self.level_up == 9:
-                            collision.health -= PLAYER_BULLET_DAMAGE*5  
+                            collision.health -= PLAYER_BULLET_DAMAGE*8  
                         elif self.level_up == 10:
                             collision.health -= PLAYER_BULLET_DAMAGE*10             
 
@@ -1325,7 +1325,9 @@ class GameView(arcade.View):
             # Figure out the attributes of this power up
             if "Invincibility" in power_up.properties:
                 self.invincibility_timer = int(power_up.properties["Invincibility"])
-                self.can_die = False
+                t_end = delta_time + 60 * 15
+                while delta_time < t_end:
+                    self.can_die = False
             elif "Speed" in power_up.properties:
                 speed = int(power_up.properties["Speed"])       
             elif "Gravity" in power_up.properties:

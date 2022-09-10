@@ -4285,7 +4285,7 @@
                         {
                          "name":"Gravity",
                          "type":"int",
-                         "value":0
+                         "value":100
                         }]
                 }, 
                 {
