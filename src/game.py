@@ -1327,6 +1327,9 @@ class GameView(arcade.View):
             if "Invincibility" in power_up.properties:
                 self.invincibility_timer = int(power_up.properties["Invincibility"])
                 self.can_die = False
+            elif "Shooter" in power_up.properties:
+                shooter = int(power_up.properties["Shooter"]) 
+                self.mouse_pressed = True
             elif "Speed" in power_up.properties:
                 speed = int(power_up.properties["Speed"])       
             elif "Gravity" in power_up.properties:
