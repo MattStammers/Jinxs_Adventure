@@ -154,6 +154,10 @@ class GameView(arcade.View):
         # Where is the right edge of the map?
         self.end_of_map = 0
 
+        # Selfs
+        self.x = 0
+        self.y = 0
+
         # Level
         self.level = 0
 
