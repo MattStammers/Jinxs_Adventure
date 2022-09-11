@@ -4265,9 +4265,9 @@
                  "imagewidth":128,
                  "properties":[
                         {
-                         "name":"Shooter",
+                         "name":"Grenades",
                          "type":"int",
-                         "value":19
+                         "value":100
                         }]
                 }, 
                 {

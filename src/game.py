@@ -139,6 +139,9 @@ class GameView(arcade.View):
         self.death_timer = 0
         self.invincibility_timer = 0
 
+        # Super bullet mode
+        self.grenade_booster = 0
+
         # Keep track of the score
         self.score = 0
 
@@ -221,6 +224,9 @@ class GameView(arcade.View):
         self.can_die = True
         self.death_timer = 0
         self.invincibility_timer = 0
+
+        # Super bullet mode
+        self.grenade_booster = 0
 
         # Shielding mechanics
         self.can_shield = True
@@ -864,7 +870,65 @@ class GameView(arcade.View):
 
         # Add mouse shooting
         if self.mouse_pressed:
-            if self.level_up>=1:
+            if self.grenade_booster >=1:
+                self.grenade_booster -=1
+                for x in range(0,self.level_up):
+                    grenade = GrenadeSprite((5+self.level_up), self.level_up, arcade.color.PURPLE_HEART)
+                    self.grenade_list.append(grenade)
+
+                    # Position the grenade at the player's current location
+                    start_x = self.player_sprite.center_x
+                    start_y = self.player_sprite.center_y
+                    grenade.position = self.player_sprite.position
+
+                    # Get from the mouse the destination location for the grenade
+                    # IMPORTANT! If you have a scrolling screen, you will also need
+                    # to add in self.view_bottom and self.view_left.
+                    dest_x = self.x
+                    dest_y = self.y
+
+                    # Do math to calculate how to get the grenade to the destination.
+                    # Calculation the angle in radians between the start points
+                    # and end points. This is the angle the grenade will travel.
+                    x_diff = dest_x - start_x
+                    y_diff = dest_y - start_y
+                    angle = math.atan2(y_diff, x_diff)
+
+                    # What is the 1/2 size of this sprite, so we can figure out how far
+                    # away to spawn the grenade
+                    size = max(self.player_sprite.width, self.player_sprite.height) / 2
+
+                    # Use angle to to spawn bullet away from player in proper direction
+                    grenade.center_x += size * math.cos(angle)
+                    grenade.center_y += size * math.sin(angle)
+
+                    # Set angle of bullet
+                    grenade.angle = math.degrees(angle)
+
+                    # Gravity to use for the bullet
+                    # If we don't use custom gravity, bullet drops too fast, or we have
+                    # to make it go too fast.
+                    # Force is in relation to bullet's angle.
+                    grenade_gravity = (0, -BULLET_GRAVITY)
+
+                    # Add the sprite. This needs to be done AFTER setting the fields above.
+                    self.physics_engine.add_sprite(grenade,
+                                                mass=BULLET_MASS,
+                                                damping=1.0,
+                                                friction=0.6,
+                                                collision_type="grenade",
+                                                gravity=grenade_gravity,
+                                                elasticity=0.9)
+
+                    # Add force to bullet
+                    force = (BULLET_MOVE_FORCE*self.level_up, 0)
+                    self.physics_engine.apply_force(grenade, force)
+                    self.scene.add_sprite(LAYER_NAME_PLAYER_GRENADES, grenade)
+
+                    # Reset
+                    self.mouse_pressed = True
+
+            elif self.level_up>=1:
                 for x in range(0,self.level_up):
                     grenade = GrenadeSprite((5+self.level_up), self.level_up, arcade.color.PURPLE_HEART)
                     self.grenade_list.append(grenade)
@@ -1327,8 +1391,8 @@ class GameView(arcade.View):
             if "Invincibility" in power_up.properties:
                 self.invincibility_timer = int(power_up.properties["Invincibility"])
                 self.can_die = False
-            elif "Shooter" in power_up.properties:
-                shooter = int(power_up.properties["Shooter"]) 
+            elif "Grenades" in power_up.properties:
+                self.grenade_booster = int(power_up.properties["Grenades"]) 
                 self.mouse_pressed = True
             elif "Speed" in power_up.properties:
                 speed = int(power_up.properties["Speed"])       
@@ -1442,7 +1506,16 @@ class GameView(arcade.View):
         # Activate the GUI camera before drawing GUI elements
         self.gui_camera.use()
 
-        # Draw lives on the screen, scrolling it with the viewport
+        # Draw grenade booster count on the screen, scrolling it with the viewport
+        score_text = f"Grenade Booster Remaining: {self.grenade_booster}"
+        arcade.draw_text(
+            score_text,
+            10,
+            190,
+            arcade.csscolor.DARK_GREEN,
+            18,
+        )
+        # Draw invincibility on the screen, scrolling it with the viewport
         score_text = f"Invincibility Shield Remaining: {self.invincibility_timer}"
         arcade.draw_text(
             score_text,
