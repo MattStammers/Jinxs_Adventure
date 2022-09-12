@@ -1392,8 +1392,8 @@ class GameView(arcade.View):
 
         for power_up in power_up_hit_list:
             # Figure out the attributes of this power up
-            if "Invincibility" in power_up.properties:
-                self.invincibility_timer = int(power_up.properties["Invincibility"])
+            if "Shield" in power_up.properties:
+                self.invincibility_timer = int(power_up.properties["Shield"])
                 self.can_die = False
             elif "Grenades" in power_up.properties:
                 self.grenade_booster = int(power_up.properties["Grenades"]) 

@@ -66,7 +66,7 @@ PLAYER_JUMP_IMPULSE = 1100
 DEAD_ZONE = 1
 
 # Death Cooldown
-DEATH_PROTECT = 30
+DEATH_PROTECT = 15
 
 # Constants used to track if the player is facing left or right
 RIGHT_FACING = 0
