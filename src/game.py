@@ -1515,7 +1515,7 @@ class GameView(arcade.View):
         arcade.draw_text(
             score_text,
             10,
-            190,
+            160,
             arcade.csscolor.DARK_GREEN,
             18,
         )
@@ -1524,17 +1524,8 @@ class GameView(arcade.View):
         arcade.draw_text(
             score_text,
             10,
-            160,
-            arcade.csscolor.ORANGE_RED,
-            18,
-        )
-        # Draw invincibility drive
-        score_text = f"Life-Loss Shield Time Remaining: {DEATH_PROTECT-self.death_timer}"
-        arcade.draw_text(
-            score_text,
-            10,
             130,
-            arcade.csscolor.MEDIUM_PURPLE,
+            arcade.csscolor.ORANGE_RED,
             18,
         )
         # Draw lives on the screen, scrolling it with the viewport
