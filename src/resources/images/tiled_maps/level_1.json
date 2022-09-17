@@ -630,7 +630,7 @@
                         {
                          "name":"speech",
                          "type":"string",
-                         "value":"Sire, blue slimes are attacking the castle"
+                         "value":"Sire, blue slimes are attacking the castle. Use the power ups to defeat them"
                         }, 
                         {
                          "name":"type",
