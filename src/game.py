@@ -1392,8 +1392,8 @@ class GameView(arcade.View):
 
         for power_up in power_up_hit_list:
             # Figure out the attributes of this power up
-            if "Invincibility" in power_up.properties:
-                self.invincibility_timer = int(power_up.properties["Invincibility"])
+            if "Shield" in power_up.properties:
+                self.invincibility_timer = int(power_up.properties["Shield"])
                 self.can_die = False
             elif "Grenades" in power_up.properties:
                 self.grenade_booster = int(power_up.properties["Grenades"]) 
@@ -1515,7 +1515,7 @@ class GameView(arcade.View):
         arcade.draw_text(
             score_text,
             10,
-            190,
+            160,
             arcade.csscolor.DARK_GREEN,
             18,
         )
@@ -1524,17 +1524,8 @@ class GameView(arcade.View):
         arcade.draw_text(
             score_text,
             10,
-            160,
-            arcade.csscolor.ORANGE_RED,
-            18,
-        )
-        # Draw invincibility drive
-        score_text = f"Life-Loss Shield Time Remaining: {DEATH_PROTECT-self.death_timer}"
-        arcade.draw_text(
-            score_text,
-            10,
             130,
-            arcade.csscolor.MEDIUM_PURPLE,
+            arcade.csscolor.ORANGE_RED,
             18,
         )
         # Draw lives on the screen, scrolling it with the viewport
