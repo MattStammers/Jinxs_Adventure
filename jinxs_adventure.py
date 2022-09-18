@@ -1287,11 +1287,11 @@ class GameView(arcade.View):
                                     if self.score >= 250000:
                                         # Advance to the next level
                                         self.level_up = 8
-                                        if self.score >= 1000000:
+                                        if self.score >= 500000:
                                             # Advance to the next level
                                             self.level_up = 9
                                             # level 10 to be reserved - needs debugging
-                                            #  if self.score >= 10000000:
+                                            #  if self.score >= 1000000:
                                             #    # Advance to the next level
                                             #    self.level_up = 10
 
